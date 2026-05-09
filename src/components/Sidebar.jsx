@@ -1,0 +1,178 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  Key,
+  Code2,
+  Activity,
+  Webhook,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  Terminal,
+  ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
+  Zap,
+  Copy
+} from "lucide-react";
+
+const menuItems = [
+  { title: "API Overview", icon: LayoutDashboard, href: "/dashboard" },
+  { title: "API Keys", icon: Key, href: "/dashboard/keys" },
+  { title: "API Docs", icon: Code2, href: "/dashboard/api-docs" },
+  { title: "Logs & Traffic", icon: Activity, href: "/dashboard/logs" },
+  { title: "Webhooks", icon: Webhook, href: "/dashboard/webhooks" },
+  { title: "Security", icon: ShieldCheck, href: "/dashboard/security" },
+  { title: "Settings", icon: Settings, href: "/dashboard/settings" },
+];
+
+export default function APISidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const SidebarContent = ({ mobile = false }) => (
+    <div className="flex flex-col h-full bg-white relative">
+      
+      {/* Logo Section - Original Design */}
+      <div className={`p-6 border-b border-gray-100 flex items-center ${isCollapsed && !mobile ? "justify-center" : "justify-between"}`}>
+        <div className="flex items-center gap-2">
+          <div className="min-w-[36px] h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
+            <Terminal size={20} className="text-white" />
+          </div>
+          {(!isCollapsed || mobile) && (
+            <div className="flex flex-col animate-in fade-in duration-300">
+              <h1 className="text-lg font-bold tracking-tight text-gray-800 leading-none">
+                API_PORTAL
+              </h1>
+              <span className="text-[10px] text-emerald-600 font-bold mt-1 uppercase tracking-tighter">Production v2</span>
+            </div>
+          )}
+        </div>
+        {mobile && (
+          <button onClick={() => setIsOpen(false)} className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg">
+            <X size={20} />
+          </button>
+        )}
+      </div>
+
+      {/* API Status Indicator */}
+      {(!isCollapsed || mobile) && (
+        <div className="px-4 py-4">
+          <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-100 rounded-2xl">
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[11px] font-bold text-emerald-800 uppercase leading-none">System Live</p>
+              <p className="text-[10px] text-emerald-600 mt-1">Latency: 24ms</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation - Same Hover/Active effects */}
+      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+        {menuItems.map((item, index) => {
+          const Icon = item.icon;
+          const isActive = pathname === item.href;
+
+          return (
+            <Link
+              key={index}
+              href={item.href}
+              title={isCollapsed ? item.title : ""}
+              className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+                isActive
+                  ? "bg-emerald-50 text-emerald-600 shadow-sm shadow-emerald-100"
+                  : "text-gray-500 hover:text-emerald-600 hover:bg-gray-50"
+              } ${isCollapsed && !mobile ? "justify-center" : ""}`}
+            >
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className="min-w-[22px]" />
+              {(!isCollapsed || mobile) && (
+                <span className={`font-medium text-sm animate-in fade-in duration-300 ${isActive ? "font-semibold" : ""}`}>
+                  {item.title}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Usage Stats Section */}
+      {(!isCollapsed || mobile) && (
+        <div className="px-4 py-4 m-3 bg-gray-50 rounded-2xl border border-gray-100">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Usage</span>
+            <span className="text-[10px] font-bold text-emerald-600">65%</span>
+          </div>
+          <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-emerald-500 h-full w-[65%] rounded-full" />
+          </div>
+          <p className="text-[9px] text-gray-500 mt-2 text-center">6.5k / 10k monthly requests</p>
+        </div>
+      )}
+
+      {/* Bottom Actions */}
+      <div className="p-4 mt-auto border-t border-gray-50">
+        <button className={`w-full flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl transition-all shadow-lg shadow-gray-200 ${isCollapsed && !mobile ? "justify-center" : "justify-center"}`}>
+          <LogOut size={18} className="min-w-[18px]" />
+          {(!isCollapsed || mobile) && <span className="font-semibold text-sm">Sign Out</span>}
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile Header - Same as original */}
+      <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 px-4 flex items-center justify-between z-30">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+            <Terminal size={18} className="text-white" />
+          </div>
+          <span className="font-bold text-gray-800">API_PORTAL</span>
+        </div>
+        <button onClick={() => setIsOpen(true)} className="p-2 hover:bg-gray-100 rounded-lg">
+          <Menu size={24} className="text-gray-600" />
+        </button>
+      </header>
+
+      {/* Desktop Sidebar - Same as original */}
+      <aside 
+        className={`hidden md:flex fixed inset-y-0 left-0 bg-white border-r border-gray-100 flex-col z-40 transition-all duration-300 ease-in-out ${
+          isCollapsed ? "w-20" : "w-64"
+        }`}
+      >
+        <SidebarContent />
+        
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="absolute -right-3 top-20 w-6 h-6 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-sm hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 transition-all z-50"
+        >
+          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        </button>
+      </aside>
+
+      {/* Mobile Drawer */}
+      <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+        <aside className={`absolute left-0 top-0 bottom-0 w-[280px] bg-white transition-transform duration-300 ease-out shadow-2xl ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <SidebarContent mobile={true} />
+        </aside>
+      </div>
+
+      <div className="h-16 md:hidden" />
+    </>
+  );
+}
