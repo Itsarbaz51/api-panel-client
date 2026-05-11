@@ -17,18 +17,20 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  Zap,
-  Copy
+  User
 } from "lucide-react";
+
+// Button component import (Path adjust karein agar zarurat ho)
+import Button from "@/components/ui/Button";
 
 const menuItems = [
   { title: "API Overview", icon: LayoutDashboard, href: "/dashboard" },
-  { title: "API Keys", icon: Key, href: "/dashboard/keys" },
+  { title: "API Keys", icon: Key, href: "/dashboard/api-keys" },
   { title: "API Docs", icon: Code2, href: "/dashboard/api-docs" },
-  { title: "Logs & Traffic", icon: Activity, href: "/dashboard/logs" },
+  { title: "Logs & Traffic", icon: Activity, href: "/dashboard/logs-&-traffic" },
   { title: "Webhooks", icon: Webhook, href: "/dashboard/webhooks" },
-  { title: "Security", icon: ShieldCheck, href: "/dashboard/security" },
   { title: "Settings", icon: Settings, href: "/dashboard/settings" },
+  { title: "User-Management", icon: User, href: "/dashboard/user-management" },
 ];
 
 export default function APISidebar() {
@@ -43,7 +45,7 @@ export default function APISidebar() {
   const SidebarContent = ({ mobile = false }) => (
     <div className="flex flex-col h-full bg-white relative">
       
-      {/* Logo Section - Original Design */}
+      {/* Logo Section */}
       <div className={`p-6 border-b border-gray-100 flex items-center ${isCollapsed && !mobile ? "justify-center" : "justify-between"}`}>
         <div className="flex items-center gap-2">
           <div className="min-w-[36px] h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
@@ -58,10 +60,16 @@ export default function APISidebar() {
             </div>
           )}
         </div>
+        
         {mobile && (
-          <button onClick={() => setIsOpen(false)} className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsOpen(false)}
+            className="text-gray-400 hover:bg-gray-50"
+          >
             <X size={20} />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -81,7 +89,7 @@ export default function APISidebar() {
         </div>
       )}
 
-      {/* Navigation - Same Hover/Active effects */}
+      {/* Navigation */}
       <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
@@ -123,19 +131,24 @@ export default function APISidebar() {
         </div>
       )}
 
-      {/* Bottom Actions */}
+      {/* Bottom Actions - Using Custom Button */}
       <div className="p-4 mt-auto border-t border-gray-50">
-        <button className={`w-full flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl transition-all shadow-lg shadow-gray-200 ${isCollapsed && !mobile ? "justify-center" : "justify-center"}`}>
+        <Button 
+          className={`w-full flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl transition-all shadow-lg shadow-gray-200 ${
+            isCollapsed && !mobile ? "justify-center" : "justify-center"
+          }`}
+          onClick={() => console.log("Signing out...")}
+        >
           <LogOut size={18} className="min-w-[18px]" />
           {(!isCollapsed || mobile) && <span className="font-semibold text-sm">Sign Out</span>}
-        </button>
+        </Button>
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Mobile Header - Same as original */}
+      {/* Mobile Header */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 px-4 flex items-center justify-between z-30">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
@@ -143,12 +156,18 @@ export default function APISidebar() {
           </div>
           <span className="font-bold text-gray-800">API_PORTAL</span>
         </div>
-        <button onClick={() => setIsOpen(true)} className="p-2 hover:bg-gray-100 rounded-lg">
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setIsOpen(true)}
+          className="hover:bg-gray-100"
+        >
           <Menu size={24} className="text-gray-600" />
-        </button>
+        </Button>
       </header>
 
-      {/* Desktop Sidebar - Same as original */}
+      {/* Desktop Sidebar */}
       <aside 
         className={`hidden md:flex fixed inset-y-0 left-0 bg-white border-r border-gray-100 flex-col z-40 transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-64"
