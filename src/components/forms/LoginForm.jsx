@@ -1,102 +1,86 @@
 'use client';
 
 import React, { useState } from 'react';
-import Button from '../ui/Button';
-import Checkbox from '../ui/Checkbox';
-import InputField from '../ui/InputField';
 
-export default function LoginForm({ onForgotPasswordClick, onSubmit }) {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
-  });
-  
-  const [errors, setErrors] = useState({});
+import Input from '@/components/ui/InputField';
+import Button from '@/components/ui/Button';
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
+import { loginValidation } from '@/validation/loginValidation';
+import { getValidationErrors } from '@/utils/validationErrors';
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    return newErrors;
-  };
+export default function LoginForm({ onSubmit, onForgotPassword }) {
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+	});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
-      onSubmit?.(formData);
-    } else {
-      setErrors(newErrors);
-    }
-  };
+	const [errors, setErrors] = useState({});
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6 text-shadow-lg">
-      <InputField
-        label="Email Address"
-        type="email"
-        name="email"
-        placeholder="eldo.nawawi@edufactory.com"
-        value={formData.email}
-        onChange={handleChange}
-        error={errors.email}
-        required  
-      />
+	const handleChange = (e) => {
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		});
 
-      <div>
-        <div className="flex justify-between mb-2">
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide">
-            Password
-          </label>
-          <button
-            type="button"
-            onClick={onForgotPasswordClick}
-            className="text-xs font-bold text-[#10a37f] hover:underline text-shadow-lg"
-          >
-            Forgot Password?
-          </button>
-        </div>
-        <InputField
-          type="password"
-          name="password"
-          placeholder="••••••"
-          value={formData.password}
-          onChange={handleChange}
-          error={errors.password}
-          required
-        />
-      </div>
+		setErrors({
+			...errors,
+			[e.target.name]: '',
+		});
+	};
 
-      <Checkbox
-        label="Keep me logged in"
-        name="rememberMe"
-        checked={formData.rememberMe}
-        onChange={handleChange}
-      />
+	const handleSubmit = (e) => {
+		e.preventDefault();
 
-      <Button type="submit" variant="primary">
-        Sign In
-      </Button>
-    </form>
-  );
+		const result = loginValidation.safeParse(formData);
+
+		// validation fail
+		if (!result.success) {
+			setErrors(getValidationErrors(result.error.errors));
+
+			return;
+		}
+
+		// validation success
+		onSubmit(formData);
+	};
+
+	return (
+		<form onSubmit={handleSubmit} className="space-y-5">
+			<Input
+				type="email"
+				name="email"
+				label="Email"
+				placeholder="Enter your email"
+				value={formData.email}
+				onChange={handleChange}
+				error={errors.email}
+				required
+			/>
+
+			<Input
+				type="password"
+				name="password"
+				label="Password"
+				placeholder="Enter your password"
+				value={formData.password}
+				onChange={handleChange}
+				error={errors.password}
+				required
+			/>
+
+			<div className="flex justify-end">
+				<Button
+					type="button"
+					variant="text"
+					onClick={onForgotPassword}
+					className="text-sm text-[#10a37f] hover:text-[#0e8a6b] transition">
+					Forgot Password?
+				</Button>
+			</div>
+
+			<Button type="submit" variant="primary" size="lg" fullWidth>
+				Login
+			</Button>
+		</form>
+	);
 }

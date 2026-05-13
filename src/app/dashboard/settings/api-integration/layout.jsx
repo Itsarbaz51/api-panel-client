@@ -3,29 +3,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Settings, ShieldCheck, Bell } from "lucide-react";
-import { motion } from "framer-motion"; // Make sure to install: npm install framer-motion
+import { motion } from "framer-motion";
 
-export default function SettingsLayout({ children }) {
+export default function ApiIntegrationLayout({ children }) {
   const pathname = usePathname();
 
   const tabs = [
     {
-      label: "General",
-      value: "general",
+      label: "Services",
+      value: "services",
       icon: Settings,
-      href: "/dashboard/settings/general",
+      href: "/dashboard/settings/api-integration/services",
     },
     {
-      label: "Security",
-      value: "security",
+      label: "Providers",
+      value: "providers",
       icon: ShieldCheck,
-      href: "/dashboard/settings/security",
+      href: "/dashboard/settings/api-integration/providers",
     },
     {
-      label: "API Integration",
-      value: "api-integration",
-      icon: ShieldCheck,
-      href: "/dashboard/settings/api-integration",
+      label: "Mapping",
+      value: "mapping",
+      icon: Bell,
+      href: "/dashboard/settings/api-integration/mapping",
     },
   ];
 
@@ -40,14 +40,14 @@ export default function SettingsLayout({ children }) {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <div className="h-6 w-1 bg-[#00b37e] rounded-full" />
-            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#00b37e]/80">Preferences</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#00b37e]/80">Config</span>
           </div>
           <h1 className="text-4xl font-black tracking-tight text-[#0f172a]">
-            System <span className="text-[#00b37e]">Settings</span>
+            API <span className="text-[#00b37e]">Integration</span>
           </h1>
         </div>
 
-        {/* Floating Navigation (Animated Style) */}
+        {/* Floating Navigation (Animated Pill Style) */}
         <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
@@ -60,10 +60,10 @@ export default function SettingsLayout({ children }) {
                   ${isActive ? "text-[#00b37e]" : "text-slate-500 hover:text-slate-800"}
                 `}
               >
-                {/* Framer Motion Active Indicator (The White Pill) */}
+                {/* Framer Motion Active Indicator */}
                 {isActive && (
                   <motion.div
-                    layoutId="activeTabPillSettings"
+                    layoutId="activeApiTab"
                     className="absolute inset-0 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 rounded-[26px]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
@@ -82,7 +82,7 @@ export default function SettingsLayout({ children }) {
 
       {/* Content Area */}
       <main className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {children}
+        {children}
       </main>
     </div>
   );

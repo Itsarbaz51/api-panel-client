@@ -1,25 +1,51 @@
-"use client";
+'use client';
 
-import LoginForm from "../form/LoginForm";
+import React from 'react';
+import LoginForm from '@/components/forms/LoginForm';
 
-export default function LoginModal({ isOpen, onClose }) {
+export default function LoginModal({ handleLogin, onForgotPassword }) {
+	return (
+		<div className="bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row max-w-5xl w-full overflow-hidden">
+			{/* LEFT */}
+			<div className="w-full md:w-1/2 relative min-h-125">
+				<video
+					autoPlay
+					loop
+					muted
+					playsInline
+					className="absolute inset-0 w-full h-full object-cover">
+					<source src="/videos/video.mp4" type="video/mp4" />
+				</video>
 
-  if (!isOpen) return null;
+				<div className="absolute inset-0 bg-black/40" />
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+				<div className="relative z-10 flex items-center h-full p-10">
+					<div className="text-white">
+						<h1 className="text-5xl font-bold leading-tight">
+							Let's Grow Up <br />
+							Your Future
+						</h1>
 
-      <div className="w-full max-w-md bg-[#0F172A] border border-gray-800 rounded-3xl p-8 relative shadow-2xl">
+						<p className="mt-5 text-white/80">
+							Learn important new skills and grow your career.
+						</p>
+					</div>
+				</div>
+			</div>
 
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl"
-        >
-          ×
-        </button>
+			{/* RIGHT */}
+			<div className="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
+				{/* Logo */}
+				<div className="mb-10">
+					<h2 className="text-3xl font-bold text-slate-800">Edufactory</h2>
+				</div>
 
-        <LoginForm onClose={onClose} />
-      </div>
-    </div>
-  );
+				{/* Login Form */}
+				<LoginForm
+					onSubmit={handleLogin}
+					onForgotPassword={onForgotPassword}
+				/>
+			</div>
+		</div>
+	);
 }

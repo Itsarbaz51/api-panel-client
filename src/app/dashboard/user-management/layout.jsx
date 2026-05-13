@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, Users } from "lucide-react";
+import { motion } from "framer-motion"; // Make sure: npm install framer-motion
 
 export default function UserManagementLayout({ children }) {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ export default function UserManagementLayout({ children }) {
   ];
 
   return (
-    <div className="relative min-h-screen max-w-7xl mx-auto p-4 md:p-10 animate-in fade-in duration-700">
+    <div className="relative min-h-screen max-w-7xl mx-auto p-4 md:p-10 animate-in fade-in duration-700 font-sans">
       
       {/* Background Glows */}
       <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[#00b37e]/10 blur-[120px] rounded-full -z-10" />
@@ -40,7 +41,8 @@ export default function UserManagementLayout({ children }) {
           </h1>
         </div>
 
-        <nav className="flex items-center gap-4 bg-[#f8fafc] p-2 rounded-[28px] border border-slate-100 shadow-inner">
+        {/* Floating Navigation (White Pill Animation) */}
+        <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
             return (
@@ -48,22 +50,31 @@ export default function UserManagementLayout({ children }) {
                 key={tab.value}
                 href={tab.href}
                 className={`
-                  flex items-center gap-3 px-6 py-3 rounded-[22px] text-sm font-bold transition-all duration-300
-                  ${isActive 
-                    ? "bg-white text-[#00b37e] shadow-[0_10px_25px_-5px_rgba(0,179,126,0.15)] border border-[#00b37e]/10" 
-                    : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
-                  }
+                  relative flex items-center gap-2.5 px-7 py-3 rounded-[26px] text-sm font-bold transition-all duration-300 whitespace-nowrap outline-none
+                  ${isActive ? "text-[#00b37e]" : "text-slate-500 hover:text-slate-800"}
                 `}
               >
-                <tab.icon className={`w-4 h-4 ${isActive ? "text-[#00b37e]" : "text-slate-400"}`} />
-                {tab.label}
+                {/* Framer Motion Active Indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeUserTab"
+                    className="absolute inset-0 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 rounded-[26px]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+
+                {/* Tab Content */}
+                <span className="relative z-10 flex items-center gap-2.5">
+                  <tab.icon className={`w-4 h-4 ${isActive ? "text-[#00b37e]" : "text-slate-400"}`} />
+                  {tab.label}
+                </span>
               </Link>
             );
           })}
         </nav>
       </header>
 
-      {/* --- CONTENT AREA (Double Div structure removed) --- */}
+      {/* Content Area */}
       <main className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           {children}
       </main>

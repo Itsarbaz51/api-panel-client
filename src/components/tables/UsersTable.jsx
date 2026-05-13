@@ -1,136 +1,60 @@
 "use client";
 
-import { Users, Download, User } from "lucide-react";
-import TableShell from "./core/TableShell";
-import TableHeader from "./core/TableHeader";
-import TableBody from "./core/TableBody";
-import TablePagination from "./core/TablePagination";
+import React from "react";
+import UserRow from "@/components/ui/UserRow";
 
-const statusOptions = [
-  { label: "All", value: "all" },
-  { label: "Active", value: "ACTIVE" },
-  { label: "Inactive", value: "INACTIVE" },
-  { label: "Suspended", value: "SUSPENDED" },
-];
+// Table Components
+import TableShell from "@/components/tables/core/TableShell";
+import TableHeader from "@/components/tables/core/TableHeader";
+import TableBody from "@/components/tables/core/TableBody";
+import DataTableSearchEmpty from "@/components/tables/core/DataTableSearchEmpty";
 
-const getColumns = (onImagePreview) => [
-  {
-    key: "profilePictureUrl",
-    label: "Photo",
-    render: (row) =>
-      row.profilePictureUrl ? (
-        <img
-          src={row.profilePictureUrl}
-          alt={row.fullName}
-          className="h-10 w-10 rounded-full object-cover cursor-pointer border border-border"
-          onClick={() => onImagePreview(row.profilePictureUrl)}
-        />
-      ) : (
-        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center border border-border">
-          <User className="h-4 w-4 text-muted-foreground" />
-        </div>
-      ),
-  },
-  { key: "userNumber", label: "User No" },
-  { key: "fullName", label: "Name" },
-  { key: "email", label: "Email" },
-  { key: "tenantNumber", label: "Tenant Number" },
-  { key: "tenantName", label: "Tenant Name" },
-  { key: "mobileNumber", label: "Mobile" },
-  {
-    key: "userStatus",
-    label: "Status",
-    render: (row) => (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium border ${
-          row.userStatus === "ACTIVE"
-            ? "bg-success/10 text-success border-success/20"
-            : row.userStatus === "INACTIVE"
-              ? "bg-warning/10 text-warning border-warning/20"
-              : row.userStatus === "SUSPENDED"
-                ? "bg-destructive/10 text-destructive border-destructive/20"
-                : "bg-secondary text-secondary-foreground border-border"
-        }`}
-      >
-        {row.userStatus}
-      </span>
-    ),
-  },
-  {
-    key: "createdAt",
-    label: "Created At",
-    render: (row) => (
-      <span className="text-sm text-muted-foreground">
-        {new Date(row.createdAt).toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })}
-      </span>
-    ),
-  },
-  { key: "actions", label: "Actions" },
-];
-
-export default function UsersTable({
+export default function UserTable({
   users,
-  total,
-  page,
-  perPage,
-  onPageChange,
-  search,
-  onSearch,
-  statusFilter,
-  onStatusFilterChange,
-  onAddUser,
-  onEdit,
-  onView,
-  onDelete,
-  onImagePreview,
-  extraActions,
+  onViewUser,
+  onEditUser,
+  onDeleteUser,
 }) {
-  const columns = getColumns(onImagePreview);
+  if (users.length === 0) {
+    return (
+      <div className="px-8 pb-8">
+        <DataTableSearchEmpty
+          title="No users found"
+          description="There are no users available right now."
+        />
+      </div>
+    );
+  }
 
-  const filters = [
-    {
-      value: statusFilter,
-      onChange: onStatusFilterChange,
-      placeholder: "Status",
-      options: statusOptions,
-    },
+  const columns = [
+    "User Details",
+    "Role",
+    "Status",
+    "Date Joined",
+    "Actions",
   ];
 
   return (
-    <TableShell>
-      <TableHeader
-        title="All Users"
-        subtitle={`${total} users found`}
-        search={search}
-        setSearch={onSearch}
-        searchPlaceholder="Search by name, email, user no. or mobile…"
-        filters={filters}
-        onAdd={onAddUser}
-        addLabel="Add User"
-        addIcon={Users}
-        onExport={() => console.log("Export users")}
-        exportIcon={Download}
-      />
+    <div className="px-4 pb-8">
+      <TableShell>
+        
+        {/* Header */}
+        <TableHeader columns={columns} />
 
-      <TableBody
-        columns={columns}
-        data={users}
-        onEdit={onEdit}
-        onView={onView}
-        onDelete={onDelete}
-        onExtraActions={extraActions}
-      />
+        {/* Body */}
+        <TableBody>
+          {users.map((user) => (
+            <UserRow
+              key={user.id}
+              user={user}
+              onView={onViewUser}
+              onEdit={onEditUser}
+              onDelete={onDeleteUser}
+            />
+          ))}
+        </TableBody>
 
-      <TablePagination
-        page={page}
-        setPage={onPageChange}
-        total={total}
-        perPage={perPage}
-      />
-    </TableShell>
+      </TableShell>
+    </div>
   );
 }

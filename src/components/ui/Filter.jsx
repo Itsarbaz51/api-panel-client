@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Filter } from "lucide-react";
 import Button from "@/components/ui/Button";
-
 
 export default function FilterDropdown({
   value,
@@ -17,7 +16,6 @@ export default function FilterDropdown({
 
   const activeOption = options.find((o) => o.value === value);
 
-  // outside click
   useEffect(() => {
     const handler = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -30,49 +28,45 @@ export default function FilterDropdown({
 
   return (
     <div className="relative" ref={ref}>
-      {/* Trigger */}
       <Button
         variant="outline"
-        size="default"
+        onClick={() => setOpen(!open)}
         disabled={disabled}
-        onClick={() => setOpen((v) => !v)}
-        icon={ChevronDown}
-        iconPosition="right"
+        className="flex items-center gap-2 px-4 py-2.5 bg-white border-slate-200 hover:bg-slate-50"
       >
-        {activeOption?.label || placeholder}
+        <Filter size={14} className="text-slate-500" />
+        <span>{activeOption?.label || placeholder}</span>
+        <ChevronDown size={14} className={`text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`} />
       </Button>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute z-50 mt-2 w-52 rounded-border border border-border bg-card shadow-border">
-          {options.map((opt) => {
-            const isActive = value === opt.value;
-
-            return (
-              <button
-                key={opt.value}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-                className={
-                  "w-full flex items-center justify-between px-4 py-2 text-sm transition-colors",
-                  isActive ? "bg-accent text-foreground" : "hover:bg-accent"
-                }
-              >
-                <span>{opt.label}</span>
-
-                {typeof opt.count === "number" && (
-                  <span className="text-xs text-muted-foreground">
-                    {opt.count}
-                  </span>
-                )}
-
-                {isActive && <Check className="h-4 w-4 text-primary ml-2" />}
-              </button>
-            );
-          })}
-        </div>
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 z-20 overflow-hidden">
+            <div className="p-1">
+              {options.map((opt) => {
+                const isActive = value === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors ${
+                      isActive 
+                        ? "bg-emerald-50 text-emerald-700" 
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    {isActive && <Check size={14} className="text-emerald-600" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

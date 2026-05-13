@@ -20,7 +20,6 @@ import {
   User
 } from "lucide-react";
 
-// Button component import (Path adjust karein agar zarurat ho)
 import Button from "@/components/ui/Button";
 
 const menuItems = [
@@ -29,8 +28,9 @@ const menuItems = [
   { title: "API Docs", icon: Code2, href: "/dashboard/api-docs" },
   { title: "Logs & Traffic", icon: Activity, href: "/dashboard/logs-&-traffic" },
   { title: "Webhooks", icon: Webhook, href: "/dashboard/webhooks" },
-  { title: "Settings", icon: Settings, href: "/dashboard/settings" },
   { title: "User-Management", icon: User, href: "/dashboard/user-management" },
+  { title: "Settings", icon: Settings, href: "/dashboard/settings" },
+  { title: "Developer API", icon: Settings, href: "/dashboard/developer-api" },
 ];
 
 export default function APISidebar() {

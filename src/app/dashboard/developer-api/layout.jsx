@@ -2,30 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Settings, ShieldCheck, Bell } from "lucide-react";
-import { motion } from "framer-motion"; // Make sure to install: npm install framer-motion
+import { DownloadCloudIcon, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion"; // Animation ke liye install karein: npm install framer-motion
 
-export default function SettingsLayout({ children }) {
+export default function developerAPILayout({ children }) {
   const pathname = usePathname();
 
   const tabs = [
     {
-      label: "General",
-      value: "general",
-      icon: Settings,
-      href: "/dashboard/settings/general",
+      label: "API Docs",
+      value: "docs",
+      icon: DownloadCloudIcon,
+      href: "/dashboard/developer-api/docs",
     },
     {
-      label: "Security",
-      value: "security",
+      label: "Permissions",
+      value: "permissions",
       icon: ShieldCheck,
-      href: "/dashboard/settings/security",
-    },
-    {
-      label: "API Integration",
-      value: "api-integration",
-      icon: ShieldCheck,
-      href: "/dashboard/settings/api-integration",
+      href: "/dashboard/developer-api/permissions",
     },
   ];
 
@@ -47,8 +41,8 @@ export default function SettingsLayout({ children }) {
           </h1>
         </div>
 
-        {/* Floating Navigation (Animated Style) */}
-        <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">
+        {/* Floating Navigation (Image Style) */}
+        <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
             return (
@@ -63,7 +57,7 @@ export default function SettingsLayout({ children }) {
                 {/* Framer Motion Active Indicator (The White Pill) */}
                 {isActive && (
                   <motion.div
-                    layoutId="activeTabPillSettings"
+                    layoutId="activeTabPill"
                     className="absolute inset-0 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 rounded-[26px]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
