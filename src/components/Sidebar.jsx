@@ -48,7 +48,7 @@ export default function APISidebar() {
       {/* Logo Section */}
       <div className={`p-6 border-b border-gray-100 flex items-center ${isCollapsed && !mobile ? "justify-center" : "justify-between"}`}>
         <div className="flex items-center gap-2">
-          <div className="min-w-[36px] h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
+          <div className="min-w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
             <Terminal size={20} className="text-white" />
           </div>
           {(!isCollapsed || mobile) && (
@@ -106,7 +106,7 @@ export default function APISidebar() {
                   : "text-gray-500 hover:text-emerald-600 hover:bg-gray-50"
               } ${isCollapsed && !mobile ? "justify-center" : ""}`}
             >
-              <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className="min-w-[22px]" />
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className="min-w-5.5" />
               {(!isCollapsed || mobile) && (
                 <span className={`font-medium text-sm animate-in fade-in duration-300 ${isActive ? "font-semibold" : ""}`}>
                   {item.title}
@@ -118,28 +118,17 @@ export default function APISidebar() {
       </nav>
 
       {/* Usage Stats Section */}
-      {(!isCollapsed || mobile) && (
-        <div className="px-4 py-4 m-3 bg-gray-50 rounded-2xl border border-gray-100">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Usage</span>
-            <span className="text-[10px] font-bold text-emerald-600">65%</span>
-          </div>
-          <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-emerald-500 h-full w-[65%] rounded-full" />
-          </div>
-          <p className="text-[9px] text-gray-500 mt-2 text-center">6.5k / 10k monthly requests</p>
-        </div>
-      )}
+      
 
       {/* Bottom Actions - Using Custom Button */}
       <div className="p-4 mt-auto border-t border-gray-50">
         <Button 
-          className={`w-full flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-xl transition-all shadow-lg shadow-gray-200 ${
+          className={`w-full flex items-center  bg-gray-900 hover:bg-gray-800 text-white rounded-xl transition-all shadow-lg shadow-gray-200 ${
             isCollapsed && !mobile ? "justify-center" : "justify-center"
           }`}
           onClick={() => console.log("Signing out...")}
         >
-          <LogOut size={18} className="min-w-[18px]" />
+          <LogOut size={18} className="min-w-4.5 " />
           {(!isCollapsed || mobile) && <span className="font-semibold text-sm">Sign Out</span>}
         </Button>
       </div>
@@ -186,7 +175,7 @@ export default function APISidebar() {
       {/* Mobile Drawer */}
       <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-        <aside className={`absolute left-0 top-0 bottom-0 w-[280px] bg-white transition-transform duration-300 ease-out shadow-2xl ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <aside className={`absolute left-0 top-0 bottom-0 w-70 bg-white transition-transform duration-300 ease-out shadow-2xl ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <SidebarContent mobile={true} />
         </aside>
       </div>

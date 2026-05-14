@@ -1,6 +1,6 @@
 'use client';
 
-import { User, Download } from 'lucide-react';
+import { Package, Download } from 'lucide-react';
 
 import TableShell from './core/TableShell';
 import TableHeader from './core/TableHeader';
@@ -15,28 +15,38 @@ const statusOptions = [
 
 const columns = [
 	{
-		key: 'name',
-		label: 'User',
+		key: 'packageName',
+		label: 'Package',
 		render: (row) => (
 			<div className="flex items-center gap-3">
 				<div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-					<User className="h-5 w-5 text-primary" />
+					<Package className="h-5 w-5 text-primary" />
 				</div>
 
 				<div>
-					<p className="font-medium">{row.name}</p>
+					<p className="font-medium">{row.packageName}</p>
 
-					<p className="text-xs text-muted-foreground">
-						{row.email}
-					</p>
+					<p className="text-xs text-muted-foreground">{row.packageNumber}</p>
 				</div>
 			</div>
 		),
 	},
 
 	{
-		key: 'role',
-		label: 'Role',
+		key: 'price',
+		label: 'Price',
+		render: (row) => <span className="font-semibold">${row.price}</span>,
+	},
+
+	{
+		key: 'usersLimit',
+		label: 'Users',
+		render: (row) => <span>{row.usersLimit} Users</span>,
+	},
+
+	{
+		key: 'storage',
+		label: 'Storage',
 	},
 
 	{
@@ -55,11 +65,11 @@ const columns = [
 	},
 
 	{
-		key: 'joined',
-		label: 'Joined',
+		key: 'createdAt',
+		label: 'Created At',
 		render: (row) => (
 			<span className="text-sm text-muted-foreground">
-				{row.joined}
+				{new Date(row.createdAt).toLocaleDateString()}
 			</span>
 		),
 	},
@@ -70,8 +80,8 @@ const columns = [
 	},
 ];
 
-export default function UsersTable({
-	users,
+export default function PackagesTable({
+	packages,
 	total,
 	page,
 	perPage,
@@ -80,7 +90,7 @@ export default function UsersTable({
 	onSearch,
 	statusFilter,
 	onStatusFilterChange,
-	onAddUser,
+	onAddPackage,
 	onEdit,
 	onDelete,
 }) {
@@ -96,22 +106,22 @@ export default function UsersTable({
 	return (
 		<TableShell>
 			<TableHeader
-				title="All Users"
-				subtitle={`${total} users found`}
+				title="All Packages"
+				subtitle={`${total} packages found`}
 				search={search}
 				setSearch={onSearch}
-				searchPlaceholder="Search users..."
+				searchPlaceholder="Search packages..."
 				// filters={filters}
-				onAdd={onAddUser}
-				addLabel="Add User"
-				addIcon={User}
+				onAdd={onAddPackage}
+				addLabel="Add Package"
+				addIcon={Package}
 				onExport={() => console.log('Export')}
 				exportIcon={Download}
 			/>
 
 			<TableBody
 				columns={columns}
-				data={users}
+				data={packages}
 				onEdit={onEdit}
 				onDelete={onDelete}
 			/>

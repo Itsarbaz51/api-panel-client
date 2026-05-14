@@ -19,7 +19,7 @@ export default function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <header className="h-16 md:h-20 bg-white border-b border-gray-100 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 md:h-20  border-b border-gray-100 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
       
       {/* Left Side: Search Bar (Hidden on small mobile, visible on tablet/desktop) */}
       <div className="flex items-center flex-1 max-w-xs md:max-w-md">

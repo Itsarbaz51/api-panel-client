@@ -6,16 +6,17 @@ export default function Button({
 	children,
 	onClick,
 	type = 'button',
-	variant = 'primary', // primary, secondary, outline, white, ghost, danger
-	size = 'md', // sm, md, lg
-	fullWidth = false, // Changed default to false for dashboard usage
+	variant = 'primary',
+	size = 'md',
+	fullWidth = false,
 	disabled = false,
 	className = '',
 	leftIcon,
 	rightIcon,
+	iconPosition = 'left', // FIX
 	...props
 }) {
-	// Base styles: Clean and aligned
+	// Base styles
 	const baseStyles = `
     inline-flex
     items-center
@@ -30,7 +31,7 @@ export default function Button({
     disabled:active:scale-100
   `;
 
-	// Modern Variants
+	// Variants
 	const variants = {
 		primary:
 			'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200/50 border border-emerald-600',
@@ -49,9 +50,12 @@ export default function Button({
 
 		danger:
 			'bg-red-50 text-red-600 border border-red-100 hover:bg-red-500 hover:text-white',
+
+		dark:
+			'bg-slate-900 text-white hover:bg-slate-800 border border-slate-900',
 	};
 
-	// Sizes for flexibility
+	// Sizes
 	const sizes = {
 		sm: 'px-3 py-1.5 text-xs rounded-lg',
 		md: 'px-5 py-2.5 text-sm rounded-xl',
@@ -73,11 +77,24 @@ export default function Button({
         ${className}
       `}
 			{...props}>
-			{leftIcon && <span className="shrink-0">{leftIcon}</span>}
+			
+			{/* LEFT ICON */}
+			{leftIcon && iconPosition === 'left' && (
+				<span className="shrink-0">
+					{leftIcon}
+				</span>
+			)}
 
-			<span className="truncate">{children}</span>
+			<span className="truncate">
+				{children}
+			</span>
 
-			{rightIcon && <span className="shrink-0">{rightIcon}</span>}
+			{/* RIGHT ICON */}
+			{rightIcon && iconPosition === 'right' && (
+				<span className="shrink-0">
+					{rightIcon}
+				</span>
+			)}
 		</button>
 	);
 }
