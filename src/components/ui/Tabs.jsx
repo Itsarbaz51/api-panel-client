@@ -1,50 +1,62 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Link from "next/link";
 
-export default function Tabs({ tabs = [], activeTab }) {
+export default function Tabs({
+	tabs = [],
+	activeTab,
+	onChange,
+}) {
 	return (
-		<div className="relative flex items-center gap-2 p-2 rounded-xl border border-slate-200/60 bg-white/70 backdrop-blur-xl  overflow-x-auto no-scrollbar w-full lg:w-fit  flex-col lg:flex-row ">
+		<div className="inline-flex items-center gap-2 p-1 rounded-2xl border border-border bg-card">
 			{tabs.map((tab) => {
-				const isActive = activeTab === tab.value;
+				const Icon = tab.icon;
 
-				return (
-					<Link
-						key={tab.value}
-						href={tab.href}
-						className={`
-							relative flex items-center gap-2.5 px-6 py-3 rounded-xl
-							text-sm font-semibold whitespace-nowrap transition-all duration-300
-							${isActive ? 'text-emerald-600' : 'text-slate-500 hover:text-slate-900'}
-						`}>
-						{/* ACTIVE BG */}
-						{isActive && (
-							<motion.div
-								layoutId="activeTab"
-								className="absolute inset-0 rounded-xl bg-white border border-slate-100 "
-								transition={{
-									type: 'spring',
-									stiffness: 380,
-									damping: 30,
-								}}
-							/>
-						)}
+				const tabValue =
+					tab.id || tab.value;
 
-						{/* CONTENT */}
-						<div className="relative z-10 flex items-center gap-2.5">
-							{tab.icon && (
-								<tab.icon
-									className={`h-4 w-4 ${
-										isActive ? 'text-emerald-600' : 'text-slate-400'
-									}`}
-								/>
+				const isActive =
+					activeTab === tabValue;
+
+				const className = `
+					flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200
+					${isActive
+						? "bg-background text-emerald-600 shadow-sm border border-border"
+						: "text-muted-foreground hover:text-foreground"}
+				`;
+
+				/* LINK TAB */
+				if (tab.href) {
+					return (
+						<Link
+							key={tabValue}
+							href={tab.href}
+							className={className}
+						>
+							{Icon && (
+								<Icon className="h-4 w-4" />
 							)}
 
 							<span>{tab.label}</span>
-						</div>
-					</Link>
+						</Link>
+					);
+				}
+
+				/* BUTTON TAB */
+				return (
+					<button
+						key={tabValue}
+						onClick={() =>
+							onChange?.(tabValue)
+						}
+						className={className}
+					>
+						{Icon && (
+							<Icon className="h-4 w-4" />
+						)}
+
+						<span>{tab.label}</span>
+					</button>
 				);
 			})}
 		</div>

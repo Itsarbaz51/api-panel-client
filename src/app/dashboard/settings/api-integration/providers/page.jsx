@@ -1,7 +1,5 @@
-import React from 'react'
+import ProvidersClient from '@/components/client/ProvidersClient'
 
-export default function provider() {
-  return (
-    <div>provider</div>
-  )
+export default function Providers() {
+  return <ProvidersClient />
 }

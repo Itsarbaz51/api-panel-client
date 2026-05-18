@@ -1,7 +1,6 @@
-import React from 'react'
+import MappingClient from "@/components/client/MappingClient";
+
 
 export default function mapping() {
-  return (
-    <div>mapping</div>
-  )
+  return <MappingClient />
 }

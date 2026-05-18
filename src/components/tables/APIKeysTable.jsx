@@ -158,7 +158,7 @@ export default function APIKeysTable({
 				search={search}
 				setSearch={onSearch}
 				searchPlaceholder="Search API keys..."
-				// filters={filters}
+				filters={filters}
 				onAdd={onGenerateKey}
 				addLabel="Generate Key"
 				addIcon={KeyRound}

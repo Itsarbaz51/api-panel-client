@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-
 import { Users, Building2 } from 'lucide-react';
 
 import Header from '@/components/ui/Header';

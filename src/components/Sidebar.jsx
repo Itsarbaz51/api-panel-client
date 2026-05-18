@@ -120,18 +120,6 @@ export default function APISidebar() {
       {/* Usage Stats Section */}
       
 
-      {/* Bottom Actions - Using Custom Button */}
-      <div className="p-4 mt-auto border-t border-gray-50">
-        <Button 
-          className={`w-full flex items-center  bg-gray-900 hover:bg-gray-800 text-white rounded-xl transition-all shadow-lg shadow-gray-200 ${
-            isCollapsed && !mobile ? "justify-center" : "justify-center"
-          }`}
-          onClick={() => console.log("Signing out...")}
-        >
-          <LogOut size={18} className="min-w-4.5 " />
-          {(!isCollapsed || mobile) && <span className="font-semibold text-sm">Sign Out</span>}
-        </Button>
-      </div>
     </div>
   );
 

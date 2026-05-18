@@ -1,7 +1,7 @@
-import React from 'react'
+import ServiceClient from "@/components/client/ServiceClient";
 
-export default function service() {
-  return (
-    <div>service</div>
-  )
+
+export default function Service() {
+
+  return <ServiceClient />
 }

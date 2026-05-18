@@ -101,7 +101,7 @@ export default function UsersTable({
 				search={search}
 				setSearch={onSearch}
 				searchPlaceholder="Search users..."
-				// filters={filters}
+				filters={filters}
 				onAdd={onAddUser}
 				addLabel="Add User"
 				addIcon={User}

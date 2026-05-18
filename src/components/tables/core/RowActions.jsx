@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MoreVertical, Eye, Edit, Trash2 } from "lucide-react";
-import Button from "@/components/ui/Button";
 
+import {
+  MoreVertical,
+  Eye,
+  Edit,
+  Trash2,
+} from "lucide-react";
+
+import Button from "@/components/ui/Button";
 
 export default function RowActions({
   onView,
@@ -12,98 +18,173 @@ export default function RowActions({
   extraActions = [],
 }) {
   const [open, setOpen] = useState(false);
+
   const [openUp, setOpenUp] = useState(false);
+
   const ref = useRef(null);
 
-  // Close on outside click
+  /* ================= OUTSIDE CLICK ================= */
+
   useEffect(() => {
     const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
+      if (
+        ref.current &&
+        !ref.current.contains(e.target)
+      ) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+
+    document.addEventListener(
+      "mousedown",
+      handleClick
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClick
+      );
+    };
   }, []);
+
+  /* ================= TOGGLE ================= */
 
   const toggle = () => {
     if (!ref.current) return;
 
-    const rect = ref.current.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
+    const rect =
+      ref.current.getBoundingClientRect();
 
+    const spaceBelow =
+      window.innerHeight - rect.bottom;
+
+    // open upward if low space
     setOpenUp(spaceBelow < 180);
-    setOpen((v) => !v);
+
+    setOpen((prev) => !prev);
   };
 
   return (
-    <div className="relative" ref={ref}>
-      {/* Trigger */}
+    <div
+      className="relative flex justify-end"
+      ref={ref}
+    >
+
+      {/* TRIGGER */}
       <Button
+        type="button"
         size="icon"
         variant="ghost"
         onClick={toggle}
         aria-haspopup="menu"
         aria-expanded={open}
+        className="h-9 w-9 rounded-xl"
       >
         <MoreVertical className="h-4 w-4 text-muted-foreground" />
       </Button>
 
-      {/* Dropdown */}
+      {/* DROPDOWN */}
       {open && (
         <div
-          className={
-            "absolute right-0 z-50 min-w-[168px] rounded-border border border-border bg-card shadow-border",
-            openUp ? "bottom-full mb-2" : "top-full mt-2"
-          
-        }
+          className={`absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-2xl border border-border bg-card shadow-xl ${
+            openUp
+              ? "bottom-full mb-2"
+              : "top-full mt-2"
+          }`}
         >
-          {onView && <MenuItem icon={Eye} label="View" onClick={onView} />}
 
-          {onEdit && <MenuItem icon={Edit} label="Edit" onClick={onEdit} />}
+          {/* VIEW */}
+          {onView && (
+            <MenuItem
+              icon={Eye}
+              label="View"
+              onClick={() => {
+                onView();
+                setOpen(false);
+              }}
+            />
+          )}
 
+          {/* EDIT */}
+          {onEdit && (
+            <MenuItem
+              icon={Edit}
+              label="Edit"
+              onClick={() => {
+                onEdit();
+                setOpen(false);
+              }}
+            />
+          )}
+
+          {/* EXTRA ACTIONS */}
           {extraActions.map((a, i) => (
             <MenuItem
               key={i}
               icon={a.icon}
               label={a.label}
-              onClick={a.onClick}
+              onClick={() => {
+                a.onClick();
+                setOpen(false);
+              }}
             />
           ))}
 
+          {/* DELETE */}
           {onDelete && (
             <>
-              <div className="my-1 h-px bg-border border-t " />
+              <div className="h-px bg-border" />
+
               <MenuItem
                 icon={Trash2}
                 label="Delete"
                 danger
-                onClick={onDelete}
+                onClick={() => {
+                  onDelete();
+                  setOpen(false);
+                }}
               />
             </>
           )}
+
         </div>
       )}
+
     </div>
   );
 }
 
-/* ---------------- MENU ITEM ---------------- */
+/* ==================================================
+   MENU ITEM
+================================================== */
 
-function MenuItem({ icon: Icon, label, onClick, danger }) {
+function MenuItem({
+  icon: Icon,
+  label,
+  onClick,
+  danger = false,
+}) {
   return (
-    <Button
+    <button
+      type="button"
       onClick={onClick}
-      variant="ghost"
-      className={
-        "w-full justify-start gap-3 px-4 py-2.5 text-sm font-medium",
-        danger
-          ? "text-destructive hover:bg-destructive/10"
-          : "text-foreground hover:bg-accent"
-      }
+      className={`
+        flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition-colors
+        ${
+          danger
+            ? "text-red-500 hover:bg-red-50"
+            : "text-foreground hover:bg-accent"
+        }
+      `}
     >
+
       <Icon className="h-4 w-4 shrink-0 opacity-90" />
-      <span className="flex-1 text-left">{label}</span>
-    </Button>
+
+      <span className="flex-1 text-left">
+        {label}
+      </span>
+
+    </button>
   );
 }

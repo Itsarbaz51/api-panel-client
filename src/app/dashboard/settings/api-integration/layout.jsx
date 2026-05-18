@@ -37,15 +37,7 @@ export default function ApiIntegrationLayout({ children }) {
 
       {/* Header Section */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-1 bg-[#00b37e] rounded-full" />
-            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#00b37e]/80">Config</span>
-          </div>
-          <h1 className="text-4xl font-black tracking-tight text-[#0f172a]">
-            API <span className="text-[#00b37e]">Integration</span>
-          </h1>
-        </div>
+        
 
         {/* Floating Navigation (Animated Pill Style) */}
         <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">

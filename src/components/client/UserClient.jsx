@@ -70,8 +70,8 @@ export default function UserClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafb] p-4 md:p-10">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <>
+  
 
         {/* QUICK STATS */}
         <QuickStats
@@ -99,9 +99,7 @@ export default function UserClient() {
             ]}
         />
 
-        {/* MAIN CARD */}
-        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.03)] overflow-hidden">
-
+        
           {/* USERS TABLE */}
           <UsersTable
             users={filteredUsers}
@@ -119,10 +117,8 @@ export default function UserClient() {
             onDelete={handleDeleteUser}
           />
 
-          {/* FOOTER */}
-          
-        </div>
-      </div>
+        
+   
 
       {/* USER MODAL */}
       <UserModal
@@ -134,6 +130,6 @@ export default function UserClient() {
         onSubmit={handleAddUser}
         initialData={editingUser}
       />
-    </div>
+    </>
   );
 }

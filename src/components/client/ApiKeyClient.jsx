@@ -147,7 +147,7 @@ export default function ApiKeyClient() {
         {/* TABLE AREA */}
         <div className="bg-white rounded-4xl border border-slate-200/60 shadow-xl overflow-hidden">
 
-          <div className="p-6">
+          <div className="">
 
             <APIKeysTable
               keys={filteredKeys}
