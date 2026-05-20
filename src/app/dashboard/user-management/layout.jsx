@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import { Users, Building2 } from 'lucide-react';
 
-import Header from '@/components/ui/Header';
 import Tabs from '@/components/ui/Tabs';
 
 export default function UserManagementLayout({ children }) {
@@ -31,16 +30,13 @@ export default function UserManagementLayout({ children }) {
 			{/* BG GLOW */}
 			<div className="absolute top-0 left-0 h-75 w-75 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-			<Header
-				title="User Management"
-				subtitle="Manage users, roles, permissions, and subscription packages from one central dashboard."
-			/>
 			<Tabs tabs={tabs} activeTab={activeTab} />
 
 			{/* PAGE */}
 			<div className="animate-in fade-in slide-in-from-bottom-4 duration-500 mt-3">
 				{children}
 			</div>
+			
 		</div>
 	);
 }

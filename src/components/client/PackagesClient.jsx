@@ -1,14 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { RefreshCw, Package, CheckCircle, Ban, DollarSign } from 'lucide-react';
+
+import {
+	Package,
+	CheckCircle,
+	Ban,
+	DollarSign,
+	Plus,
+} from 'lucide-react';
+
 
 import PackagesTable from '@/components/tables/PackagesTable';
 import PackageModal from '@/components/modals/PackageModal';
+
 import QuickStats from '@/components/QuickStats';
 import Button from '@/components/ui/Button';
+import Header from '../ui/Header';
 
-export default function PackagesClient() {
+export default function PackagesClient({
+	tabs = [],
+	activeTab,
+}) {
 	/* ================= UI STATE ================= */
 
 	const [page, setPage] = useState(1);
@@ -36,7 +49,6 @@ export default function PackagesClient() {
 			status: 'ACTIVE',
 			createdAt: new Date(),
 		},
-
 		{
 			id: 2,
 			packageNumber: 'PKG-1002',
@@ -47,7 +59,6 @@ export default function PackagesClient() {
 			status: 'ACTIVE',
 			createdAt: new Date(),
 		},
-
 		{
 			id: 3,
 			packageNumber: 'PKG-1003',
@@ -64,11 +75,17 @@ export default function PackagesClient() {
 
 	const filteredPackages = packages.filter((pkg) => {
 		const matchSearch =
-			pkg.packageName.toLowerCase().includes(search.toLowerCase()) ||
-			pkg.packageNumber.toLowerCase().includes(search.toLowerCase());
+			pkg.packageName
+				.toLowerCase()
+				.includes(search.toLowerCase()) ||
+			pkg.packageNumber
+				.toLowerCase()
+				.includes(search.toLowerCase());
 
 		const matchStatus =
-			statusFilter === 'all' ? true : pkg.status === statusFilter;
+			statusFilter === 'all'
+				? true
+				: pkg.status === statusFilter;
 
 		return matchSearch && matchStatus;
 	});
@@ -80,32 +97,28 @@ export default function PackagesClient() {
 			title: 'Total Packages',
 			value: packages.length,
 			icon: Package,
-			iconColor: 'text-primary',
-			bgColor: 'bg-primary/10',
 		},
-
 		{
 			title: 'Active Packages',
-			value: packages.filter((p) => p.status === 'ACTIVE').length,
+			value: packages.filter(
+				(p) => p.status === 'ACTIVE'
+			).length,
 			icon: CheckCircle,
-			iconColor: 'text-success',
-			bgColor: 'bg-success/10',
 		},
-
 		{
 			title: 'Inactive Packages',
-			value: packages.filter((p) => p.status === 'INACTIVE').length,
+			value: packages.filter(
+				(p) => p.status === 'INACTIVE'
+			).length,
 			icon: Ban,
-			iconColor: 'text-destructive',
-			bgColor: 'bg-destructive/10',
 		},
-
 		{
 			title: 'Revenue Plans',
-			value: `$${packages.reduce((a, b) => a + b.price, 0)}`,
+			value: `$${packages.reduce(
+				(a, b) => a + b.price,
+				0
+			)}`,
 			icon: DollarSign,
-			iconColor: 'text-warning',
-			bgColor: 'bg-warning/10',
 		},
 	];
 
@@ -122,15 +135,22 @@ export default function PackagesClient() {
 	};
 
 	const handleDelete = (pkg) => {
-		setPackages((prev) => prev.filter((p) => p.id !== pkg.id));
+		setPackages((prev) =>
+			prev.filter((p) => p.id !== pkg.id)
+		);
 	};
 
 	const handleSubmit = (data) => {
 		if (editingPackage) {
 			setPackages((prev) =>
 				prev.map((p) =>
-					p.id === editingPackage.id ? { ...editingPackage, ...data } : p,
-				),
+					p.id === editingPackage.id
+						? {
+								...editingPackage,
+								...data,
+						  }
+						: p
+				)
 			);
 		} else {
 			setPackages((prev) => [
@@ -148,50 +168,63 @@ export default function PackagesClient() {
 		setEditingPackage(null);
 	};
 
-	/* ================= RENDER ================= */
-
 	return (
-		<>
-			<div className="mb-6 flex justify-end">
-				<Button variant="outline" icon={RefreshCw}>
-					Refresh
-				</Button>
-			</div>
+		<div className="space-y-8">
 
+			{/* HEADER */}
+			<Header
+				title="Packages Management"
+				subtitle="Manage subscription packages, pricing and plan access."
+				actions={
+					<Button
+						variant="primary"
+						className="bg-emerald-600 hover:bg-emerald-700 text-white"
+						leftIcon={<Plus size={18} />}
+						onClick={handleAdd}
+					>
+						Add Package
+					</Button>
+				}
+			>
+			</Header>
+
+			{/* QUICK STATS */}
 			<QuickStats stats={stats} />
 
-			<PackagesTable
-				packages={filteredPackages}
-				total={filteredPackages.length}
-				page={page}
-				perPage={perPage}
-				onPageChange={setPage}
-				search={search}
-				onSearch={(v) => {
-					setSearch(v);
-					setPage(1);
-				}}
-				statusFilter={statusFilter}
-				onStatusFilterChange={(v) => {
-					setStatusFilter(v);
-					setPage(1);
-				}}
-				onAddPackage={handleAdd}
-				onEdit={handleEdit}
-				onDelete={handleDelete}
-			/>
-
-			{openModal && (
-				<PackageModal
-					open={openModal}
-					onClose={() => {
-						setOpenModal(false);
-						setEditingPackage(null);
+			{/* TABLE */}
+			<div className="bg-white rounded-[32px] border border-slate-200/60 shadow-xl overflow-hidden">
+				<PackagesTable
+					packages={filteredPackages}
+					total={filteredPackages.length}
+					page={page}
+					perPage={perPage}
+					onPageChange={setPage}
+					search={search}
+					onSearch={(v) => {
+						setSearch(v);
+						setPage(1);
 					}}
-					onSubmit={handleSubmit}
-					initialData={editingPackage}
+					statusFilter={statusFilter}
+					onStatusFilterChange={(v) => {
+						setStatusFilter(v);
+						setPage(1);
+					}}
+					onAddPackage={handleAdd}
+					onEdit={handleEdit}
+					onDelete={handleDelete}
 				/>
-			)}
-		</>
+			</div>
+
+			{/* MODAL */}
+			<PackageModal
+				open={openModal}
+				onClose={() => {
+					setOpenModal(false);
+					setEditingPackage(null);
+				}}
+				onSubmit={handleSubmit}
+				initialData={editingPackage}
+			/>
+		</div>
 	);
 }

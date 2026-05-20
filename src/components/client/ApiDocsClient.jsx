@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import ApiHeader from "@/components/sections/api-docs/ApiHeader";
 
 import EndpointGrid from "@/components/sections/api-docs/EndpointGrid";
 
@@ -25,7 +24,7 @@ export default function ApiDocsClient() {
 	return (
 		<div className="min-h-screen bg-background p-6 space-y-6">
 
-			<ApiHeader />
+			
 
 			<EndpointGrid
 				endpoints={endpoints}

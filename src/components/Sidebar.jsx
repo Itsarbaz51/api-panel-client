@@ -25,7 +25,6 @@ import Button from "@/components/ui/Button";
 const menuItems = [
   { title: "API Overview", icon: LayoutDashboard, href: "/dashboard" },
   { title: "API Keys", icon: Key, href: "/dashboard/api-keys" },
-  { title: "API Docs", icon: Code2, href: "/dashboard/api-docs" },
   { title: "Logs & Traffic", icon: Activity, href: "/dashboard/logs-&-traffic" },
   { title: "Webhooks", icon: Webhook, href: "/dashboard/webhooks" },
   { title: "User-Management", icon: User, href: "/dashboard/user-management" },

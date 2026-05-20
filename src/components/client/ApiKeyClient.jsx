@@ -13,11 +13,11 @@ import {
 import QuickStats from "@/components/QuickStats";
 import Button from "@/components/ui/Button";
 import APIKeysTable from "@/components/tables/APIKeysTable";
+
 import { dummyUsers } from "../dummyData";
+import Header from "../ui/Header";
 
 export default function ApiKeyClient() {
-
-  // API KEYS STATE
   const [apiKeys, setApiKeys] = useState(dummyUsers);
 
   const [search, setSearch] = useState("");
@@ -25,7 +25,6 @@ export default function ApiKeyClient() {
 
   // FILTER
   const filteredKeys = apiKeys.filter((key) => {
-
     const matchesSearch =
       key.name.toLowerCase().includes(search.toLowerCase()) ||
       key.key.toLowerCase().includes(search.toLowerCase());
@@ -39,24 +38,15 @@ export default function ApiKeyClient() {
 
   // GENERATE KEY
   const handleGenerateKey = () => {
-
     const newKey = {
       id: Date.now().toString(),
-
       name: `API Key ${apiKeys.length + 1}`,
-
       key: `sk_live_${Math.random()
         .toString(36)
         .substring(2, 14)}`,
-
       status: "active",
-
-      created: new Date()
-        .toISOString()
-        .split("T")[0],
-
+      created: new Date().toISOString().split("T")[0],
       lastUsed: "Never",
-
       expiresIn: "90 days",
     };
 
@@ -65,7 +55,6 @@ export default function ApiKeyClient() {
 
   // DELETE KEY
   const handleDeleteKey = (id) => {
-
     setApiKeys((prev) =>
       prev.filter((item) => item.id !== id)
     );
@@ -73,33 +62,13 @@ export default function ApiKeyClient() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] p-6 md:p-10 font-sans">
-
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-
-          <div className="space-y-2">
-
-            <div className="flex items-center gap-2">
-
-              <div className="h-5 w-1.5 rounded-full bg-emerald-500" />
-
-              <span className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600">
-                Security Layer
-              </span>
-
-            </div>
-
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-              API Access Keys
-            </h1>
-
-          </div>
-
-          {/* BUTTON */}
-          <div className="flex p-1.5 bg-white border border-slate-200 shadow-sm rounded-2xl items-center gap-1">
-
+        <Header
+          title="API Access Keys"
+          subtitle="Manage, generate and monitor secure API keys for your platform."
+          actions={
             <Button
               variant="primary"
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-5"
@@ -108,9 +77,8 @@ export default function ApiKeyClient() {
             >
               Generate Key
             </Button>
-
-          </div>
-        </div>
+          }
+        />
 
         {/* QUICK STATS */}
         <QuickStats
@@ -144,26 +112,21 @@ export default function ApiKeyClient() {
           ]}
         />
 
-        {/* TABLE AREA */}
-        <div className="bg-white rounded-4xl border border-slate-200/60 shadow-xl overflow-hidden">
-
-          <div className="">
-
-            <APIKeysTable
-              keys={filteredKeys}
-              total={filteredKeys.length}
-              page={1}
-              perPage={10}
-              onPageChange={() => {}}
-              search={search}
-              onSearch={setSearch}
-              statusFilter={statusFilter}
-              onStatusFilterChange={setStatusFilter}
-              onGenerateKey={handleGenerateKey}
-              onDelete={handleDeleteKey}
-            />
-
-          </div>
+        {/* TABLE */}
+        <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-xl overflow-hidden mt-8">
+          <APIKeysTable
+            keys={filteredKeys}
+            total={filteredKeys.length}
+            page={1}
+            perPage={10}
+            onPageChange={() => {}}
+            search={search}
+            onSearch={setSearch}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+            onGenerateKey={handleGenerateKey}
+            onDelete={handleDeleteKey}
+          />
         </div>
       </div>
     </div>
