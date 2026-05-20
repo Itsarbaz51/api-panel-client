@@ -3,23 +3,21 @@
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 import Button from "@/components/ui/Button";
 
-import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
-
 const VARIANTS = {
   danger: {
     icon: AlertTriangle,
-    iconClass: "text-destructive",
-    titleClass: "text-destructive",
+    iconClass: "text-red-500",
+    titleClass: "text-red-600",
   },
   success: {
     icon: CheckCircle,
-    iconClass: "text-success",
-    titleClass: "text-success",
+    iconClass: "text-green-500",
+    titleClass: "text-green-600",
   },
   info: {
     icon: Info,
-    iconClass: "text-primary",
-    titleClass: "text-primary",
+    iconClass: "text-blue-500",
+    titleClass: "text-blue-600",
   },
 };
 
@@ -29,34 +27,25 @@ export default function ConfirmDialog({
   onConfirm,
   title = "Are you sure?",
   description,
-  confirmText = "Confirm",
+  confirmText = "",
   cancelText = "Cancel",
-  variant = "danger", // danger | success | info
+  variant = "danger",
   loading = false,
 }) {
-  useLockBodyScroll(open);
   if (!open) return null;
 
   const Icon = VARIANTS[variant]?.icon || AlertTriangle;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-8 backdrop-blur-lg ">
       <div className="w-full max-w-md rounded-xl border bg-card shadow-lg">
-        {/* HEADER */}
         <div className="p-6 text-center">
-          <div
-            className={
-              "mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted"
-            }
-          >
-            <Icon className={"h-6 w-6", VARIANTS[variant]?.iconClass} />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+            <Icon className={`h-6 w-6 ${VARIANTS[variant]?.iconClass}`} />
           </div>
 
           <h3
-            className={
-              "text-lg font-semibold",
-              VARIANTS[variant]?.titleClass
-            }
+            className={`text-lg font-semibold ${VARIANTS[variant]?.titleClass}`}
           >
             {title}
           </h3>
@@ -66,18 +55,16 @@ export default function ConfirmDialog({
           )}
         </div>
 
-        {/* ACTIONS */}
-        <div className="flex justify-end gap-3 border-t px-6 py-4">
-          <Button variant="ghost" onClick={onClose} disabled={loading}>
-            {cancelText}
-          </Button>
-
+        <div className={`flex justify-end gap-3 border-t px-6 py-4 `}>
           <Button
             variant={variant === "danger" ? "destructive" : "default"}
             onClick={onConfirm}
-            loading={loading}
+            {...(loading ? { loading: true } : {})}
           >
-            {confirmText}
+            {loading ? "Loading..." : confirmText && confirmText}
+          </Button>
+          <Button variant="ghost" onClick={onClose} disabled={loading}>
+            {cancelText}
           </Button>
         </div>
       </div>

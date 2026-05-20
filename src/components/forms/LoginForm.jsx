@@ -1,86 +1,155 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import Input from '@/components/ui/InputField';
-import Button from '@/components/ui/Button';
+import Input from "@/components/ui/InputField";
+import Button from "@/components/ui/Button";
 
-import { loginValidation } from '@/validation/loginValidation';
-import { getValidationErrors } from '@/utils/validationErrors';
+import { loginValidation } from "@/validation/loginValidation";
+import { getValidationErrors } from "@/utils/validationErrors";
+import Alert from "../ui/Alert";
+import ConfirmDialog from "../ConfirmDialog";
 
-export default function LoginForm({ onSubmit, onForgotPassword }) {
-	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
-	});
+export default function LoginForm({ onSubmit, onForgotPassword, loading }) {
+  const [formData, setFormData] = useState({
+    identify: "",
+    password: "",
+    latitude: null,
+    longitude: null,
+    accuracy: null,
+  });
 
-	const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const [locationLoading, setLocationLoading] = useState(true);
+  const [locationAllowed, setLocationAllowed] = useState(false);
+  const [locationError, setLocationError] = useState("");
+  const [locationDialog, setLocationDialog] = useState(false);
 
-	const handleChange = (e) => {
-		setFormData({
-			...formData,
-			[e.target.name]: e.target.value,
-		});
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
 
-		setErrors({
-			...errors,
-			[e.target.name]: '',
-		});
-	};
+    setErrors((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
+  };
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationLoading(false);
+      setLocationDialog(true);
+      return;
+    }
 
-		const result = loginValidation.safeParse(formData);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setFormData((prev) => ({
+          ...prev,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        }));
 
-		// validation fail
-		if (!result.success) {
-			setErrors(getValidationErrors(result.error.errors));
+        setLocationAllowed(true);
+        setLocationLoading(false);
+      },
+      () => {
+        setLocationAllowed(false);
+        setLocationLoading(false);
+        setLocationDialog(true);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      },
+    );
+  }, []);
 
-			return;
-		}
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-		// validation success
-		onSubmit(formData);
-	};
+    if (!locationAllowed) {
+      setLocationDialog(true);
+      return;
+    }
 
-	return (
-		<form onSubmit={handleSubmit} className="space-y-5">
-			<Input
-				type="email"
-				name="email"
-				label="Email"
-				placeholder="Enter your email"
-				value={formData.email}
-				onChange={handleChange}
-				error={errors.email}
-				required
-			/>
+    const result = loginValidation.safeParse(formData);
 
-			<Input
-				type="password"
-				name="password"
-				label="Password"
-				placeholder="Enter your password"
-				value={formData.password}
-				onChange={handleChange}
-				error={errors.password}
-				required
-			/>
+    if (!result.success) {
+      setErrors(getValidationErrors(result.error.issues));
+      return;
+    }
 
-			<div className="flex justify-end">
-				<Button
-					type="button"
-					variant="text"
-					onClick={onForgotPassword}
-					className="text-sm text-[#10a37f] hover:text-[#0e8a6b] transition">
-					Forgot Password?
-				</Button>
-			</div>
+    onSubmit(formData);
+  };
 
-			<Button type="submit" variant="primary" size="lg" fullWidth>
-				Login
-			</Button>
-		</form>
-	);
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {locationError && (
+        <Alert type="error" title="Location Permission Required">
+          {locationError}
+        </Alert>
+      )}
+      {locationLoading && (
+        <div className="text-sm text-blue-600">Getting your location...</div>
+      )}
+
+      <ConfirmDialog
+        open={locationDialog}
+        onClose={() => setLocationDialog(false)}
+        onConfirm={() => {
+          setLocationDialog(false);
+          window.location.reload();
+        }}
+        variant="danger"
+        title="Location Permission Required"
+        description="Location access is required to login. Please allow location permission and try again."
+        // confirmText="Retry"
+        cancelText="Close"
+      />
+
+      <Input
+        type="text"
+        name="identify"
+        label="Email / Username / RegistrationNumber"
+        placeholder="Enter email or username"
+        value={formData.identify}
+        onChange={handleChange}
+        error={errors.identify}
+      />
+
+      <Input
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="Enter password"
+        value={formData.password}
+        onChange={handleChange}
+        error={errors.password}
+      />
+
+      <div className="flex justify-end">
+        <Button type="button" variant="text" onClick={onForgotPassword}>
+          Forgot Password?
+        </Button>
+      </div>
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        fullWidth
+        disabled={loading || locationLoading || !locationAllowed}
+      >
+        {locationLoading
+          ? "Getting Location..."
+          : loading
+            ? "Logging..."
+            : "Login"}
+      </Button>
+    </form>
+  );
 }

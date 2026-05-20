@@ -1,9 +1,9 @@
-export const getValidationErrors = (errors) => {
-	const fieldErrors = {};
+export const getValidationErrors = (issues = []) => {
+  const formatted = {};
 
-	errors.forEach((err) => {
-		fieldErrors[err.path[0]] = err.message;
-	});
+  issues.forEach((issue) => {
+    formatted[issue.path[0]] = issue.message;
+  });
 
-	return fieldErrors;
+  return formatted;
 };

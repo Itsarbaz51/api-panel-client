@@ -1,35 +1,70 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import LoginModal from '../modals/LoginModal';
-import ForgotPasswordModal from '@/components/modals/ForgotPasswordModal';
+import LoginModal from "../modals/LoginModal";
+import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";
+import ConfirmDialog from "@/components/ConfirmDialog";
+
+import { setUser } from "@/store/authSlice";
+import { useLogin } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function LoginClient() {
-	const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
 
-	const handleLogin = async (data) => {
-		console.log('login', data);
-	};
+  const [errorDialog, setErrorDialog] = useState({
+    open: false,
+    message: "",
+  });
 
-	const handleForgotPasswordSubmit = async (data) => {
-		console.log('forgot password', data);
+  const dispatch = useDispatch();
+  const loginMutation = useLogin();
+  const router = useRouter();
 
-		// api call here
-	};
+  const handleLogin = async (data) => {
+    try {
+      const res = await loginMutation.mutateAsync(data);
+      console.log(res);
 
-	return (
-		<div className="min-h-screen bg-[#76c8b1] flex items-center justify-center p-4">
-			<LoginModal
-				handleLogin={handleLogin}
-				onForgotPassword={() => setForgotOpen(true)}
-			/>
+      dispatch(setUser(res.data));
+      router.push("/dashboard");
+    } catch (err) {
+      console.log(err);
+      setErrorDialog({
+        open: true,
+        message: err?.response?.data?.message || err?.message || "Login failed",
+      });
+    }
+  };
 
-			<ForgotPasswordModal
-				isOpen={forgotOpen}
-				onClose={() => setForgotOpen(false)}
-				onSubmit={handleForgotPasswordSubmit}
-			/>
-		</div>
-	);
+  return (
+    <div className="min-h-screen bg-[#76c8b1] flex items-center justify-center p-4">
+      <LoginModal
+        handleLogin={handleLogin}
+        onForgotPassword={() => setForgotOpen(true)}
+        loading={loginMutation.isPending}
+      />
+
+      <ForgotPasswordModal
+        isOpen={forgotOpen}
+        onClose={() => setForgotOpen(false)}
+      />
+
+      <ConfirmDialog
+        open={errorDialog.open}
+        onClose={() =>
+          setErrorDialog({
+            open: false,
+            message: "",
+          })
+        }
+        variant="danger"
+        title="Login Failed"
+        description={errorDialog.message}
+        cancelText="Close"
+      />
+    </div>
+  );
 }
