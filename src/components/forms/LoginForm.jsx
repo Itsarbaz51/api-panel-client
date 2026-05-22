@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 import Input from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -24,6 +25,9 @@ export default function LoginForm({ onSubmit, onForgotPassword, loading }) {
   const [locationAllowed, setLocationAllowed] = useState(false);
   const [locationError, setLocationError] = useState("");
   const [locationDialog, setLocationDialog] = useState(false);
+  
+  // --- Password Visibility State ---
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -121,15 +125,28 @@ export default function LoginForm({ onSubmit, onForgotPassword, loading }) {
         error={errors.identify}
       />
 
-      <Input
-        type="password"
-        name="password"
-        label="Password"
-        placeholder="Enter password"
-        value={formData.password}
-        onChange={handleChange}
-        error={errors.password}
-      />
+      {/* --- Password Input with Visibility Toggle --- */}
+      <div className="relative">
+        <Input
+          type={showPassword ? "text" : "password"}
+          name="password"
+          label="Password"
+          placeholder="Enter password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          // Adjusted `top-[34px]` to align with standard input heights accounting for labels.
+          // You may need to tweak this slightly depending on your custom <Input /> component's label height.
+          className="absolute right-3 top-[34px] p-1 text-slate-400 hover:text-slate-600 transition-colors"
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+        </button>
+      </div>
 
       <div className="flex justify-end">
         <Button type="button" variant="text" onClick={onForgotPassword}>
