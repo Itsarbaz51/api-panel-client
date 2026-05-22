@@ -1,230 +1,241 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { Package, Plus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+
+import PackagesTable from "@/components/tables/PackagesTable";
+import PackageModal from "@/components/modals/PackageModal";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import QuickStats from "@/components/QuickStats";
+import Button from "@/components/ui/Button";
+import Header from "../ui/Header";
+
+import { useCreate, useDelete, useGetAll, useUpdate } from "@/hooks/usePackage";
 
 import {
-	Package,
-	CheckCircle,
-	Ban,
-	DollarSign,
-	Plus,
-} from 'lucide-react';
+  setPackages,
+  addPackage,
+  updatePackage,
+  removePackage,
+} from "@/store/packageSlice";
 
+export default function PackagesClient() {
+  /* ================= STATE ================= */
 
-import PackagesTable from '@/components/tables/PackagesTable';
-import PackageModal from '@/components/modals/PackageModal';
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [editingPackage, setEditingPackage] = useState(null);
 
-import QuickStats from '@/components/QuickStats';
-import Button from '@/components/ui/Button';
-import Header from '../ui/Header';
+  const [errorDialog, setErrorDialog] = useState({
+    open: false,
+    message: "",
+  });
 
-export default function PackagesClient({
-	tabs = [],
-	activeTab,
-}) {
-	/* ================= UI STATE ================= */
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    data: null,
+  });
 
-	const [page, setPage] = useState(1);
+  const perPage = 10;
 
-	const [search, setSearch] = useState('');
+  /* ================= REDUX ================= */
 
-	const [statusFilter, setStatusFilter] = useState('all');
+  const dispatch = useDispatch();
+  const packages = useSelector((state) => state.package.packages) || [];
 
-	const [openModal, setOpenModal] = useState(false);
+  /* ================= API ================= */
 
-	const [editingPackage, setEditingPackage] = useState(null);
+  const getAllQuery = useGetAll({
+    page,
+    limit: perPage,
+    search,
+  });
 
-	const perPage = 10;
+  const createMutation = useCreate();
 
-	/* ================= DUMMY DATA ================= */
+  const updateMutation = useUpdate();
 
-	const [packages, setPackages] = useState([
-		{
-			id: 1,
-			packageNumber: 'PKG-1001',
-			packageName: 'Starter Plan',
-			price: 19,
-			usersLimit: 5,
-			storage: '10 GB',
-			status: 'ACTIVE',
-			createdAt: new Date(),
-		},
-		{
-			id: 2,
-			packageNumber: 'PKG-1002',
-			packageName: 'Professional Plan',
-			price: 49,
-			usersLimit: 25,
-			storage: '50 GB',
-			status: 'ACTIVE',
-			createdAt: new Date(),
-		},
-		{
-			id: 3,
-			packageNumber: 'PKG-1003',
-			packageName: 'Enterprise Plan',
-			price: 99,
-			usersLimit: 100,
-			storage: '200 GB',
-			status: 'INACTIVE',
-			createdAt: new Date(),
-		},
-	]);
+  const deleteMutation = useDelete();
 
-	/* ================= FILTER ================= */
+  /* ================= SYNC ================= */
 
-	const filteredPackages = packages.filter((pkg) => {
-		const matchSearch =
-			pkg.packageName
-				.toLowerCase()
-				.includes(search.toLowerCase()) ||
-			pkg.packageNumber
-				.toLowerCase()
-				.includes(search.toLowerCase());
+  useEffect(() => {
+    if (getAllQuery.data?.data?.data) {
+      dispatch(setPackages(getAllQuery.data.data.data));
+    }
+  }, [getAllQuery.data, dispatch]);
 
-		const matchStatus =
-			statusFilter === 'all'
-				? true
-				: pkg.status === statusFilter;
+  /* ================= STATS ================= */
 
-		return matchSearch && matchStatus;
-	});
+  const stats = [
+    {
+      title: "Total Packages",
+      value: getAllQuery.data?.data?.pagination?.total || 0,
+      icon: Package,
+    },
+  ];
 
-	/* ================= STATS ================= */
+  /* ================= ACTIONS ================= */
 
-	const stats = [
-		{
-			title: 'Total Packages',
-			value: packages.length,
-			icon: Package,
-		},
-		{
-			title: 'Active Packages',
-			value: packages.filter(
-				(p) => p.status === 'ACTIVE'
-			).length,
-			icon: CheckCircle,
-		},
-		{
-			title: 'Inactive Packages',
-			value: packages.filter(
-				(p) => p.status === 'INACTIVE'
-			).length,
-			icon: Ban,
-		},
-		{
-			title: 'Revenue Plans',
-			value: `$${packages.reduce(
-				(a, b) => a + b.price,
-				0
-			)}`,
-			icon: DollarSign,
-		},
-	];
+  const closeModal = () => {
+    setOpenModal(false);
+    setEditingPackage(null);
+  };
 
-	/* ================= ACTIONS ================= */
+  const handleAdd = () => {
+    setEditingPackage(null);
+    setOpenModal(true);
+  };
 
-	const handleAdd = () => {
-		setEditingPackage(null);
-		setOpenModal(true);
-	};
+  const handleEdit = (pkg) => {
+    setEditingPackage(pkg);
+    setOpenModal(true);
+  };
 
-	const handleEdit = (pkg) => {
-		setEditingPackage(pkg);
-		setOpenModal(true);
-	};
+  const handleDelete = (pkg) => {
+    setDeleteDialog({
+      open: true,
+      data: pkg,
+    });
+  };
 
-	const handleDelete = (pkg) => {
-		setPackages((prev) =>
-			prev.filter((p) => p.id !== pkg.id)
-		);
-	};
+  /* ================= DELETE ================= */
 
-	const handleSubmit = (data) => {
-		if (editingPackage) {
-			setPackages((prev) =>
-				prev.map((p) =>
-					p.id === editingPackage.id
-						? {
-								...editingPackage,
-								...data,
-						  }
-						: p
-				)
-			);
-		} else {
-			setPackages((prev) => [
-				...prev,
-				{
-					id: Date.now(),
-					packageNumber: `PKG-${Date.now()}`,
-					createdAt: new Date(),
-					...data,
-				},
-			]);
-		}
+  const confirmDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(deleteDialog.data.id);
+      dispatch(removePackage(deleteDialog.data.id));
+      setDeleteDialog({
+        open: false,
+        data: null,
+      });
+    } catch (err) {
+      setErrorDialog({
+        open: true,
+        message:
+          err?.response?.data?.message || err?.message || "Delete failed",
+      });
+    }
+  };
 
-		setOpenModal(false);
-		setEditingPackage(null);
-	};
+  /* ================= SUBMIT ================= */
 
-	return (
-		<div className="space-y-8">
+  const handleSubmit = async (data) => {
+    try {
+      if (editingPackage) {
+        const res = await updateMutation.mutateAsync({
+          id: editingPackage.id,
+          payload: data,
+        });
 
-			{/* HEADER */}
-			<Header
-				title="Packages Management"
-				subtitle="Manage subscription packages, pricing and plan access."
-				actions={
-					<Button
-						variant="primary"
-						className="bg-emerald-600 hover:bg-emerald-700 text-white"
-						leftIcon={<Plus size={18} />}
-						onClick={handleAdd}
-					>
-						Add Package
-					</Button>
-				}
-			>
-			</Header>
+        dispatch(updatePackage(res.data));
+      } else {
+        const res = await createMutation.mutateAsync(data);
 
-			{/* QUICK STATS */}
-			<QuickStats stats={stats} />
+        dispatch(addPackage(res.data));
+      }
 
-			{/* TABLE */}
-			<div className="bg-white rounded-[32px] border border-slate-200/60 shadow-xl overflow-hidden">
-				<PackagesTable
-					packages={filteredPackages}
-					total={filteredPackages.length}
-					page={page}
-					perPage={perPage}
-					onPageChange={setPage}
-					search={search}
-					onSearch={(v) => {
-						setSearch(v);
-						setPage(1);
-					}}
-					statusFilter={statusFilter}
-					onStatusFilterChange={(v) => {
-						setStatusFilter(v);
-						setPage(1);
-					}}
-					onAddPackage={handleAdd}
-					onEdit={handleEdit}
-					onDelete={handleDelete}
-				/>
-			</div>
+      closeModal();
+    } catch (err) {
+      setErrorDialog({
+        open: true,
+        message:
+          err?.response?.data?.message ||
+          err?.message ||
+          "Package action failed",
+      });
+    }
+  };
 
-			{/* MODAL */}
-			<PackageModal
-				open={openModal}
-				onClose={() => {
-					setOpenModal(false);
-					setEditingPackage(null);
-				}}
-				onSubmit={handleSubmit}
-				initialData={editingPackage}
-			/>
-		</div>
-	);
+  return (
+    <div className="space-y-8">
+      {/* HEADER */}
+
+      <Header
+        title="Packages Management"
+        subtitle="Manage subscription packages, pricing and plan access."
+        actions={
+          <Button
+            variant="primary"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            leftIcon={<Plus size={18} />}
+            onClick={handleAdd}
+          >
+            Add Package
+          </Button>
+        }
+      />
+
+      {/* STATS */}
+
+      <QuickStats stats={stats} />
+
+      {/* TABLE */}
+
+      <div className="bg-white rounded-4xl border border-slate-200/60 shadow-xl overflow-hidden">
+        <PackagesTable
+          packages={packages}
+          total={getAllQuery.data?.data?.pagination?.total || 0}
+          page={page}
+          perPage={perPage}
+          loading={getAllQuery.isLoading}
+          onPageChange={setPage}
+          search={search}
+          onSearch={(value) => {
+            setSearch(value);
+            setPage(1);
+          }}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
+
+      {/* MODAL */}
+
+      <PackageModal
+        open={openModal}
+        onClose={closeModal}
+        onSubmit={handleSubmit}
+        initialData={editingPackage}
+        loading={createMutation.isPending || updateMutation.isPending}
+      />
+
+      {/* ERROR */}
+
+      <ConfirmDialog
+        open={errorDialog.open}
+        onClose={() =>
+          setErrorDialog({
+            open: false,
+            message: "",
+          })
+        }
+        variant="danger"
+        title="Action Failed"
+        description={errorDialog.message}
+        cancelText="Close"
+      />
+
+      {/* DELETE */}
+
+      <ConfirmDialog
+        open={deleteDialog.open}
+        onClose={() =>
+          setDeleteDialog({
+            open: false,
+            data: null,
+          })
+        }
+        onConfirm={confirmDelete}
+        loading={deleteMutation.isPending}
+        variant="danger"
+        title="Delete Package"
+        description="Are you sure you want to delete this package?"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </div>
+  );
 }

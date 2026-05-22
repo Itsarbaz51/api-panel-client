@@ -14,9 +14,9 @@ export default function TableBody({
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-border">
-            {columns.map((col) => (
+            {columns.map((col, i) => (
               <th
-                key={col.key}
+                key={col.key || i}
                 className="px-6 py-4 text-left text-sm text-muted-foreground"
               >
                 {col.label}
@@ -39,8 +39,9 @@ export default function TableBody({
           ) : (
             data.map((row, index) => (
               <TableRow
-                key={index}
+                key={row.id || index}
                 row={row}
+                index={index}
                 columns={columns}
                 onView={onView}
                 onEdit={onEdit}

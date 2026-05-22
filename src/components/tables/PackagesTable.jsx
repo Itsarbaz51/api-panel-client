@@ -1,137 +1,107 @@
-'use client';
+"use client";
 
-import { Package, Download } from 'lucide-react';
+import { Package, Download, Pencil, Trash2 } from "lucide-react";
 
-import TableShell from './core/TableShell';
-import TableHeader from './core/TableHeader';
-import TableBody from './core/TableBody';
-import TablePagination from './core/TablePagination';
-
-const statusOptions = [
-	{ label: 'All', value: 'all' },
-	{ label: 'Active', value: 'ACTIVE' },
-	{ label: 'Inactive', value: 'INACTIVE' },
-];
-
-const columns = [
-	{
-		key: 'packageName',
-		label: 'Package',
-		render: (row) => (
-			<div className="flex items-center gap-3">
-				<div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-					<Package className="h-5 w-5 text-primary" />
-				</div>
-
-				<div>
-					<p className="font-medium">{row.packageName}</p>
-
-					<p className="text-xs text-muted-foreground">{row.packageNumber}</p>
-				</div>
-			</div>
-		),
-	},
-
-	{
-		key: 'price',
-		label: 'Price',
-		render: (row) => <span className="font-semibold">${row.price}</span>,
-	},
-
-	{
-		key: 'usersLimit',
-		label: 'Users',
-		render: (row) => <span>{row.usersLimit} Users</span>,
-	},
-
-	{
-		key: 'storage',
-		label: 'Storage',
-	},
-
-	{
-		key: 'status',
-		label: 'Status',
-		render: (row) => (
-			<span
-				className={`px-2 py-1 rounded-full text-xs font-medium border ${
-					row.status === 'ACTIVE'
-						? 'bg-success/10 text-success border-success/20'
-						: 'bg-destructive/10 text-destructive border-destructive/20'
-				}`}>
-				{row.status}
-			</span>
-		),
-	},
-
-	{
-		key: 'createdAt',
-		label: 'Created At',
-		render: (row) => (
-			<span className="text-sm text-muted-foreground">
-				{new Date(row.createdAt).toLocaleDateString()}
-			</span>
-		),
-	},
-
-	{
-		key: 'actions',
-		label: 'Actions',
-	},
-];
+import TableShell from "./core/TableShell";
+import TableHeader from "./core/TableHeader";
+import TableBody from "./core/TableBody";
+import TablePagination from "./core/TablePagination";
 
 export default function PackagesTable({
-	packages,
-	total,
-	page,
-	perPage,
-	onPageChange,
-	search,
-	onSearch,
-	statusFilter,
-	onStatusFilterChange,
-	onAddPackage,
-	onEdit,
-	onDelete,
+  packages,
+  total,
+  page,
+  perPage,
+  onPageChange,
+  search,
+  onSearch,
+  onAddPackage,
+  onEdit,
+  onDelete,
 }) {
-	const filters = [
-		{
-			value: statusFilter,
-			onChange: onStatusFilterChange,
-			placeholder: 'Status',
-			options: statusOptions,
-		},
-	];
+  const columns = [
+    {
+      key: "srNo",
+      label: "#",
 
-	return (
-		<TableShell>
-			<TableHeader
-				title="All Packages"
-				subtitle={`${total} packages found`}
-				search={search}
-				setSearch={onSearch}
-				searchPlaceholder="Search packages..."
-				// filters={filters}
-				onAdd={onAddPackage}
-				addLabel="Add Package"
-				addIcon={Package}
-				onExport={() => console.log('Export')}
-				exportIcon={Download}
-			/>
+      render: (row, index) => (
+        <p className="font-medium">{(page - 1) * perPage + index + 1}</p>
+      ),
+    },
 
-			<TableBody
-				columns={columns}
-				data={packages}
-				onEdit={onEdit}
-				onDelete={onDelete}
-			/>
+    {
+      key: "name",
+      label: "Name",
 
-			<TablePagination
-				page={page}
-				setPage={onPageChange}
-				total={total}
-				perPage={perPage}
-			/>
-		</TableShell>
-	);
+      render: (row) => <p className="font-medium">{row.name}</p>,
+    },
+
+    {
+      key: "createdAt",
+      label: "Created At",
+
+      render: (row) => (
+        <span>{new Date(row.createdAt).toLocaleDateString()}</span>
+      ),
+    },
+
+    {
+      key: "updatedAt",
+      label: "Updated At",
+
+      render: (row) => (
+        <span>{new Date(row.updatedAt).toLocaleDateString()}</span>
+      ),
+    },
+
+    {
+      key: "action",
+      label: "Action",
+
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onEdit(row)}
+            className="rounded-lg bg-blue-50 p-2 text-blue-600 hover:bg-blue-100 transition"
+          >
+            <Pencil size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onDelete(row)}
+            className="rounded-lg bg-red-50 p-2 text-red-600 hover:bg-red-100 transition"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <TableShell>
+      <TableHeader
+        title="All Packages"
+        subtitle={`${total} packages found`}
+        search={search}
+        setSearch={onSearch}
+        searchPlaceholder="Search packages..."
+        onAdd={onAddPackage}
+        addLabel="Add Package"
+        addIcon={Package}
+        exportIcon={Download}
+      />
+
+      <TableBody columns={columns} data={packages} />
+
+      <TablePagination
+        page={page}
+        setPage={onPageChange}
+        total={total}
+        perPage={perPage}
+      />
+    </TableShell>
+  );
 }

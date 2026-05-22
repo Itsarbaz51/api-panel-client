@@ -3,6 +3,7 @@ import RowActions from "./RowActions";
 export default function TableRow({
   columns,
   row,
+  index,
   onView,
   onEdit,
   onDelete,
@@ -25,7 +26,7 @@ export default function TableRow({
               extraActions={resolvedExtraActions}
             />
           ) : col.render ? (
-            col.render(row)
+            col.render(row, index)
           ) : (
             row[col.key]
           )}

@@ -16,7 +16,7 @@ export default function UserManagementLayout({ children }) {
 			href: '/dashboard/user-management/users',
 		},
 		{
-			label: 'Service Packages',
+			label: 'Packages',
 			value: 'packages',
 			icon: Building2,
 			href: '/dashboard/user-management/packages',
