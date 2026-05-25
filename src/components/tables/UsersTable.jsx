@@ -7,89 +7,74 @@ import TableHeader from './core/TableHeader';
 import TableBody from './core/TableBody';
 import TablePagination from './core/TablePagination';
 
-const statusOptions = [
-	{ label: 'All', value: 'all' },
-	{ label: 'Active', value: 'ACTIVE' },
-	{ label: 'Inactive', value: 'INACTIVE' },
-];
-
-const columns = [
-	{
-		key: 'name',
-		label: 'User',
-		render: (row) => (
-			<div className="flex items-center gap-3">
-				<div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-					<User className="h-5 w-5 text-primary" />
-				</div>
-
-				<div>
-					<p className="font-medium">{row.name}</p>
-
-					<p className="text-xs text-muted-foreground">
-						{row.email}
-					</p>
-				</div>
-			</div>
-		),
-	},
-
-	{
-		key: 'role',
-		label: 'Role',
-	},
-
-	{
-		key: 'status',
-		label: 'Status',
-		render: (row) => (
-			<span
-				className={`px-2 py-1 rounded-full text-xs font-medium border ${
-					row.status === 'ACTIVE'
-						? 'bg-success/10 text-success border-success/20'
-						: 'bg-destructive/10 text-destructive border-destructive/20'
-				}`}>
-				{row.status}
-			</span>
-		),
-	},
-
-	{
-		key: 'joined',
-		label: 'Joined',
-		render: (row) => (
-			<span className="text-sm text-muted-foreground">
-				{row.joined}
-			</span>
-		),
-	},
-
-	{
-		key: 'actions',
-		label: 'Actions',
-	},
-];
-
 export default function UsersTable({
 	users,
 	total,
 	page,
 	perPage,
-	onPageChange,
 	search,
 	onSearch,
-	statusFilter,
-	onStatusFilterChange,
-	onAddUser,
+	onPageChange,
+	onView,
 	onEdit,
 	onDelete,
+	onViewPassword,
 }) {
-	const filters = [
+	const columns = [
 		{
-			value: statusFilter,
-			onChange: onStatusFilterChange,
-			placeholder: 'Status',
-			options: statusOptions,
+			key: 'user',
+
+			label: 'User',
+
+			render: (row) => (
+				<div className="flex gap-3">
+					<div className="h-10 w-10 rounded-xl bg-primary/10 flex justify-center items-center">
+						<User />
+					</div>
+
+					<div>
+						<div>{row.fullName}</div>
+
+						<div className="text-xs">{row.email}</div>
+					</div>
+				</div>
+			),
+		},
+
+		{
+			key: 'password',
+
+			label: 'Password',
+
+			render: (row) => (
+				<button
+					onClick={() => onViewPassword(row)}
+					className="px-3 py-2 rounded-lg bg-green-600 text-white">
+					View Password
+				</button>
+			),
+		},
+
+		{
+			key: 'status',
+
+			label: 'Status',
+
+			render: (row) => <span>{row.status}</span>,
+		},
+
+		{
+			key: 'joined',
+
+			label: 'Joined',
+
+			render: (row) => new Date(row.createdAt).toLocaleDateString(),
+		},
+
+		{
+			key: 'actions',
+
+			label: 'Actions',
 		},
 	];
 
@@ -101,17 +86,13 @@ export default function UsersTable({
 				search={search}
 				setSearch={onSearch}
 				searchPlaceholder="Search users..."
-				filters={filters}
-				onAdd={onAddUser}
-				addLabel="Add User"
-				addIcon={User}
-				onExport={() => console.log('Export')}
 				exportIcon={Download}
 			/>
 
 			<TableBody
 				columns={columns}
 				data={users}
+				onView={onView}
 				onEdit={onEdit}
 				onDelete={onDelete}
 			/>

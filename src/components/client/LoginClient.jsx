@@ -1,222 +1,115 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
-import LoginModal from "../modals/LoginModal";
-import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";
-import ConfirmDialog from "@/components/ConfirmDialog";
+import LoginModal from '@/components/modals/LoginModal';
+import ForgotPasswordModal from '@/components/modals/ForgotPasswordModal';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
-import { setUser } from "@/store/authSlice";
+import { setUser } from '@/store/authSlice';
 
-import {
-  useLogin,
-  useForgotPassword,
-} from "@/hooks/useAuth";
-
-import { useRouter } from "next/navigation";
+import { useLogin, useForgotPassword } from '@/hooks/useAuth';
 
 export default function LoginClient() {
-  const [forgotOpen, setForgotOpen] =
-    useState(false);
+	const dispatch = useDispatch();
+	const router = useRouter();
 
-  const [errorDialog, setErrorDialog] =
-    useState({
-      open: false,
-      message: "",
-    });
+	const [forgotOpen, setForgotOpen] = useState(false);
 
-  const dispatch = useDispatch();
+	const [errorDialog, setErrorDialog] = useState({
+		open: false,
+		message: '',
+	});
 
-  const loginMutation =
-    useLogin();
+	const loginMutation = useLogin();
 
-  const forgotMutation =
-    useForgotPassword();
+	const forgotMutation = useForgotPassword();
 
-  const router =
-    useRouter();
+	// LOGIN
 
+	const handleLogin = async (data) => {
+		try {
+			const res = await loginMutation.mutateAsync(data);
 
+			console.log('LOGIN RESPONSE:', res);
 
-  // LOGIN
+			dispatch(setUser(res?.data || res?.user));
 
-  const handleLogin =
-    async (
-      data
-    ) => {
-      try {
-        const res =
-          await loginMutation.mutateAsync(
-            data
-          );
+			router.replace('/dashboard');
+		} catch (err) {
+			console.log(err);
 
-        console.log(
-          res
-        );
+			setErrorDialog({
+				open: true,
 
-        dispatch(
-          setUser(
-            res.data
-          )
-        );
+				message: err?.response?.data?.message || err?.message || 'Login failed',
+			});
+		}
+	};
 
-        router.push(
-          "/dashboard"
-        );
+	// FORGOT PASSWORD
 
-      } catch (
-        err
-      ) {
+	const handleForgotPassword = async (data) => {
+		try {
+			const res = await forgotMutation.mutateAsync(data);
 
-        console.log(
-          err
-        );
+			setErrorDialog({
+				open: true,
 
-        setErrorDialog({
-          open: true,
+				message: res?.message || 'Reset link sent',
+			});
 
-          message:
-            err
-              ?.response
-              ?.data
-              ?.message ||
+			setForgotOpen(false);
+		} catch (err) {
+			setErrorDialog({
+				open: true,
 
-            err
-              ?.message ||
+				message:
+					err?.response?.data?.message ||
+					err?.message ||
+					'Forgot password failed',
+			});
+		}
+	};
 
-            "Login failed",
-        });
+	return (
+		<div
+			className="
+      min-h-screen
+      bg-[#76c8b1]
+      flex
+      items-center
+      justify-center
+      p-4
+    ">
+			<LoginModal
+				handleLogin={handleLogin}
+				loading={loginMutation.isPending}
+				onForgotPassword={() => setForgotOpen(true)}
+			/>
 
-      }
-    };
+			<ForgotPasswordModal
+				isOpen={forgotOpen}
+				onClose={() => setForgotOpen(false)}
+				onSubmit={handleForgotPassword}
+				loading={forgotMutation.isPending}
+			/>
 
-
-
-  // FORGOT PASSWORD
-
-  const handleForgotPassword =
-    async (
-      data
-    ) => {
-      try {
-
-        const res =
-          await forgotMutation.mutateAsync(
-            data
-          );
-
-        console.log(
-          res
-        );
-
-        setErrorDialog({
-          open: true,
-
-          message:
-            res?.message ||
-
-            "Reset password link sent",
-        });
-
-        setForgotOpen(
-          false
-        );
-
-      } catch (
-        err
-      ) {
-
-        console.log(
-          err
-        );
-
-        setErrorDialog({
-          open: true,
-
-          message:
-            err
-              ?.response
-              ?.data
-              ?.message ||
-
-            err
-              ?.message ||
-
-            "Forgot password failed",
-        });
-
-      }
-    };
-
-
-
-  return (
-    <div className="min-h-screen bg-[#76c8b1] flex items-center justify-center p-4">
-
-      <LoginModal
-        handleLogin={
-          handleLogin
-        }
-
-        onForgotPassword={() =>
-          setForgotOpen(
-            true
-          )
-        }
-
-        loading={
-          loginMutation.isPending
-        }
-      />
-
-
-
-      <ForgotPasswordModal
-        isOpen={
-          forgotOpen
-        }
-
-        onClose={() =>
-          setForgotOpen(
-            false
-          )
-        }
-
-        onSubmit={
-          handleForgotPassword
-        }
-
-        loading={
-          forgotMutation.isPending
-        }
-      />
-
-
-
-      <ConfirmDialog
-        open={
-          errorDialog.open
-        }
-
-        onClose={() =>
-          setErrorDialog({
-            open: false,
-            message: "",
-          })
-        }
-
-        variant="danger"
-
-        title="Notification"
-
-        description={
-          errorDialog.message
-        }
-
-        cancelText="Close"
-      />
-
-    </div>
-  );
+			<ConfirmDialog
+				open={errorDialog.open}
+				onClose={() =>
+					setErrorDialog({
+						open: false,
+						message: '',
+					})
+				}
+				title="Notification"
+				variant="danger"
+				description={errorDialog.message}
+				cancelText="Close"
+			/>
+		</div>
+	);
 }
