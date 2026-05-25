@@ -9,6 +9,7 @@ import UserModal from "../modals/UserModal";
 import View from "../ui/View";
 import Header from "../ui/Header";
 import Button from "@/components/ui/Button";
+import CredentialsModal from "../ui/Credentials";
 
 import {
   useGetAllUsers,
@@ -19,23 +20,15 @@ import {
 } from "@/hooks/useUser";
 
 import { useGetAll } from "@/hooks/usePackage";
-import CredentialsModal from "../ui/Credentials";
 
 export default function UserClient() {
   const [searchTerm, setSearchTerm] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-
   const [openModal, setOpenModal] = useState(false);
-
   const [viewOpen, setViewOpen] = useState(false);
-
   const [editingUser, setEditingUser] = useState(null);
-
   const [viewUser, setViewUser] = useState(null);
-
   const [credentialOpen, setCredentialOpen] = useState(false);
-
   const [credentials, setCredentials] = useState(null);
 
   const limit = 6;
@@ -57,11 +50,8 @@ export default function UserClient() {
   });
 
   const createUser = useCreateUser();
-
   const updateUser = useUpdateUser();
-
   const getOneUser = useGetOneUser();
-
   const getCredentials = useGetCredentials();
 
   const allUsers = usersResponse?.data || [];
@@ -75,11 +65,11 @@ export default function UserClient() {
   const total = filteredUsers.length;
 
   const activeUsers = filteredUsers.filter(
-    (user) => user?.status === "ACTIVE",
+    (user) => user.status === "ACTIVE",
   ).length;
 
   const inactiveUsers = filteredUsers.filter(
-    (user) => user?.status === "IN_ACTIVE",
+    (user) => user.status === "IN_ACTIVE",
   ).length;
 
   const users = filteredUsers.slice(
@@ -89,39 +79,29 @@ export default function UserClient() {
 
   const handleSubmit = async (payload) => {
     try {
-      let res;
-
       if (editingUser?.id) {
-        res = await updateUser.mutateAsync({
+        await updateUser.mutateAsync({
           id: editingUser.id,
           payload,
         });
       } else {
-        res = await createUser.mutateAsync(payload);
+        await createUser.mutateAsync(payload);
       }
 
       await refetch();
-
       setOpenModal(false);
-
       setEditingUser(null);
 
-      return {
-        success: true,
-      };
-    } catch (err) {
-      return {
-        success: false,
-      };
+      return { success: true };
+    } catch {
+      return { success: false };
     }
   };
 
   const handleEdit = async (user) => {
     try {
       const res = await getOneUser.mutateAsync(user.id);
-
       setEditingUser(res?.data);
-
       setOpenModal(true);
     } catch {}
   };
@@ -129,9 +109,7 @@ export default function UserClient() {
   const handleView = async (user) => {
     try {
       const res = await getOneUser.mutateAsync(user.id);
-
       setViewUser(res?.data);
-
       setViewOpen(true);
     } catch {}
   };
@@ -139,9 +117,7 @@ export default function UserClient() {
   const handleViewPassword = async (user) => {
     try {
       const res = await getCredentials.mutateAsync(user.id);
-
       setCredentials(res?.data);
-
       setCredentialOpen(true);
     } catch {}
   };
@@ -156,7 +132,6 @@ export default function UserClient() {
             leftIcon={<UserPlus />}
             onClick={() => {
               setEditingUser(null);
-
               setOpenModal(true);
             }}
           >
@@ -193,8 +168,8 @@ export default function UserClient() {
         search={searchTerm}
         onSearch={setSearchTerm}
         onPageChange={setCurrentPage}
-        onEdit={handleEdit}
         onView={handleView}
+        onEdit={handleEdit}
         onViewPassword={handleViewPassword}
       />
 
@@ -206,7 +181,6 @@ export default function UserClient() {
         packageLoading={packageLoading}
         onClose={() => {
           setOpenModal(false);
-
           setEditingUser(null);
         }}
       />
@@ -217,7 +191,6 @@ export default function UserClient() {
         data={viewUser}
         onClose={() => {
           setViewOpen(false);
-
           setViewUser(null);
         }}
       />
@@ -227,7 +200,6 @@ export default function UserClient() {
         data={credentials}
         onClose={() => {
           setCredentialOpen(false);
-
           setCredentials(null);
         }}
       />

@@ -2,12 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import {
-  MoreVertical,
-  Eye,
-  Edit,
-  Trash2,
-} from "lucide-react";
+import { MoreVertical, Eye, Edit, Trash2 } from "lucide-react";
 
 import Button from "@/components/ui/Button";
 
@@ -27,24 +22,15 @@ export default function RowActions({
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (
-        ref.current &&
-        !ref.current.contains(e.target)
-      ) {
+      if (ref.current && !ref.current.contains(e.target)) {
         setOpen(false);
       }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleClick
-    );
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClick
-      );
+      document.removeEventListener("mousedown", handleClick);
     };
   }, []);
 
@@ -53,11 +39,9 @@ export default function RowActions({
   const toggle = () => {
     if (!ref.current) return;
 
-    const rect =
-      ref.current.getBoundingClientRect();
+    const rect = ref.current.getBoundingClientRect();
 
-    const spaceBelow =
-      window.innerHeight - rect.bottom;
+    const spaceBelow = window.innerHeight - rect.bottom;
 
     // open upward if low space
     setOpenUp(spaceBelow < 180);
@@ -66,11 +50,7 @@ export default function RowActions({
   };
 
   return (
-    <div
-      className="relative flex justify-end"
-      ref={ref}
-    >
-
+    <div className="relative flex justify-end" ref={ref}>
       {/* TRIGGER */}
       <Button
         type="button"
@@ -88,12 +68,9 @@ export default function RowActions({
       {open && (
         <div
           className={`absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-2xl border border-border bg-card shadow-xl ${
-            openUp
-              ? "bottom-full mb-2"
-              : "top-full mt-2"
+            openUp ? "bottom-full mb-2" : "top-full mt-2"
           }`}
         >
-
           {/* VIEW */}
           {onView && (
             <MenuItem
@@ -147,10 +124,8 @@ export default function RowActions({
               />
             </>
           )}
-
         </div>
       )}
-
     </div>
   );
 }
@@ -159,12 +134,7 @@ export default function RowActions({
    MENU ITEM
 ================================================== */
 
-function MenuItem({
-  icon: Icon,
-  label,
-  onClick,
-  danger = false,
-}) {
+function MenuItem({ icon: Icon, label, onClick, danger = false }) {
   return (
     <button
       type="button"
@@ -178,13 +148,9 @@ function MenuItem({
         }
       `}
     >
-
       <Icon className="h-4 w-4 shrink-0 opacity-90" />
 
-      <span className="flex-1 text-left">
-        {label}
-      </span>
-
+      <span className="flex-1 text-left">{label}</span>
     </button>
   );
 }
