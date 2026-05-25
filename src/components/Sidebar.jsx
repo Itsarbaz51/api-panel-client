@@ -30,6 +30,7 @@ const menuItems = [
   { title: "User-Management", icon: User, href: "/dashboard/user-management" },
   { title: "Settings", icon: Settings, href: "/dashboard/settings" },
   { title: "Developer API", icon: Settings, href: "/dashboard/developer-api" },
+  { title: "Keys", icon: Key, href: "/dashboard/kyc" },
 ];
 
 export default function APISidebar() {
