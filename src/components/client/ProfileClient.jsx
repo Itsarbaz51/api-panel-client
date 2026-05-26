@@ -16,21 +16,21 @@ import {
   ShieldCheck,
   Lock,
   CheckCircle2,
-  AlertCircle,
-} from "lucide-react";
+  } from "lucide-react";
 
 // --- Custom UI Imports ---
-import Button from "@/components/ui/Button";
 import Header from "@/components/ui/Header";
 import Alert from "@/components/ui/Alert";
 
 import ResetPasswordModal from "../modals/ResetPasswordModal";
+import { useSelector } from "react-redux";
 
 export default function ProfileClient() {
-  const { data, isLoading, isError, error } = useCurrentUser();
+  const user = useSelector((state) => state.auth.user);
+
+  const isLoading = !user;
 
   const resetPasswordMutation = useResetPassword();
-  const user = data?.data;
 
   // --- UI States ---
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -125,32 +125,6 @@ export default function ProfileClient() {
           <p className="text-sm font-medium text-slate-500 mt-2">
             Loading profile...
           </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-slate-50 px-4">
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-red-100 max-w-md w-full text-center">
-          <div className="w-16 h-16 mx-auto bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
-            <AlertCircle className="w-8 h-8" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
-            Profile Unavailable
-          </h2>
-          <p className="text-slate-500 mb-6 text-sm">
-            {error?.message ||
-              "We couldn't connect to your profile data. Please verify your connection and try again."}
-          </p>
-          <Button
-            onClick={() => window.location.reload()}
-            fullWidth
-            className="bg-slate-900 hover:bg-slate-800"
-          >
-            Refresh Connection
-          </Button>
         </div>
       </div>
     );

@@ -1,45 +1,31 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const userValidation = z.object({
-	fullName: z
-		.string()
-		.trim()
-		.min(2, 'Full name is required')
-		.max(50, 'Maximum 50 characters allowed')
-		.regex(
-			/^[a-zA-Z\s]+$/,
-			'Only letters are allowed'
-		),
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Full name is required")
+    .max(50, "Maximum 50 characters allowed")
+    .regex(/^[a-zA-Z\s]+$/, "Only letters are allowed"),
 
-	companyName: z
-		.string()
-		.trim()
-		.min(2, 'Company name is required')
-		.max(
-			100,
-			'Maximum 100 characters allowed'
-		),
+  companyName: z
+    .string()
+    .trim()
+    .min(2, "Company name is required")
+    .max(100, "Maximum 100 characters allowed"),
 
-	companyType: z.enum([
-		'PRIVATE_LIMITED',
-		'PUBLIC_LIMITED',
-		'LLP',
-	]),
+  companyType: z.enum(["PRIVATE_LIMITED", "PUBLIC_LIMITED", "LLP"]),
 
-	email: z
-		.string()
-		.trim()
-		.email('Enter valid email'),
+  status: z.enum(["ACTIVE", "IN_ACTIVE", "DELETED"]),
 
-	phoneNumber: z
-		.string()
-		.regex(
-			/^[0-9]{10}$/,
-			'Phone number must be exactly 10 digits'
-		),
+  email: z.string().trim().email("Enter valid email"),
 
-	packageId: z
-		.string()
-		.min(1, 'Package is required')
-		.uuid('Select a valid package'),
+  phoneNumber: z
+    .string()
+    .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
+
+  packageId: z
+    .string()
+    .min(1, "Package is required")
+    .uuid("Select a valid package"),
 });
