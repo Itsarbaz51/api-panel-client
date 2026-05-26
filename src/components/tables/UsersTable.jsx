@@ -1,108 +1,123 @@
-'use client';
+"use client";
 
-import { User, Download } from 'lucide-react';
+import { User, Download } from "lucide-react";
 
-import TableShell from './core/TableShell';
-import TableHeader from './core/TableHeader';
-import TableBody from './core/TableBody';
-import TablePagination from './core/TablePagination';
+import TableShell from "./core/TableShell";
+import TableHeader from "./core/TableHeader";
+import TableBody from "./core/TableBody";
+import TablePagination from "./core/TablePagination";
 
 export default function UsersTable({
-	users,
-	total,
-	page,
-	perPage,
-	search,
-	onSearch,
-	onPageChange,
-	onView,
-	onEdit,
-	onDelete,
-	onViewPassword,
+  users,
+  total,
+  page,
+  perPage,
+  search,
+  onSearch,
+  onPageChange,
+  onView,
+  onEdit,
+  onDelete,
+  onViewPassword,
 }) {
-	const columns = [
-		{
-			key: 'user',
+  const columns = [
+    {
+      key: "user",
+      label: "User",
 
-			label: 'User',
+      render: (row) => (
+        <div className="flex gap-3">
+          {row.profileImage ? null : (
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex justify-center items-center">
+              <User />
+            </div>
+          )}
 
-			render: (row) => (
-				<div className="flex gap-3">
-					<div className="h-10 w-10 rounded-xl bg-primary/10 flex justify-center items-center">
-						<User />
-					</div>
+          <div>
+            <div>{row.fullName}</div>
 
-					<div>
-						<div>{row.fullName}</div>
+            <div className="text-xs">{row.email}</div>
+          </div>
+        </div>
+      ),
+    },
 
-						<div className="text-xs">{row.email}</div>
-					</div>
-				</div>
-			),
-		},
+    {
+      key: "companyName",
 
-		{
-			key: 'password',
+      label: "Company Name",
 
-			label: 'Password',
+      render: (row) => <div>{row.companyName}</div>,
+    },
 
-			render: (row) => (
-				<button
-					onClick={() => onViewPassword(row)}
-					className="px-3 py-2 rounded-lg bg-green-600 text-white">
-					View Password
-				</button>
-			),
-		},
+    {
+      key: "credential",
 
-		{
-			key: 'status',
+      label: "Credential",
 
-			label: 'Status',
+      render: (row) => (
+        <button
+          onClick={() => onViewPassword(row)}
+          className="px-3 py-2 rounded-lg bg-green-600 text-white"
+        >
+          View Credential
+        </button>
+      ),
+    },
 
-			render: (row) => <span>{row.status}</span>,
-		},
+    {
+      key: "status",
 
-		{
-			key: 'joined',
+      label: "Status",
 
-			label: 'Joined',
+      render: (row) => <span>{row.status}</span>,
+    },
+    {
+      key: "lastLogin",
 
-			render: (row) => new Date(row.createdAt).toLocaleDateString(),
-		},
+      label: "Last Login",
 
-		{
-			key: 'actions',
+      render: (row) => new Date(row.lastLoginAt).toLocaleDateString(),
+    },
+    {
+      key: "createdAt",
 
-			label: 'Actions',
-		},
-	];
+      label: "Created At",
 
-	return (
-		<TableShell>
-			<TableHeader
-				title="All Users"
-				subtitle={`${total} users found`}
-				search={search}
-				setSearch={onSearch}
-				searchPlaceholder="Search users..."
-				exportIcon={Download}
-			/>
+      render: (row) => new Date(row.createdAt).toLocaleDateString(),
+    },
 
-			<TableBody
-				columns={columns}
-				data={users}
-				onView={onView}
-				onEdit={onEdit}
-				onDelete={onDelete}
-			/>
+    {
+      key: "actions",
+      label: "Actions",
+    },
+  ];
 
-			<TablePagination
-				page={page}
-				setPage={onPageChange}
-				total={total}
-				perPage={perPage}
-			/>
-		</TableShell>
-	);
+  return (
+    <TableShell>
+      <TableHeader
+        title="All Users"
+        subtitle={`${total} users found`}
+        search={search}
+        setSearch={onSearch}
+        searchPlaceholder="Search users..."
+        exportIcon={Download}
+      />
+
+      <TableBody
+        columns={columns}
+        data={users}
+        onView={onView}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+
+      <TablePagination
+        page={page}
+        setPage={onPageChange}
+        total={total}
+        perPage={perPage}
+      />
+    </TableShell>
+  );
 }
