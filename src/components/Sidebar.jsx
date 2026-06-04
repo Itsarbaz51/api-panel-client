@@ -45,9 +45,9 @@ export default function Sidebar() {
       href: "/dashboard/developer-api",
     },
     {
-      title: "Logs & Traffic",
+      title: "Logs",
       icon: Activity,
-      href: "/dashboard/logs-&-traffic",
+      href: "/dashboard/logs",
     },
     { title: "Settings", icon: Settings, href: "/dashboard/settings" },
   ];
