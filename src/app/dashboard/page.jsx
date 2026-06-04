@@ -61,7 +61,6 @@ const recentLogs = [
   { endpoint: "GET /v1/balance", status: 200, time: "45s ago", latency: "8ms", method: "GET", region: "EU-WEST" },
   { endpoint: "POST /v1/payout", status: 401, time: "2m ago", latency: "15ms", method: "POST", region: "AP-SOUTH" },
   { endpoint: "POST /v1/verify", status: 200, time: "5m ago", latency: "11ms", method: "POST", region: "US-WEST" },
-  { endpoint: "GET /v1/webhooks", status: 404, time: "8m ago", latency: "23ms", method: "GET", region: "EU-NORTH" },
 ];
 
 // --- API Endpoints Data ---
@@ -69,7 +68,6 @@ const apiEndpoints = [
   { name: "Authentication", endpoint: "/auth/token", calls: "234.5K", change: "+12%" },
   { name: "User Management", endpoint: "/users", calls: "456.2K", change: "+8%" },
   { name: "Payments", endpoint: "/payments", calls: "123.8K", change: "+23%" },
-  { name: "Webhooks", endpoint: "/webhooks", calls: "89.4K", change: "-3%" },
 ];
 
 export default function APIDashboardPage() {
