@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Download } from "lucide-react";
+import { User, Download, Key } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
@@ -19,6 +19,7 @@ export default function UsersTable({
   onEdit,
   onDelete,
   onViewPassword,
+  handleViewApiKey,
 }) {
   const columns = [
     {
@@ -92,7 +93,13 @@ export default function UsersTable({
       label: "Actions",
     },
   ];
-
+  const extraActions = [
+    {
+      label: "API Key",
+      onClick: handleViewApiKey,
+      icon: Key,
+    },
+  ];
   return (
     <TableShell>
       <TableHeader
@@ -110,6 +117,7 @@ export default function UsersTable({
         onView={onView}
         onEdit={onEdit}
         onDelete={onDelete}
+        onExtraActions={extraActions}
       />
 
       <TablePagination
