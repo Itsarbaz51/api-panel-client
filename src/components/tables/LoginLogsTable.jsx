@@ -1,6 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Download, MapPin } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
@@ -54,7 +54,17 @@ export default function LoginLogsTable({
       key: "location",
       label: "Location",
 
-      render: (row) => row.location,
+      render: (row) => (
+        <a
+          href={`https://www.google.com/maps?q=${row.location}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
+        >
+          <MapPin size={16} />
+          View Location
+        </a>
+      ),
     },
 
     {
