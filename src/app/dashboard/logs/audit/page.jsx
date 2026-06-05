@@ -1,5 +1,5 @@
-import AuditClient from "@/components/client/AuditClient";
+import AuditLogsClient from "@/components/client/AuditLogsClient";
 
 export default function page() {
-  return <AuditClient />;
+  return <AuditLogsClient />;
 }
