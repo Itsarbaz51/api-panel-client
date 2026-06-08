@@ -30,7 +30,7 @@ export default function ApiIntegrationLayout({ children }) {
   ];
 
   return (
-    <div className="relative min-h-screen max-w-7xl mx-auto p-4 md:p-10 animate-in fade-in duration-700 font-sans">
+    <div className="relative animate-in fade-in duration-700 font-sans">
       
       {/* Background Glow Effects */}
       <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[#00b37e]/10 blur-[120px] rounded-full -z-10" />

@@ -1,98 +1,78 @@
 "use client";
 
-import {
-  Layers,
-  Download,
-} from "lucide-react";
+import { Download } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
 import TableBody from "./core/TableBody";
 import TablePagination from "./core/TablePagination";
 
-const columns = [
-  {
-    key: "name",
-    label: "Service",
-    render: (row) => (
-      <div className="flex items-center gap-3">
-
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-          <Layers className="h-5 w-5 text-primary" />
-        </div>
-
-        <div>
-          <p className="font-medium">
-            {row.name}
-          </p>
-
-          <p className="text-xs text-muted-foreground">
-            System Module
-          </p>
-        </div>
-
-      </div>
-    ),
-  },
-
-  {
-    key: "code",
-    label: "Code",
-  },
-
-  {
-    key: "status",
-    label: "Status",
-    render: (row) => (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium border ${
-          row.status === "ACTIVE"
-            ? "bg-success/10 text-success border-success/20"
-            : "bg-destructive/10 text-destructive border-destructive/20"
-        }`}
-      >
-        {row.status}
-      </span>
-    ),
-  },
-
-  {
-    key: "actions",
-    label: "Actions",
-  },
-];
-
-export default function ServicesTable({
-  services,
+export default function ServiceTable({
+  data,
   total,
   page,
   perPage,
-  onPageChange,
   search,
   onSearch,
-  onAddService,
+  onPageChange,
   onEdit,
   onDelete,
 }) {
+  const columns = [
+    {
+      key: "name",
+      label: "Service Name",
+    },
+
+    {
+      key: "code",
+      label: "Code",
+    },
+
+    {
+      key: "status",
+      label: "Status",
+
+      render: (row) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs ${
+            row.isActive
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {row.isActive ? "Active" : "Inactive"}
+        </span>
+      ),
+    },
+
+    {
+      key: "createdAt",
+      label: "Created At",
+
+      render: (row) => new Date(row.createdAt).toLocaleDateString(),
+    },
+
+    {
+      key: "actions",
+      label: "Actions",
+    },
+  ];
+
   return (
     <TableShell>
-
       <TableHeader
-        title="All Services"
+        title="Services"
         subtitle={`${total} services found`}
         search={search}
         setSearch={onSearch}
         searchPlaceholder="Search services..."
-        onAdd={onAddService}
-        addLabel="Add Service"
-        addIcon={Layers}
-        onExport={() => console.log("Export")}
         exportIcon={Download}
       />
 
       <TableBody
         columns={columns}
-        data={services}
+        data={data}
         onEdit={onEdit}
         onDelete={onDelete}
       />
@@ -103,7 +83,6 @@ export default function ServicesTable({
         total={total}
         perPage={perPage}
       />
-
     </TableShell>
   );
 }
