@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  CirclePercent,
 } from "lucide-react";
 
 import Button from "@/components/ui/Button";
@@ -39,6 +40,11 @@ export default function Sidebar() {
           },
         ]
       : []),
+    {
+      title: "Commission Management",
+      icon: CirclePercent,
+      href: "/dashboard/commission-management",
+    },
     {
       title: "Developer API",
       icon: Settings,
