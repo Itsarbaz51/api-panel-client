@@ -6,6 +6,8 @@ import userReducer from "./userSlice";
 import apiKeyReducer from "./apiKeySlice";
 import logReducer from "./logSlice";
 import serviceReducer from "./serviceSlice";
+import providerReducer from "./providerSlice";
+import serviceProviderReducer from "./serviceProviderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,5 +17,7 @@ export const store = configureStore({
     user: userReducer,
     logs: logReducer,
     services: serviceReducer,
+    providers: providerReducer,
+    serviceProviders: serviceProviderReducer,
   },
 });
