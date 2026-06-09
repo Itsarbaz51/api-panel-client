@@ -59,10 +59,45 @@ export default function CommissionSettingForm({
   useEffect(() => {
     if (!initialData) return;
 
-    setFormData((prev) => ({
-      ...prev,
-      ...initialData,
-    }));
+    setFormData({
+      scope: initialData.targetUserId
+        ? "USER"
+        : initialData.packageId
+          ? "PACKAGE"
+          : initialData.scope || "USER",
+
+      targetUserId: initialData.targetUserId || "",
+      packageId: initialData.packageId || "",
+      serviceProviderId: initialData.serviceProviderId || "",
+
+      isActive: initialData.isActive ?? true,
+      supportsSlab: initialData.supportsSlab ?? false,
+      supportPaymentMethod: initialData.supportPaymentMethod ?? false,
+
+      paymentMethod: initialData.paymentMethod || "",
+      network: initialData.network || "",
+
+      category: initialData.category || "",
+      operator: initialData.operator || "",
+      operatorCode: initialData.operatorCode || "",
+
+      bankCode: initialData.bankCode || "",
+      transactionType: initialData.transactionType || "",
+
+      mode: initialData.mode || "COMMISSION",
+      type: initialData.type || "FLAT",
+
+      value: initialData.value ?? 0,
+
+      minAmount: initialData.minAmount ?? 0,
+      maxAmount: initialData.maxAmount ?? 0,
+
+      applyGST: initialData.applyGST ?? false,
+      gstPercent: initialData.gstPercent ?? 0,
+
+      applyTDS: initialData.applyTDS ?? false,
+      tdsPercent: initialData.tdsPercent ?? 0,
+    });
   }, [initialData]);
 
   const handleChange = (field, value) => {

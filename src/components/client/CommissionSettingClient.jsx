@@ -92,17 +92,15 @@ export default function CommissionSettingClient() {
       await refetch();
 
       setOpenModal(false);
-
       setEditingData(null);
 
-      return {
-        success: true,
-      };
+      return { success: true };
     } catch (error) {
       console.log(error);
 
       return {
         success: false,
+        message: error?.response?.data?.message || error?.message || "Failed",
       };
     }
   };
@@ -195,6 +193,7 @@ export default function CommissionSettingClient() {
       <ConfirmDialog
         open={!!deleteItem}
         title="Delete Commission"
+        confirmText="Delete"
         description="Are you sure you want to delete this commission setting?"
         variant="danger"
         onConfirm={handleDelete}
