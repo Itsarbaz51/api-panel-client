@@ -17,7 +17,7 @@ export const useGetAllCommissionSettings = ({
 
     queryFn: () =>
       apiClient(
-        `/commission-setting?page=${page}&limit=${limit}&search=${search}`,
+        `/commission-settings?page=${page}&limit=${limit}&search=${search}`,
       ),
 
     placeholderData: keepPreviousData,
@@ -28,7 +28,7 @@ export const useCreateCommissionSetting = () => {
 
   return useMutation({
     mutationFn: (payload) =>
-      apiClient("/commission-setting", {
+      apiClient("/commission-settings", {
         method: "POST",
         body: JSON.stringify(payload),
       }),
@@ -45,7 +45,7 @@ export const useUpdateCommissionSetting = () => {
 
   return useMutation({
     mutationFn: ({ id, payload }) =>
-      apiClient(`/commission-setting/${id}`, {
+      apiClient(`/commission-settings/${id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
       }),
@@ -62,7 +62,7 @@ export const useDeleteCommissionSetting = () => {
 
   return useMutation({
     mutationFn: (id) =>
-      apiClient(`/commission-setting/${id}`, {
+      apiClient(`/commission-settings/${id}`, {
         method: "DELETE",
       }),
 

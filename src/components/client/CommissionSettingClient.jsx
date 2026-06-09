@@ -70,7 +70,7 @@ export default function CommissionSettingClient() {
 
   const deleteCommission = useDeleteCommissionSetting();
 
-  const settings = commissionResponse?.data || [];
+  const settings = commissionResponse?.data?.data || [];
 
   const total = commissionResponse?.total || 0;
 
@@ -182,8 +182,8 @@ export default function CommissionSettingClient() {
         open={openModal}
         initialData={editingData}
         users={usersData?.data || []}
-        packages={packageData?.data || []}
-        providers={providerData?.data || []}
+        packages={packageData?.data?.data || []}
+        providers={providerData?.data?.data || []}
         onSubmit={handleSubmit}
         onClose={() => {
           setOpenModal(false);

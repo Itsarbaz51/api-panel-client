@@ -38,8 +38,7 @@ export default function CommissionSettingModal({
 
           <button onClick={onClose}>✕</button>
         </div>
-
-        <div className="p-6">
+        <div className="max-h-[80vh] overflow-y-auto p-6">
           <CommissionSettingForm
             initialData={initialData}
             users={users}
