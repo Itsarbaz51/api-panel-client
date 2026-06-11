@@ -8,7 +8,7 @@ import { Settings, ChevronDown, User, LogOut } from "lucide-react";
 import { logout } from "@/store/authSlice";
 import { useRouter } from "next/navigation";
 import { useLogout } from "@/hooks/useAuth";
-import usePermission from "@/hooks/usePermission";
+import usePermissionChecker from "@/hooks/usePermissionChecker";
 
 import {
   useGetCredentials,
@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const user = useSelector((state) => state.auth.user);
 
-  const { isApiHolder, isSuperAdmin } = usePermission();
+  const { isApiHolder, isSuperAdmin } = usePermissionChecker();
   const { mutate: logoutUser, isPending } = useLogout();
   const getCredentials = useGetCredentials();
   const createApiKey = useCreateApiKey();

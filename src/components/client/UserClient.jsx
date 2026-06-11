@@ -29,6 +29,8 @@ import { useGetAll } from "@/hooks/usePackage";
 import ApiKeyModal from "@/components/modals/ApiKeyModal";
 import { useSelector } from "react-redux";
 import ConfirmDialog from "../ConfirmDialog";
+import PermissionModal from "../modals/PermissionModal";
+import { useGetAllServices } from "@/hooks/useService";
 
 export default function UserClient() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +49,13 @@ export default function UserClient() {
     message: "",
   });
 
+  const [permissionDialog, setPermissionDialog] = useState({
+    open: false,
+    message: "",
+  });
+  const [permissionOpen, setPermissionOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const user = useSelector((state) => state.auth.user);
 
   const limit = 6;
@@ -62,6 +71,12 @@ export default function UserClient() {
   });
 
   const { data: packageData, isLoading: packageLoading } = useGetAll({
+    page: 1,
+    limit: 100,
+    search: "",
+  });
+
+  const { data: services } = useGetAllServices({
     page: 1,
     limit: 100,
     search: "",
@@ -260,6 +275,24 @@ export default function UserClient() {
     }
   };
 
+  const handlePermissions = async (user) => {
+    setSelectedUser(user);
+    setPermissionOpen(true);
+  };
+
+  const handlePermissionSuccess = async () => {
+    try {
+      await refetch();
+
+      setPermissionDialog({
+        open: true,
+        message: "Permissions Updated Successfully",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <Header
@@ -310,6 +343,7 @@ export default function UserClient() {
         onEdit={handleEdit}
         onViewPassword={handleViewPassword}
         handleViewApiKey={handleViewApiKey}
+        handlePermissions={handlePermissions}
       />
 
       <UserModal
@@ -342,6 +376,7 @@ export default function UserClient() {
           setCredentials(null);
         }}
       />
+
       <ApiKeyModal
         open={apiKeyOpen}
         data={apiKeyData}
@@ -356,6 +391,19 @@ export default function UserClient() {
           setApiKeyData(null);
         }}
       />
+
+      <PermissionModal
+        open={permissionOpen}
+        scope="USER"
+        selectedItem={selectedUser}
+        services={services?.data?.data || []}
+        onSuccess={handlePermissionSuccess}
+        onClose={() => {
+          setPermissionOpen(false);
+          setSelectedUser(null);
+        }}
+      />
+
       <ConfirmDialog
         open={apiKeyErrorDialog.open}
         onClose={() =>
@@ -367,6 +415,20 @@ export default function UserClient() {
         title="Notification"
         variant="danger"
         description={apiKeyErrorDialog.message}
+        cancelText="Close"
+      />
+
+      <ConfirmDialog
+        open={permissionDialog.open}
+        onClose={() =>
+          setPermissionDialog({
+            open: false,
+            message: "",
+          })
+        }
+        title="Success"
+        variant="success"
+        description={permissionDialog.message}
         cancelText="Close"
       />
     </div>

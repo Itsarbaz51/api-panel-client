@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Download, Key } from "lucide-react";
+import { User, Download, Key, Shield } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
@@ -20,6 +20,7 @@ export default function UsersTable({
   onDelete,
   onViewPassword,
   handleViewApiKey,
+  handlePermissions,
 }) {
   const columns = [
     {
@@ -98,6 +99,11 @@ export default function UsersTable({
       label: "API Key",
       onClick: handleViewApiKey,
       icon: Key,
+    },
+    {
+      label: "Permissions",
+      onClick: handlePermissions,
+      icon: Shield,
     },
   ];
   return (

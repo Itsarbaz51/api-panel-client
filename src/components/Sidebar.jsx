@@ -19,11 +19,11 @@ import {
 } from "lucide-react";
 
 import Button from "@/components/ui/Button";
-import usePermission from "@/hooks/usePermission";
+import usePermissionChecker from "@/hooks/usePermissionChecker";
 import { useSelector } from "react-redux";
 
 export default function Sidebar() {
-  const { isSuperAdmin } = usePermission();
+  const { isSuperAdmin } = usePermissionChecker();
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();

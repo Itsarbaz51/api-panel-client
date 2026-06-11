@@ -1,32 +1,68 @@
-"use client";
+import {
+  useMutation,
+  useQuery,
+  keepPreviousData,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-import { useSelector } from "react-redux";
-import { useMemo } from "react";
+import { apiClient } from "@/lib/apiClient";
 
-export default function usePermission() {
-  const user = useSelector((state) => state.auth.user);
+export const useGetAllPermissions = ({ page = 1, limit = 10, scope = "" }) =>
+  useQuery({
+    queryKey: ["permissions", page, limit, scope],
 
-  const role = user?.role;
-  const permissions = user?.permissions || [];
+    queryFn: () =>
+      apiClient(`/permission?page=${page}&limit=${limit}&scope=${scope}`),
 
-  const isSuperAdmin = role === "SUPER_ADMIN";
-  const isApiHolder = role === "API_HOLDER";
+    placeholderData: keepPreviousData,
+  });
 
-  const hasRole = (roles = []) => roles.includes(role);
+export const useCreatePermission = () => {
+  const queryClient = useQueryClient();
 
-  const hasPermission = (permission) =>
-    isSuperAdmin || isApiHolder || permissions.includes(permission);
+  return useMutation({
+    mutationFn: (payload) =>
+      apiClient("/permission", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
 
-  return useMemo(
-    () => ({
-      user,
-      role,
-      permissions,
-      isSuperAdmin,
-      isApiHolder,
-      hasRole,
-      hasPermission,
-    }),
-    [user, role, permissions],
-  );
-}
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["permissions"],
+      }),
+  });
+};
+
+export const useUpdatePermission = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, payload }) =>
+      apiClient(`/permission/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      }),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["permissions"],
+      }),
+  });
+};
+
+export const useDeletePermission = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id) =>
+      apiClient(`/permission/${id}`, {
+        method: "DELETE",
+      }),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["permissions"],
+      }),
+  });
+};
