@@ -40,11 +40,15 @@ export default function Sidebar() {
           },
         ]
       : []),
-    {
-      title: "Commission Management",
-      icon: CirclePercent,
-      href: "/dashboard/commission-management",
-    },
+    ...(isSuperAdmin
+      ? [
+          {
+            title: "Commission Management",
+            icon: CirclePercent,
+            href: "/dashboard/commission-management",
+          },
+        ]
+      : []),
     {
       title: "Developer API",
       icon: Settings,
@@ -55,7 +59,9 @@ export default function Sidebar() {
       icon: Activity,
       href: "/dashboard/logs",
     },
-    { title: "Settings", icon: Settings, href: "/dashboard/settings" },
+    ...(isSuperAdmin
+      ? [{ title: "Settings", icon: Settings, href: "/dashboard/settings" }]
+      : []),
   ];
 
   useEffect(() => {
