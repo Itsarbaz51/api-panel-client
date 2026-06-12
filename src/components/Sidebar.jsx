@@ -29,38 +29,61 @@ export default function Sidebar() {
   const pathname = usePathname();
   const user = useSelector((state) => state.auth.user);
 
-  const menuItems = [
-    { title: "API Overview", icon: LayoutDashboard, href: "/dashboard" },
+  const menuSections = [
+    {
+      title: "GENERAL",
+      items: [
+        {
+          title: "API Overview",
+          icon: LayoutDashboard,
+          href: "/dashboard",
+        },
+        {
+          title: "Developer API",
+          icon: Webhook,
+          href: "/dashboard/developer-api",
+        },
+        {
+          title: "Logs",
+          icon: Activity,
+          href: "/dashboard/logs",
+        },
+      ],
+    },
+
     ...(isSuperAdmin
       ? [
           {
-            title: "User Management",
-            icon: User,
-            href: "/dashboard/user-management",
+            title: "ADMINISTRATION",
+            items: [
+              {
+                title: "User Management",
+                icon: User,
+                href: "/dashboard/user-management",
+              },
+              {
+                title: "Commission Management",
+                icon: CirclePercent,
+                href: "/dashboard/commission-management",
+              },
+            ],
           },
         ]
       : []),
+
     ...(isSuperAdmin
       ? [
           {
-            title: "Commission Management",
-            icon: CirclePercent,
-            href: "/dashboard/commission-management",
+            title: "SYSTEM",
+            items: [
+              {
+                title: "Settings",
+                icon: Settings,
+                href: "/dashboard/settings",
+              },
+            ],
           },
         ]
-      : []),
-    {
-      title: "Developer API",
-      icon: Settings,
-      href: "/dashboard/developer-api",
-    },
-    {
-      title: "Logs",
-      icon: Activity,
-      href: "/dashboard/logs",
-    },
-    ...(isSuperAdmin
-      ? [{ title: "Settings", icon: Settings, href: "/dashboard/settings" }]
       : []),
   ];
 
@@ -118,37 +141,51 @@ export default function Sidebar() {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-        {menuItems.map((item, index) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+      <nav className="flex-1 px-3 py-2 overflow-y-auto">
+        {menuSections.map((section) => (
+          <div key={section.title} className="mb-5">
+            {(!isCollapsed || mobile) && (
+              <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                {section.title}
+              </p>
+            )}
 
-          return (
-            <Link
-              key={index}
-              href={item.href}
-              title={isCollapsed ? item.title : ""}
-              className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? "bg-emerald-50 text-emerald-600 shadow-sm shadow-emerald-100"
-                  : "text-gray-500 hover:text-emerald-600 hover:bg-gray-50"
-              } ${isCollapsed && !mobile ? "justify-center" : ""}`}
-            >
-              <Icon
-                size={22}
-                strokeWidth={isActive ? 2.5 : 2}
-                className="min-w-5.5"
-              />
-              {(!isCollapsed || mobile) && (
-                <span
-                  className={`font-medium text-sm animate-in fade-in duration-300 ${isActive ? "font-semibold" : ""}`}
-                >
-                  {item.title}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={isCollapsed ? item.title : ""}
+                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200
+                ${
+                  isActive
+                    ? "bg-emerald-50 text-emerald-600 shadow-sm"
+                    : "text-gray-500 hover:text-emerald-600 hover:bg-gray-50"
+                }
+                ${isCollapsed && !mobile ? "justify-center" : ""}
+              `}
+                  >
+                    <Icon size={20} />
+
+                    {(!isCollapsed || mobile) && (
+                      <span
+                        className={`text-sm ${
+                          isActive ? "font-semibold" : "font-medium"
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Usage Stats Section */}
