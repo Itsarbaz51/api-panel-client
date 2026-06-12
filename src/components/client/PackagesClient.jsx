@@ -10,6 +10,8 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import QuickStats from "@/components/QuickStats";
 import Button from "@/components/ui/Button";
 import Header from "../ui/Header";
+import PermissionModal from "@/components/modals/PermissionModal";
+import { useGetAllServices } from "@/hooks/useService";
 
 import { useCreate, useDelete, useGetAll, useUpdate } from "@/hooks/usePackage";
 
@@ -38,6 +40,13 @@ export default function PackagesClient() {
     data: null,
   });
 
+  const [permissionOpen, setPermissionOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [permissionDialog, setPermissionDialog] = useState({
+    open: false,
+    message: "",
+  });
+
   const perPage = 10;
 
   /* ================= REDUX ================= */
@@ -51,6 +60,12 @@ export default function PackagesClient() {
     page,
     limit: perPage,
     search,
+  });
+
+  const { data: services } = useGetAllServices({
+    page: 1,
+    limit: 100,
+    search: "",
   });
 
   const createMutation = useCreate();
@@ -98,6 +113,21 @@ export default function PackagesClient() {
     setDeleteDialog({
       open: true,
       data: pkg,
+    });
+  };
+
+  const handlePermissions = (pkg) => {
+    setSelectedPackage(pkg);
+
+    setPermissionOpen(true);
+  };
+
+  const handlePermissionSuccess = async () => {
+    await getAllQuery.refetch();
+
+    setPermissionDialog({
+      open: true,
+      message: "Package Permissions Updated Successfully",
     });
   };
 
@@ -194,6 +224,7 @@ export default function PackagesClient() {
           }}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          handlePermissions={handlePermissions}
         />
       </div>
 
@@ -240,6 +271,32 @@ export default function PackagesClient() {
         description="Are you sure you want to delete this package?"
         confirmText="Delete"
         cancelText="Cancel"
+      />
+
+      <PermissionModal
+        open={permissionOpen}
+        scope="PACKAGE"
+        selectedItem={selectedPackage}
+        services={services?.data?.data || []}
+        onSuccess={handlePermissionSuccess}
+        onClose={() => {
+          setPermissionOpen(false);
+          setSelectedPackage(null);
+        }}
+      />
+
+      <ConfirmDialog
+        open={permissionDialog.open}
+        onClose={() =>
+          setPermissionDialog({
+            open: false,
+            message: "",
+          })
+        }
+        title="Success"
+        variant="success"
+        description={permissionDialog.message}
+        cancelText="Close"
       />
     </div>
   );

@@ -1,5 +1,5 @@
-import ProvidersClient from '@/components/client/ProvidersClient'
+import ProviderClient from "@/components/client/ProviderClient";
 
-export default function Providers() {
-  return <ProvidersClient />
+export default function Page() {
+  return <ProviderClient />;
 }

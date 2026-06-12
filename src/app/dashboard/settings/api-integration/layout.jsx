@@ -22,23 +22,20 @@ export default function ApiIntegrationLayout({ children }) {
       href: "/dashboard/settings/api-integration/providers",
     },
     {
-      label: "Mapping",
-      value: "mapping",
+      label: "Service Provider",
+      value: "service-provider",
       icon: Bell,
-      href: "/dashboard/settings/api-integration/mapping",
+      href: "/dashboard/settings/api-integration/service-provider",
     },
   ];
 
   return (
-    <div className="relative min-h-screen max-w-7xl mx-auto p-4 md:p-10 animate-in fade-in duration-700 font-sans">
-      
+    <div className="relative animate-in fade-in duration-700 font-sans">
       {/* Background Glow Effects */}
       <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[#00b37e]/10 blur-[120px] rounded-full -z-10" />
 
       {/* Header Section */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
-        
-
         {/* Floating Navigation (Animated Pill Style) */}
         <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
@@ -63,7 +60,9 @@ export default function ApiIntegrationLayout({ children }) {
 
                 {/* Tab Content */}
                 <span className="relative z-10 flex items-center gap-2.5">
-                  <tab.icon className={`w-4 h-4 ${isActive ? "text-[#00b37e]" : "text-slate-400"}`} />
+                  <tab.icon
+                    className={`w-4 h-4 ${isActive ? "text-[#00b37e]" : "text-slate-400"}`}
+                  />
                   {tab.label}
                 </span>
               </Link>

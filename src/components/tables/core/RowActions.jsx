@@ -148,7 +148,7 @@ function MenuItem({ icon: Icon, label, onClick, danger = false }) {
         }
       `}
     >
-      <Icon className="h-4 w-4 shrink-0 opacity-90" />
+      {Icon && <Icon className="h-4 w-4 shrink-0 opacity-90" />}
 
       <span className="flex-1 text-left">{label}</span>
     </button>

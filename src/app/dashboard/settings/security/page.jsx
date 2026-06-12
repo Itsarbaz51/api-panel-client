@@ -17,7 +17,7 @@ export default function SecurityPage() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(true);
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-10 text-slate-800 animate-in fade-in duration-1000 font-sans selection:bg-emerald-500/20">
+    <div className=" text-slate-800 animate-in fade-in duration-1000 font-sans selection:bg-emerald-500/20">
       
       {/* Background Ambient Glows */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">

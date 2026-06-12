@@ -1,146 +1,141 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Settings, Plus, CheckCircle, XCircle } from "lucide-react";
+
+import Header from "../ui/Header";
+import Button from "../ui/Button";
+import QuickStats from "../QuickStats";
+
+import ServiceTable from "../tables/ServicesTable";
+import ServiceModal from "../modals/ServiceModal";
+
 import {
-  RefreshCw,
-  Layers,
-  CheckCircle,
-} from "lucide-react";
+  useGetAllServices,
+  useCreateService,
+  useUpdateService,
+  useDeleteService,
+} from "@/hooks/useService";
 
-import ServicesTable from "@/components/tables/ServicesTable";
-import ServiceModal from "@/components/modals/ServiceModal";
+import ConfirmDialog from "../ConfirmDialog";
 
-import QuickStats from "@/components/QuickStats";
-import Button from "@/components/ui/Button";
+export default function ServiceClient() {
+  const [searchTerm, setSearchTerm] = useState("");
 
-export default function ServicesClient() {
-  const [page, setPage] = useState(1);
-
-  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [openModal, setOpenModal] = useState(false);
 
-  const [editingService, setEditingService] = useState(null);
+  const [editingData, setEditingData] = useState(null);
 
-  const perPage = 10;
+  const [deleteData, setDeleteData] = useState(null);
 
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      name: "BBPS",
-      code: "BBPS",
-      status: "ACTIVE",
-    },
-    {
-      id: 2,
-      name: "Payout",
-      code: "PAYOUT",
-      status: "ACTIVE",
-    },
-    {
-      id: 3,
-      name: "PAN",
-      code: "PAN",
-      status: "INACTIVE",
-    },
-  ]);
+  const limit = 10;
 
-  const filteredServices = services.filter((service) =>
-    service.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const { data: response, refetch } = useGetAllServices({
+    page: currentPage,
+    limit,
+    search: searchTerm,
+  });
 
-  const stats = [
-    {
-      title: "Total Services",
-      value: services.length,
-      icon: Layers,
-      iconColor: "text-primary",
-      bgColor: "bg-primary/10",
-    },
+  const createService = useCreateService();
+  const updateService = useUpdateService();
+  const deleteService = useDeleteService();
 
-    {
-      title: "Active Services",
-      value: services.filter((s) => s.status === "ACTIVE").length,
-      icon: CheckCircle,
-      iconColor: "text-success",
-      bgColor: "bg-success/10",
-    },
-  ];
+  const services = response?.data?.data || [];
+  const total = response?.total || 0;
 
-  const handleAdd = () => {
-    setEditingService(null);
-    setOpenModal(true);
-  };
+  const active = services?.filter((x) => x.isActive).length;
+  const inactive = services?.filter((x) => !x.isActive).length;
 
-  const handleEdit = (service) => {
-    setEditingService(service);
-    setOpenModal(true);
-  };
-
-  const handleDelete = (service) => {
-    setServices((prev) =>
-      prev.filter((s) => s.id !== service.id)
-    );
-  };
-
-  const handleSubmit = (data) => {
-    if (editingService) {
-      setServices((prev) =>
-        prev.map((s) =>
-          s.id === editingService.id
-            ? { ...editingService, ...data }
-            : s
-        )
-      );
+  const handleSubmit = async (payload) => {
+    if (editingData?.id) {
+      await updateService.mutateAsync({
+        id: editingData?.id,
+        payload,
+      });
     } else {
-      setServices((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          ...data,
-        },
-      ]);
+      await createService.mutateAsync(payload);
     }
 
+    await refetch();
+
     setOpenModal(false);
+
+    setEditingData(null);
   };
 
   return (
-    <>
-      <div className="mb-6 flex justify-end">
-
-        <Button
-          variant="outline"
-          icon={RefreshCw}
-        >
-          Refresh
-        </Button>
-
-      </div>
-
-      <QuickStats stats={stats} />
-
-      <ServicesTable
-        services={filteredServices}
-        total={filteredServices.length}
-        page={page}
-        perPage={perPage}
-        onPageChange={setPage}
-        search={search}
-        onSearch={setSearch}
-        onAddService={handleAdd}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+    <div className="space-y-8">
+      <Header
+        title="Services"
+        subtitle="Manage services"
+        actions={
+          <Button leftIcon={<Plus />} onClick={() => setOpenModal(true)}>
+            Add Service
+          </Button>
+        }
       />
 
-      {openModal && (
-        <ServiceModal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          onSubmit={handleSubmit}
-          initialData={editingService}
-        />
-      )}
-    </>
+      <QuickStats
+        stats={[
+          {
+            title: "Total",
+            value: total,
+            icon: Settings,
+          },
+          {
+            title: "Active",
+            value: active,
+            icon: CheckCircle,
+          },
+          {
+            title: "Inactive",
+            value: inactive,
+            icon: XCircle,
+          },
+        ]}
+      />
+
+      <ServiceTable
+        data={services}
+        total={total}
+        page={currentPage}
+        perPage={limit}
+        search={searchTerm}
+        onSearch={setSearchTerm}
+        onPageChange={setCurrentPage}
+        onEdit={(row) => {
+          setEditingData(row);
+          setOpenModal(true);
+        }}
+        onDelete={(row) => setDeleteData(row)}
+      />
+
+      <ServiceModal
+        open={openModal}
+        initialData={editingData}
+        onSubmit={handleSubmit}
+        onClose={() => {
+          setOpenModal(false);
+          setEditingData(null);
+        }}
+      />
+
+      <ConfirmDialog
+        open={!!deleteData}
+        title="Delete Service"
+        description="Are you sure you want to delete this service?"
+        variant="danger"
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          await deleteService.mutateAsync(deleteData?.id);
+          await refetch();
+          setDeleteData(null);
+        }}
+        onClose={() => setDeleteData(null)}
+      />
+    </div>
   );
 }

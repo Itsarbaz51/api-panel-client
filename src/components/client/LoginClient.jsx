@@ -1,115 +1,116 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
-import LoginModal from '@/components/modals/LoginModal';
-import ForgotPasswordModal from '@/components/modals/ForgotPasswordModal';
-import ConfirmDialog from '@/components/ConfirmDialog';
+import LoginModal from "@/components/modals/LoginModal";
+import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
-import { setUser } from '@/store/authSlice';
+import { setUser } from "@/store/authSlice";
 
-import { useLogin, useForgotPassword } from '@/hooks/useAuth';
+import { useLogin, useForgotPassword } from "@/hooks/useAuth";
 
 export default function LoginClient() {
-	const dispatch = useDispatch();
-	const router = useRouter();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-	const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
 
-	const [errorDialog, setErrorDialog] = useState({
-		open: false,
-		message: '',
-	});
+  const [errorDialog, setErrorDialog] = useState({
+    open: false,
+    message: "",
+  });
 
-	const loginMutation = useLogin();
+  const loginMutation = useLogin();
 
-	const forgotMutation = useForgotPassword();
+  const forgotMutation = useForgotPassword();
 
-	// LOGIN
+  // LOGIN
 
-	const handleLogin = async (data) => {
-		try {
-			const res = await loginMutation.mutateAsync(data);
+  const handleLogin = async (data) => {
+    try {
+      const res = await loginMutation.mutateAsync(data);
 
-			console.log('LOGIN RESPONSE:', res);
+      console.log("LOGIN RESPONSE:", res);
 
-			dispatch(setUser(res?.data || res?.user));
+      dispatch(setUser(res?.data || res?.user));
 
-			router.replace('/dashboard');
-		} catch (err) {
-			console.log(err);
+      router.replace("/dashboard");
+    } catch (err) {
+      console.log(err);
 
-			setErrorDialog({
-				open: true,
+      setErrorDialog({
+        open: true,
 
-				message: err?.response?.data?.message || err?.message || 'Login failed',
-			});
-		}
-	};
+        message: err?.response?.data?.message || err?.message || "Login failed",
+      });
+    }
+  };
 
-	// FORGOT PASSWORD
+  // FORGOT PASSWORD
 
-	const handleForgotPassword = async (data) => {
-		try {
-			const res = await forgotMutation.mutateAsync(data);
+  const handleForgotPassword = async (data) => {
+    try {
+      const res = await forgotMutation.mutateAsync(data);
 
-			setErrorDialog({
-				open: true,
+      setErrorDialog({
+        open: true,
 
-				message: res?.message || 'Reset link sent',
-			});
+        message: res?.message || "Reset link sent",
+      });
 
-			setForgotOpen(false);
-		} catch (err) {
-			setErrorDialog({
-				open: true,
+      setForgotOpen(false);
+    } catch (err) {
+      setErrorDialog({
+        open: true,
 
-				message:
-					err?.response?.data?.message ||
-					err?.message ||
-					'Forgot password failed',
-			});
-		}
-	};
+        message:
+          err?.response?.data?.message ||
+          err?.message ||
+          "Forgot password failed",
+      });
+    }
+  };
 
-	return (
-		<div
-			className="
+  return (
+    <div
+      className="
       min-h-screen
       bg-[#76c8b1]
       flex
       items-center
       justify-center
       p-4
-    ">
-			<LoginModal
-				handleLogin={handleLogin}
-				loading={loginMutation.isPending}
-				onForgotPassword={() => setForgotOpen(true)}
-			/>
+    "
+    >
+      <LoginModal
+        handleLogin={handleLogin}
+        loading={loginMutation.isPending}
+        onForgotPassword={() => setForgotOpen(true)}
+      />
 
-			<ForgotPasswordModal
-				isOpen={forgotOpen}
-				onClose={() => setForgotOpen(false)}
-				onSubmit={handleForgotPassword}
-				loading={forgotMutation.isPending}
-			/>
+      <ForgotPasswordModal
+        isOpen={forgotOpen}
+        onClose={() => setForgotOpen(false)}
+        onSubmit={handleForgotPassword}
+        loading={forgotMutation.isPending}
+      />
 
-			<ConfirmDialog
-				open={errorDialog.open}
-				onClose={() =>
-					setErrorDialog({
-						open: false,
-						message: '',
-					})
-				}
-				title="Notification"
-				variant="danger"
-				description={errorDialog.message}
-				cancelText="Close"
-			/>
-		</div>
-	);
+      <ConfirmDialog
+        open={errorDialog.open}
+        onClose={() =>
+          setErrorDialog({
+            open: false,
+            message: "",
+          })
+        }
+        title="Notification"
+        variant="danger"
+        description={errorDialog.message}
+        cancelText="Close"
+      />
+    </div>
+  );
 }

@@ -15,26 +15,22 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  CirclePercent,
 } from "lucide-react";
 
 import Button from "@/components/ui/Button";
-import usePermission from "@/hooks/usePermission";
+import usePermissionChecker from "@/hooks/usePermissionChecker";
+import { useSelector } from "react-redux";
 
-export default function APISidebar() {
-  const { isSuperAdmin } = usePermission();
+export default function Sidebar() {
+  const { isSuperAdmin } = usePermissionChecker();
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const user = useSelector((state) => state.auth.user);
 
   const menuItems = [
     { title: "API Overview", icon: LayoutDashboard, href: "/dashboard" },
-    { title: "API Keys", icon: Key, href: "/dashboard/api-keys" },
-    {
-      title: "Logs & Traffic",
-      icon: Activity,
-      href: "/dashboard/logs-&-traffic",
-    },
-    { title: "Webhooks", icon: Webhook, href: "/dashboard/webhooks" },
     ...(isSuperAdmin
       ? [
           {
@@ -44,12 +40,28 @@ export default function APISidebar() {
           },
         ]
       : []),
-    { title: "Settings", icon: Settings, href: "/dashboard/settings" },
+    ...(isSuperAdmin
+      ? [
+          {
+            title: "Commission Management",
+            icon: CirclePercent,
+            href: "/dashboard/commission-management",
+          },
+        ]
+      : []),
     {
       title: "Developer API",
       icon: Settings,
       href: "/dashboard/developer-api",
     },
+    {
+      title: "Logs",
+      icon: Activity,
+      href: "/dashboard/logs",
+    },
+    ...(isSuperAdmin
+      ? [{ title: "Settings", icon: Settings, href: "/dashboard/settings" }]
+      : []),
   ];
 
   useEffect(() => {
@@ -63,16 +75,13 @@ export default function APISidebar() {
         className={`p-6 border-b border-gray-100 flex items-center ${isCollapsed && !mobile ? "justify-center" : "justify-between"}`}
       >
         <div className="flex items-center gap-2">
-          <div className="min-w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
-            <Terminal size={20} className="text-white" />
-          </div>
           {(!isCollapsed || mobile) && (
             <div className="flex flex-col animate-in fade-in duration-300">
               <h1 className="text-lg font-bold tracking-tight text-gray-800 leading-none">
-                API_PORTAL
+                {user?.companyName || "API_PORTAL"}
               </h1>
               <span className="text-[10px] text-emerald-600 font-bold mt-1 uppercase tracking-tighter">
-                Production v2
+                {user?.role}
               </span>
             </div>
           )}

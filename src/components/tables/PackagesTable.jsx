@@ -1,6 +1,6 @@
 "use client";
 
-import { Package, Download, Pencil, Trash2 } from "lucide-react";
+import { Package, Download, Pencil, Trash2, Shield } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
@@ -18,6 +18,7 @@ export default function PackagesTable({
   onAddPackage,
   onEdit,
   onDelete,
+  handlePermissions,
 }) {
   const columns = [
     {
@@ -60,6 +61,14 @@ export default function PackagesTable({
 
       render: (row) => (
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => handlePermissions(row)}
+            className="rounded-lg bg-emerald-50 p-2 text-emerald-600 hover:bg-emerald-100 transition"
+          >
+            <Shield size={16} />
+          </button>
+
           <button
             type="button"
             onClick={() => onEdit(row)}
