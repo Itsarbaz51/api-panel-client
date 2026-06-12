@@ -11,11 +11,13 @@ import ConfirmDialog from "@/components/ConfirmDialog";
 import { setUser } from "@/store/authSlice";
 
 import { useLogin, useForgotPassword } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LoginClient() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const queryClient = useQueryClient();
   const [forgotOpen, setForgotOpen] = useState(false);
 
   const [errorDialog, setErrorDialog] = useState({
@@ -24,33 +26,29 @@ export default function LoginClient() {
   });
 
   const loginMutation = useLogin();
-
   const forgotMutation = useForgotPassword();
 
   // LOGIN
-
   const handleLogin = async (data) => {
     try {
-      const res = await loginMutation.mutateAsync(data);
+      await loginMutation.mutateAsync(data);
 
-      console.log("LOGIN RESPONSE:", res);
+      const currentUser = await queryClient.ensureQueryData({
+        queryKey: ["current-user"],
+      });
 
-      dispatch(setUser(res?.data || res?.user));
+      dispatch(setUser(currentUser?.data));
 
       router.replace("/dashboard");
     } catch (err) {
-      console.log(err);
-
       setErrorDialog({
         open: true,
-
         message: err?.response?.data?.message || err?.message || "Login failed",
       });
     }
   };
 
   // FORGOT PASSWORD
-
   const handleForgotPassword = async (data) => {
     try {
       const res = await forgotMutation.mutateAsync(data);
