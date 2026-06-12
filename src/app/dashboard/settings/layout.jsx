@@ -16,12 +16,6 @@ export default function SettingsLayout({ children }) {
       href: "/dashboard/settings/general",
     },
     {
-      label: "Security",
-      value: "security",
-      icon: ShieldCheck,
-      href: "/dashboard/settings/security",
-    },
-    {
       label: "API Integration",
       value: "api-integration",
       icon: ShieldCheck,
