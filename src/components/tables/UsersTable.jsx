@@ -24,6 +24,16 @@ export default function UsersTable({
 }) {
   const columns = [
     {
+      key: "registrationNumber",
+      label: "Registration Number",
+
+      render: (row) => (
+        <div className="flex gap-3">
+          <div>{row.registrationNumber}</div>
+        </div>
+      ),
+    },
+    {
       key: "user",
       label: "User",
 
