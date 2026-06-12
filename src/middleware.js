@@ -4,12 +4,14 @@ import { jwtDecode } from "jwt-decode";
 export function middleware(request) {
   const token = request.cookies.get("accessToken")?.value;
   const pathname = request.nextUrl.pathname;
+
   const protectedRoutes = ["/dashboard"];
+
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route),
   );
 
-  // NO TOKEN
+  // No token
   if (isProtected && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -18,6 +20,7 @@ export function middleware(request) {
     try {
       const decoded = jwtDecode(token);
 
+      // Token expired
       if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
         const response = NextResponse.redirect(new URL("/login", request.url));
 
@@ -26,7 +29,22 @@ export function middleware(request) {
 
         return response;
       }
-    } catch (e) {
+
+      // SUPER_ADMIN only routes
+      const superAdminRoutes = [
+        "/dashboard/user-management",
+        "/dashboard/commission-management",
+        "/dashboard/settings",
+      ];
+
+      const isSuperAdminRoute = superAdminRoutes.some((route) =>
+        pathname.startsWith(route),
+      );
+
+      if (isSuperAdminRoute && decoded?.role !== "SUPER_ADMIN") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+    } catch (error) {
       const response = NextResponse.redirect(new URL("/login", request.url));
 
       response.cookies.delete("accessToken");
@@ -36,7 +54,7 @@ export function middleware(request) {
     }
   }
 
-  // LOGIN BLOCK
+  // Login page block
   if (token && (pathname === "/login" || pathname === "/")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
