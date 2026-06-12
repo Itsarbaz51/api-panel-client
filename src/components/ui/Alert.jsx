@@ -2,7 +2,7 @@ import React from 'react';
 
 const alertStyles = {
   info: 'bg-blue-50 border-blue-100 text-blue-700',
-  success: 'bg-emerald-50 border-emerald-100 text-emerald-700',
+  success: 'bg-theme/10 border-theme/20 text-theme',
   warning: 'bg-amber-50 border-amber-100 text-amber-700',
   error: 'bg-red-50 border-red-100 text-red-700',
 };

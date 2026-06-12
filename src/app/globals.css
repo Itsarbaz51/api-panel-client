@@ -216,11 +216,11 @@ body {
   color: var(--popover-foreground);
 }
 
-.text-primary {
+. {
   color: var(--primary);
 }
 
-.text-primary-foreground {
+.-foreground {
   color: var(--primary-foreground);
 }
 
@@ -470,7 +470,7 @@ body {
 }
 
 /* Text opacity utilities */
-.text-primary-foreground\/90 {
+.-foreground\/90 {
   color: color-mix(in oklch, var(--primary-foreground) 90%, transparent);
 }
 

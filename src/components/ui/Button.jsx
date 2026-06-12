@@ -36,13 +36,13 @@ export default function Button({
 
 	const variants = {
 		primary:
-			'bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600',
+			'bg-theme text-white border border-theme hover:opacity-90',
 
 		secondary: 'bg-slate-100 hover:bg-slate-200 text-slate-800 border',
 
 		outline: 'border border-slate-300 bg-transparent',
 
-		white: 'bg-white text-emerald-600 border',
+		white: 'bg-white  border',
 
 		ghost: 'bg-transparent',
 

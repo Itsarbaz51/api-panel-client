@@ -116,7 +116,7 @@ export default function SelectField({
                       }}
                       className={`w-full flex items-center justify-between px-4 py-2 text-left text-sm ${
                         active
-                          ? "bg-primary/10 text-primary font-medium"
+                          ? "bg-primary/10  font-medium"
                           : "hover:bg-accent"
                       }`}
                     >

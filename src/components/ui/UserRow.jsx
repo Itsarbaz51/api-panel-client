@@ -4,7 +4,7 @@ import { ShieldCheck, Mail, Calendar, MoreVertical } from 'lucide-react';
 export default function UserRow({ user, onView, onEdit, onDelete }) {
   const getStatusStyles = (status) => {
     return status === 'ACTIVE' 
-      ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
+      ? 'bg-primary/10  border border-primary/20' 
       : 'bg-slate-100 text-slate-500 border border-slate-200';
   };
 
@@ -23,7 +23,7 @@ export default function UserRow({ user, onView, onEdit, onDelete }) {
     <tr className="group hover:bg-slate-50/50 transition-colors">
       <td className="px-6 py-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-emerald-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white text-lg font-bold shadow-lg ">
             {user.name.charAt(0)}
           </div>
           <div>

@@ -39,7 +39,7 @@ export default function Checkbox({
           shrink-0
           rounded
           border-gray-300
-          accent-[#10a37f]
+          accent-[var(--theme-primary)]
           cursor-pointer
           disabled:cursor-not-allowed
           ${inputClassName}

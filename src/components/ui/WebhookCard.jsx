@@ -15,8 +15,8 @@ export default function WebhookCard({
   const isActive = status === 'Active';
   
   const StatusIcon = isActive ? CheckCircle2 : XCircle;
-  const statusColor = isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600';
-  const statusBadgeColor = isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+  const statusColor = isActive ? 'bg-primary/10 ' : 'bg-red-50 text-red-600';
+  const statusBadgeColor = isActive ? 'bg-emerald-100 text-primary' : 'bg-red-100 text-red-700';
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-teal-300 transition-all group shadow-sm">

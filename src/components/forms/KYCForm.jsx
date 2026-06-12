@@ -168,7 +168,7 @@ export default function KYCForm({ onSubmit, loading }) {
     const FileUploadUI = ({ label, name, accept, fileValue }) => (
         <div className="col-span-1">
             <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
-            <div className={`relative border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-all bg-slate-50/50 hover:bg-indigo-50/50 hover:border-indigo-400 ${fileValue ? 'border-emerald-400 bg-emerald-50/30' : 'border-slate-300'}`}>
+            <div className={`relative border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-all bg-slate-50/50 hover:bg-indigo-50/50 hover:border-indigo-400 ${fileValue ? 'border-emerald-400 bg-primary/10/30' : 'border-slate-300'}`}>
                 <input
                     type="file"
                     name={name}
@@ -177,7 +177,7 @@ export default function KYCForm({ onSubmit, loading }) {
                     className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 cursor-pointer focus:outline-none"
                 />
                 {fileValue && (
-                    <div className="absolute bottom-2 right-2 flex items-center gap-1 text-xs text-emerald-600 font-medium bg-white px-2 py-1 rounded-md shadow-sm border border-emerald-100">
+                    <div className="absolute bottom-2 right-2 flex items-center gap-1 text-xs  font-medium bg-white px-2 py-1 rounded-md shadow-sm border border-primary/20">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                         Selected
                     </div>

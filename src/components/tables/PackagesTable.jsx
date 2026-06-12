@@ -64,7 +64,7 @@ export default function PackagesTable({
           <button
             type="button"
             onClick={() => handlePermissions(row)}
-            className="rounded-lg bg-emerald-50 p-2 text-emerald-600 hover:bg-emerald-100 transition"
+            className="rounded-lg bg-primary/10 p-2  hover:bg-emerald-100 transition"
           >
             <Shield size={16} />
           </button>

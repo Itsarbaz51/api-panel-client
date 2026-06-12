@@ -134,8 +134,8 @@ function GeneralClient() {
               {activeTab === "general" && (
                 <div className="p-8 space-y-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-emerald-50 rounded-xl">
-                      <Globe size={20} className="text-emerald-600" />
+                    <div className="p-2 bg-primary/10 rounded-xl">
+                      <Globe size={20} className="" />
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-slate-900">General Information</h2>
@@ -154,7 +154,7 @@ function GeneralClient() {
                         value={formData.websiteName}
                         onChange={handleInputChange}
                         placeholder="My Awesome Brand"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-ring/10 outline-none transition-all font-medium"
                       />
                     </div>
 
@@ -166,7 +166,7 @@ function GeneralClient() {
                         value={formData.websiteEmail}
                         onChange={handleInputChange}
                         placeholder="support@brand.com"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-ring/10 outline-none transition-all font-medium"
                       />
                     </div>
 
@@ -177,7 +177,7 @@ function GeneralClient() {
                         value={formData.websitePhone}
                         onChange={handleInputChange}
                         placeholder="+1 (555) 000-0000"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-ring/10 outline-none transition-all font-medium"
                       />
                     </div>
 
@@ -188,7 +188,7 @@ function GeneralClient() {
                         value={formData.websiteAddress}
                         onChange={handleInputChange}
                         placeholder="123 Business St, City"
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-ring/10 outline-none transition-all font-medium"
                       />
                     </div>
 
@@ -200,7 +200,7 @@ function GeneralClient() {
                         value={formData.websiteDescription}
                         onChange={handleInputChange}
                         placeholder="Describe your website for SEO purposes..."
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium resize-none"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-ring/10 outline-none transition-all font-medium resize-none"
                       />
                       <p className="text-xs text-slate-400">This description will appear in search engine results</p>
                     </div>
@@ -212,8 +212,8 @@ function GeneralClient() {
               {activeTab === "branding" && (
                 <div className="p-8 space-y-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-emerald-50 rounded-xl">
-                      <Brush size={20} className="text-emerald-600" />
+                    <div className="p-2 bg-primary/10 rounded-xl">
+                      <Brush size={20} className="" />
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-slate-900">Branding</h2>
@@ -225,7 +225,7 @@ function GeneralClient() {
                     {/* Logo Upload */}
                     <div className="group relative">
                       <label className="text-sm font-bold text-slate-700 mb-2 block">Website Logo</label>
-                      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-400 transition-all cursor-pointer group-hover:shadow-lg">
+                      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-slate-50 hover:bg-primary/10/50 hover:border-emerald-400 transition-all cursor-pointer group-hover:shadow-lg">
                         <div className="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                           <Upload className="text-emerald-500" size={32} />
                         </div>
@@ -237,7 +237,7 @@ function GeneralClient() {
                     {/* Favicon Upload */}
                     <div className="group relative">
                       <label className="text-sm font-bold text-slate-700 mb-2 block">Favicon</label>
-                      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-400 transition-all cursor-pointer group-hover:shadow-lg">
+                      <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-slate-50 hover:bg-primary/10/50 hover:border-emerald-400 transition-all cursor-pointer group-hover:shadow-lg">
                         <div className="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                           <GlobeIcon className="text-emerald-500" size={32} />
                         </div>
@@ -252,7 +252,7 @@ function GeneralClient() {
                     <h3 className="text-sm font-bold text-slate-700 mb-4">Preview</h3>
                     <div className="bg-white rounded-xl p-4 shadow-sm flex items-center gap-3">
                       <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                        <Image size={20} className="text-emerald-600" />
+                        <Image size={20} className="" />
                       </div>
                       <div>
                         <p className="font-bold text-slate-900">{formData.websiteName || "Your Brand"}</p>
@@ -267,8 +267,8 @@ function GeneralClient() {
               {activeTab === "social" && (
                 <div className="p-8 space-y-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-emerald-50 rounded-xl">
-                      <LinkIcon size={20} className="text-emerald-600" />
+                    <div className="p-2 bg-primary/10 rounded-xl">
+                      <LinkIcon size={20} className="" />
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-slate-900">Social Links</h2>
@@ -313,8 +313,8 @@ function GeneralClient() {
               {activeTab === "advanced" && (
                 <div className="p-8 space-y-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-emerald-50 rounded-xl">
-                      <Shield size={20} className="text-emerald-600" />
+                    <div className="p-2 bg-primary/10 rounded-xl">
+                      <Shield size={20} className="" />
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-slate-900">Advanced Settings</h2>
@@ -326,7 +326,7 @@ function GeneralClient() {
                     {/* Maintenance Mode Toggle */}
                     <div className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border-2 border-slate-200 hover:border-slate-300 transition-all">
                       <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl ${formData.maintenanceMode ? "bg-amber-100 text-amber-600" : "bg-emerald-100 text-emerald-600"}`}>
+                        <div className={`p-3 rounded-xl ${formData.maintenanceMode ? "bg-amber-100 text-amber-600" : "bg-emerald-100 "}`}>
                           <AlertCircle size={20} />
                         </div>
                         <div>
@@ -346,7 +346,7 @@ function GeneralClient() {
                           }))
                         }
                         className={`relative w-14 h-8 rounded-full transition-all duration-300 ${
-                          formData.maintenanceMode ? "bg-amber-500" : "bg-emerald-500"
+                          formData.maintenanceMode ? "bg-amber-500" : "bg-primary"
                         }`}
                       >
                         <div

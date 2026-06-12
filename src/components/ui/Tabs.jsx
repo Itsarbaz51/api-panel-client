@@ -21,7 +21,7 @@ export default function Tabs({
 				const className = `
 					flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200
 					${isActive
-						? "bg-background text-emerald-600 shadow-sm border border-border"
+						? "bg-background text-theme shadow-sm border border-border"
 						: "text-muted-foreground hover:text-foreground"}
 				`;
 

@@ -160,8 +160,8 @@ export const endpoints = [
 
 export const COLORS = {
 	emerald: {
-		bg: "bg-emerald-50",
-		text: "text-emerald-600",
+		bg: "bg-primary/10",
+		text: "",
 		border: "border-emerald-200",
 	},
 

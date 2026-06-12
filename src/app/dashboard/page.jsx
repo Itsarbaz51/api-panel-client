@@ -79,10 +79,10 @@ export default function APIDashboardPage() {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
-              <div className="absolute inset-0 w-3 h-3 bg-emerald-500 rounded-full animate-ping opacity-75" />
+              <div className="w-3 h-3 bg-primary rounded-full animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+              <div className="absolute inset-0 w-3 h-3 bg-primary rounded-full animate-ping opacity-75" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Production • Live</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.3em]  bg-primary/10 px-3 py-1 rounded-full">Production • Live</span>
             <span className="text-[11px] font-mono text-slate-400 bg-slate-100 px-3 py-1 rounded-full">v2.4.1</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
@@ -112,7 +112,7 @@ export default function APIDashboardPage() {
               <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg`}>
                 <stat.icon size={22} />
               </div>
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black ${stat.isUp ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black ${stat.isUp ? 'bg-primary/10  border border-primary/20' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
                 {stat.change}
                 {stat.isUp ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
               </div>
@@ -145,7 +145,7 @@ export default function APIDashboardPage() {
                   <option>Last 90 days</option>
                 </select>
                 <div className="flex items-center gap-1">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                   <span className="text-xs font-medium text-slate-500">Requests</span>
                 </div>
               </div>
@@ -206,9 +206,9 @@ export default function APIDashboardPage() {
                 <p className="text-slate-400 text-xs font-medium">Recent API requests and responses</p>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[9px] font-black text-emerald-600 uppercase tracking-wider">Live Feed</span>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 rounded-full border border-primary/20">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                  <span className="text-[9px] font-black  uppercase tracking-wider">Live Feed</span>
                 </div>
               </div>
             </div>
@@ -220,7 +220,7 @@ export default function APIDashboardPage() {
                 <div key={i} className="group p-4 hover:bg-slate-50/80 transition-all cursor-pointer">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3 flex-1">
-                      <div className={`mt-0.5 p-1.5 rounded-lg ${log.status === 200 ? 'bg-emerald-100 text-emerald-600' : log.status === 401 ? 'bg-amber-100 text-amber-600' : 'bg-rose-100 text-rose-600'}`}>
+                      <div className={`mt-0.5 p-1.5 rounded-lg ${log.status === 200 ? 'bg-emerald-100 ' : log.status === 401 ? 'bg-amber-100 text-amber-600' : 'bg-rose-100 text-rose-600'}`}>
                         {log.status === 200 ? <CheckCircle size={14} /> : log.status === 401 ? <AlertCircle size={14} /> : <XCircle size={14} />}
                       </div>
                       <div className="flex-1">
@@ -237,7 +237,7 @@ export default function APIDashboardPage() {
                         </div>
                       </div>
                     </div>
-                    <div className={`text-[10px] font-black px-2 py-1 rounded-md ${log.status === 200 ? 'bg-emerald-50 text-emerald-600' : log.status === 401 ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'}`}>
+                    <div className={`text-[10px] font-black px-2 py-1 rounded-md ${log.status === 200 ? 'bg-primary/10 ' : log.status === 401 ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'}`}>
                       {log.status}
                     </div>
                   </div>
@@ -267,7 +267,7 @@ export default function APIDashboardPage() {
                 </h3>
                 <p className="text-slate-400 text-xs font-medium">Most frequently accessed API routes</p>
               </div>
-              <button className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+              <button className="text-xs font-semibold  hover:text-primary flex items-center gap-1">
                 View All <ArrowUpRight size={12} />
               </button>
             </div>
@@ -295,7 +295,7 @@ export default function APIDashboardPage() {
                       <span className="text-sm font-bold text-slate-800">{endpoint.calls}</span>
                     </td>
                     <td className="p-4 text-right">
-                      <span className={`text-[11px] font-black px-2 py-1 rounded-md ${endpoint.change.startsWith('+') ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50'}`}>
+                      <span className={`text-[11px] font-black px-2 py-1 rounded-md ${endpoint.change.startsWith('+') ? ' bg-primary/10' : 'text-rose-600 bg-rose-50'}`}>
                         {endpoint.change}
                       </span>
                     </td>
@@ -316,7 +316,7 @@ export default function APIDashboardPage() {
                 </h3>
                 <p className="text-slate-400 text-xs font-medium">All systems operational</p>
               </div>
-              <div className="px-3 py-1.5 bg-emerald-500/20 rounded-full border border-emerald-500/30">
+              <div className="px-3 py-1.5 bg-primary/20 rounded-full border border-emerald-500/30">
                 <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                   <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
                   100% Uptime

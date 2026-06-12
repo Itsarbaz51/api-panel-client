@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Settings, ShieldCheck, Bell } from "lucide-react";
-import { motion } from "framer-motion"; // Make sure to install: npm install framer-motion
+import { Settings, ShieldCheck } from "lucide-react";
+
+import Tabs from "@/components/ui/Tabs";
 
 export default function SettingsLayout({ children }) {
   const pathname = usePathname();
@@ -23,64 +23,39 @@ export default function SettingsLayout({ children }) {
     },
   ];
 
-  return (
-    <div className="relative animate-in fade-in duration-700">
-      {/* Background Glow Effects */}
-      <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[#00b37e]/10 blur-[120px] rounded-full -z-10" />
+  const activeTab =
+    tabs.find((tab) => pathname.startsWith(tab.href))?.value || "general";
 
-      {/* Header Section */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-1 bg-[#00b37e] rounded-full" />
-            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#00b37e]/80">
+  return (
+    <div className="relative">
+      {/* Theme Glow */}
+      <div className="absolute top-0 left-0 h-60 w-60 bg-theme/10 blur-3xl rounded-full -z-10" />
+
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-5 w-1 rounded-full bg-theme" />
+
+            <span className="text-xs uppercase tracking-[0.2em] font-bold text-theme">
               Preferences
             </span>
           </div>
-          <h1 className="text-4xl font-black tracking-tight text-[#0f172a]">
-            System <span className="text-[#00b37e]">Settings</span>
+
+          <h1 className="text-3xl font-black text-foreground">
+            System <span className="text-theme">Settings</span>
           </h1>
+
+          <p className="text-muted-foreground mt-2">
+            Configure system behaviour and integrations.
+          </p>
         </div>
 
-        {/* Floating Navigation (Animated Style) */}
-        <nav className="flex items-center p-1.5 bg-[#f1f5f9]/80 backdrop-blur-md border border-slate-200/50 rounded-[32px] shadow-inner relative overflow-x-auto no-scrollbar">
-          {tabs.map((tab) => {
-            const isActive = pathname === tab.href;
-            return (
-              <Link
-                key={tab.value}
-                href={tab.href}
-                className={`
-                  relative flex items-center gap-2.5 px-7 py-3 rounded-[26px] text-sm font-bold transition-all duration-300 whitespace-nowrap outline-none
-                  ${isActive ? "text-[#00b37e]" : "text-slate-500 hover:text-slate-800"}
-                `}
-              >
-                {/* Framer Motion Active Indicator (The White Pill) */}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTabPillSettings"
-                    className="absolute inset-0 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100 rounded-[26px]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
+        <Tabs tabs={tabs} activeTab={activeTab} />
+      </div>
 
-                {/* Tab Content */}
-                <span className="relative z-10 flex items-center gap-2.5">
-                  <tab.icon
-                    className={`w-4 h-4 ${isActive ? "text-[#00b37e]" : "text-slate-400"}`}
-                  />
-                  {tab.label}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-      </header>
-
-      {/* Content Area */}
-      <main className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {children}
-      </main>
+      {/* Content */}
+      <div>{children}</div>
     </div>
   );
 }

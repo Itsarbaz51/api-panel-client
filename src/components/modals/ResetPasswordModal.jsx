@@ -48,7 +48,7 @@ export default function ResetPasswordModal({
         {/* --- Modal Header --- */}
         <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-emerald-100  rounded-xl flex items-center justify-center">
               <Key className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-slate-900">Reset Password</h3>

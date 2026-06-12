@@ -55,12 +55,12 @@ export default function FilterDropdown({
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors ${
                       isActive 
-                        ? "bg-emerald-50 text-emerald-700" 
+                        ? "bg-primary/10 text-primary" 
                         : "text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <span>{opt.label}</span>
-                    {isActive && <Check size={14} className="text-emerald-600" />}
+                    {isActive && <Check size={14} className="" />}
                   </button>
                 );
               })}

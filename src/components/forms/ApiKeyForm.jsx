@@ -120,7 +120,7 @@ export default function ApiKeyForm({
           <button
             type="button"
             onClick={onAddIp}
-            className="text-emerald-600 text-sm"
+            className=" text-sm"
           >
             + Add
           </button>

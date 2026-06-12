@@ -19,7 +19,7 @@ export const getMethodStyles = (method) => {
 
 export const getStatusStyles = (status) => {
 	if (status >= 200 && status < 300) {
-		return "bg-emerald-50 text-emerald-700 border-emerald-100";
+		return "bg-primary/10 text-primary border-primary/20";
 	}
 
 	if (status >= 400) {

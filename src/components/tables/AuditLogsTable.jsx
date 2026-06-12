@@ -127,7 +127,7 @@ export default function AuditLogsTable({
       render: (row) => (
         <button
           onClick={() => openMetadata(row.metadata)}
-          className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+          className=" hover:text-primary text-sm font-medium"
         >
           View Metadata
         </button>

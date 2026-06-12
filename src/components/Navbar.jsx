@@ -183,7 +183,10 @@ export default function Navbar() {
                 {user?.companyName || "API_PORTAL"}
               </h1>
 
-              <p className="text-[10px] uppercase text-emerald-600">
+              <p
+                className="text-[10px] uppercase text-theme
+"
+              >
                 {user?.role}
               </p>
             </div>
@@ -203,7 +206,7 @@ export default function Navbar() {
                       href={item.href}
                       className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                         active
-                          ? "bg-emerald-50 text-emerald-600 font-semibold"
+                          ? "bg-theme/10 text-theme font-semibold"
                           : "text-slate-600 hover:bg-slate-100"
                       }`}
                     >
@@ -215,7 +218,7 @@ export default function Navbar() {
                       <button
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                           active
-                            ? "bg-emerald-50 text-emerald-600 font-semibold"
+                            ? "bg-theme/10 text-theme font-semibold"
                             : "text-slate-600 hover:bg-slate-100"
                         }`}
                       >
@@ -242,7 +245,7 @@ export default function Navbar() {
                             href={child.href}
                             className={`block px-4 py-3 text-sm ${
                               pathname === child.href
-                                ? "bg-emerald-50 text-emerald-600 font-medium"
+                                ? "bg-theme/10 text-theme font-medium"
                                 : "hover:bg-slate-50"
                             }`}
                           >
@@ -262,7 +265,8 @@ export default function Navbar() {
             {isApiHolder && (
               <button
                 onClick={handleCredentialOpen}
-                className="hidden md:block px-4 py-2 rounded-xl bg-emerald-50 text-emerald-600"
+                className="hidden md:block px-4 py-2 rounded-xl bg-theme/10 text-theme
+"
               >
                 View Credential
               </button>
@@ -282,7 +286,7 @@ export default function Navbar() {
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center gap-2"
               >
-                <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-xl bg-theme/100 flex items-center justify-center text-white font-semibold">
                   {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
                 </div>
                 <span>{user?.fullName}</span>

@@ -29,7 +29,7 @@ export default function Input({
 				onChange={onChange}
 				className={`w-full px-4 py-3 rounded-lg bg-slate-50 border ${
 					error ? 'border-red-500' : 'border-slate-200'
-				} text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#10a37f] focus:border-[#10a37f] transition-all ${className}`}
+				} text-slate-700 focus:outline-none focus:ring-2 focus:ring-theme focus:border-theme transition-all ${className}`}
 				{...props}
 			/>
 			{error && <p className="text-red-500 text-xs mt-1">{error}</p>}

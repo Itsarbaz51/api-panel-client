@@ -40,7 +40,7 @@ const columns = [
 		render: (row) => (
 			<div className="flex items-center gap-2 font-mono text-xs">
 
-				<Terminal className="h-4 w-4 text-primary/50" />
+				<Terminal className="h-4 w-4 /50" />
 
 				<span>{row.path}</span>
 

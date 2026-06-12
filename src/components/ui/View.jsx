@@ -47,9 +47,9 @@ const formatValue = (key, value) => {
 
     if (typeof value === 'boolean') {
         return (
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${value ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/10' : 'bg-slate-100 text-slate-700 ring-1 ring-slate-600/10'
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${value ? 'bg-primary/10 text-primary ring-1 ring-emerald-600/10' : 'bg-slate-100 text-slate-700 ring-1 ring-slate-600/10'
                 }`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${value ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
+                <span className={`h-1.5 w-1.5 rounded-full ${value ? 'bg-primary' : 'bg-slate-400'}`}></span>
                 {value ? 'Active' : 'Inactive'}
             </span>
         );
@@ -82,7 +82,7 @@ const formatValue = (key, value) => {
                 <span title={String(value)} className="font-mono text-sm text-slate-600">
                     {String(value).slice(0, 8)}...{String(value).slice(-5)}
                 </span>
-                <button className="text-slate-400 group-hover:text-emerald-600 transition-colors" title="Copy ID">
+                <button className="text-slate-400 group-hover: transition-colors" title="Copy ID">
                     <IconCopy />
                 </button>
             </div>
@@ -143,8 +143,8 @@ export default function View({ open, onClose, title, data }) {
                     {prominentFields.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                             {prominentFields.map(([key, value]) => (
-                                <div key={key} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 hover:border-emerald-100 hover:shadow-emerald-50 transition-all duration-200">
-                                    <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+                                <div key={key} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 hover:border-primary/20 hover:shadow-emerald-50 transition-all duration-200">
+                                    <div className="p-3 rounded-xl bg-primary/10  border border-primary/20">
                                         {iconMap[key] || <IconUser />}
                                     </div>
                                     <div>
@@ -169,7 +169,7 @@ export default function View({ open, onClose, title, data }) {
                             {regularFields.map(([key, value], index) => (
                                 <div key={key} className={`flex flex-col p-5 ${index % 2 !== 0 ? 'md:border-l border-slate-100' : ''} ${index >= 2 ? 'md:border-t' : ''}`}>
                                     <dt className="text-sm font-medium text-slate-500 flex items-center gap-2.5 mb-2">
-                                        <span className="text-emerald-500/80 bg-emerald-50 p-1.5 rounded-lg border border-emerald-100/50">
+                                        <span className="text-emerald-500/80 bg-primary/10 p-1.5 rounded-lg border border-primary/20/50">
                                             {iconMap[key] || iconMap[key.includes('id') ? 'id' : ''] || <IconCode />}
                                         </span>
                                         {formatLabel(key)}

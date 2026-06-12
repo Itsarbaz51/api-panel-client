@@ -20,7 +20,7 @@ export default function TabsNav({ tabs = [], basePath = "" }) {
               onClick={() => router.push(href)}
               className={`pb-2 text-sm font-medium border-b-2 flex items-center gap-2 transition cursor-pointer ${
                 active
-                  ? "border-primary text-primary"
+                  ? "border-primary "
                   : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >

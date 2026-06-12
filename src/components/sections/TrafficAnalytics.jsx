@@ -71,8 +71,8 @@ export default function TrafficAnalytics({
 			title: "Total Requests",
 			value: stats.total,
 			icon: Server,
-			iconColor: "text-emerald-600",
-			bgColor: "bg-emerald-50",
+			iconColor: "",
+			bgColor: "bg-primary/10",
 
 			change: "+12%",
 			footer: "Increased from yesterday",

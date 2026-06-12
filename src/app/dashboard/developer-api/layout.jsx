@@ -33,7 +33,7 @@ export default function DeveloperAPILayout({ children }) {
 	return (
 		<div className="relative min-h-screen p-4 md:p-8">
 			{/* BG GLOW */}
-			<div className="absolute top-0 left-0 h-75 w-75 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
+			<div className="absolute top-0 left-0 h-75 w-75 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
 			{/* HEADER */}
 			<Header

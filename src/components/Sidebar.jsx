@@ -103,7 +103,7 @@ export default function Sidebar() {
               <h1 className="text-lg font-bold tracking-tight text-gray-800 leading-none">
                 {user?.companyName || "API_PORTAL"}
               </h1>
-              <span className="text-[10px] text-emerald-600 font-bold mt-1 uppercase tracking-tighter">
+              <span className="text-[10px]  font-bold mt-1 uppercase tracking-tighter">
                 {user?.role}
               </span>
             </div>
@@ -125,16 +125,16 @@ export default function Sidebar() {
       {/* API Status Indicator */}
       {(!isCollapsed || mobile) && (
         <div className="px-4 py-4">
-          <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-100 rounded-2xl">
+          <div className="flex items-center gap-3 p-3 bg-primary/10 border border-primary/20 rounded-2xl">
             <div className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </div>
             <div className="flex flex-col">
               <p className="text-[11px] font-bold text-emerald-800 uppercase leading-none">
                 System Live
               </p>
-              <p className="text-[10px] text-emerald-600 mt-1">Latency: 24ms</p>
+              <p className="text-[10px]  mt-1">Latency: 24ms</p>
             </div>
           </div>
         </div>
@@ -163,8 +163,8 @@ export default function Sidebar() {
                     className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200
                 ${
                   isActive
-                    ? "bg-emerald-50 text-emerald-600 shadow-sm"
-                    : "text-gray-500 hover:text-emerald-600 hover:bg-gray-50"
+                    ? "bg-primary/10  shadow-sm"
+                    : "text-gray-500 hover: hover:bg-gray-50"
                 }
                 ${isCollapsed && !mobile ? "justify-center" : ""}
               `}
@@ -197,7 +197,7 @@ export default function Sidebar() {
       {/* Mobile Header */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 px-4 flex items-center justify-between z-30">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <Terminal size={18} className="text-white" />
           </div>
           <span className="font-bold text-gray-800">API_PORTAL</span>
@@ -223,7 +223,7 @@ export default function Sidebar() {
 
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-20 w-6 h-6 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-sm hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 transition-all z-50"
+          className="absolute -right-3 top-20 w-6 h-6 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-sm hover:bg-primary/10 text-gray-400 hover: transition-all z-50"
         >
           {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>

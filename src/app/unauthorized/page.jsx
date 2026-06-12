@@ -61,7 +61,7 @@ export default function UnauthorizedPage() {
           {/* Suggestions */}
           <div className="mb-6">
             <h3 className="font-semibold mb-3 flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-primary" />
+              <HelpCircle className="w-4 h-4 " />
               What you can do:
             </h3>
 
@@ -78,7 +78,7 @@ export default function UnauthorizedPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-border bg-primary text-primary-foreground hover:bg-primary/90 transition font-medium"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-border bg-primary -foreground hover:bg-primary/90 transition font-medium"
             >
               <Home className="w-4 h-4" />
               Dashboard
