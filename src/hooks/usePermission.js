@@ -17,6 +17,13 @@ export const useGetAllPermissions = ({ page = 1, limit = 10, scope = "" }) =>
     placeholderData: keepPreviousData,
   });
 
+export const useMyPermissions = () =>
+  useQuery({
+    queryKey: ["my-permissions"],
+
+    queryFn: () => apiClient("/permission/my"),
+  });
+
 export const useCreatePermission = () => {
   const queryClient = useQueryClient();
 

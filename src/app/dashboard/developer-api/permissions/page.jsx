@@ -1,8 +1,8 @@
-"use client";
+import MyPermissionClient from "@/components/client/MyPermissionClient";
 import React from "react";
 
 function page() {
-  return <div>page</div>;
+  return <MyPermissionClient />;
 }
 
 export default page;
