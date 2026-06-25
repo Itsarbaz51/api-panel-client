@@ -85,6 +85,15 @@ export default function ServiceProviderForm({
 
     setFormData({
       ...initialData,
+
+      category: initialData.category ?? "",
+      operator: initialData.operator ?? "",
+      operatorCode: initialData.operatorCode ?? "",
+      paymentMethod: initialData.paymentMethod ?? "",
+      network: initialData.network ?? "",
+      bankCode: initialData.bankCode ?? "",
+      transactionType: initialData.transactionType ?? "",
+
       config: configArray.length > 0 ? configArray : [{ key: "", value: "" }],
     });
   }, [initialData]);
@@ -146,7 +155,11 @@ export default function ServiceProviderForm({
       };
 
       const validation = serviceProviderValidation.safeParse(payload);
+
       if (!validation.success) {
+        console.log(validation.error.flatten());
+        console.log(validation.error.issues);
+
         setErrors(getValidationErrors(validation.error.issues));
         return;
       }
@@ -229,7 +242,7 @@ export default function ServiceProviderForm({
         <InputField
           label="Base URL"
           name="baseUrl"
-          value={formData.baseUrl}
+          value={formData.baseUrl || ""}
           onChange={handleChange}
           error={errors.baseUrl}
         />
@@ -239,6 +252,7 @@ export default function ServiceProviderForm({
           name="handlePath"
           value={formData.handlePath}
           onChange={handleChange}
+          error={errors.handlePath}
         />
 
         <Checkbox
@@ -246,6 +260,7 @@ export default function ServiceProviderForm({
           label="Active"
           checked={formData.isActive}
           onChange={handleChange}
+          error={errors.isActive}
         />
 
         <Checkbox
@@ -253,6 +268,7 @@ export default function ServiceProviderForm({
           label="Supports Slab"
           checked={formData.supportsSlab}
           onChange={handleChange}
+          error={errors.supportsSlab}
         />
 
         <Checkbox
@@ -260,6 +276,7 @@ export default function ServiceProviderForm({
           label="Support Payment Method"
           checked={formData.supportPaymentMethod}
           onChange={handleChange}
+          error={errors.supportPaymentMethod}
         />
 
         {formData.mode === "COMMISSION" && (
@@ -269,6 +286,7 @@ export default function ServiceProviderForm({
               label="Apply TDS"
               checked={formData.applyTDS}
               onChange={handleChange}
+              error={errors.applyTDS}
             />
 
             {formData.applyTDS && (
@@ -277,6 +295,7 @@ export default function ServiceProviderForm({
                 name="tdsPercent"
                 value={formData.tdsPercent}
                 onChange={handleChange}
+                error={errors.tdsPercent}
               />
             )}
           </>
@@ -289,6 +308,7 @@ export default function ServiceProviderForm({
               label="Apply GST"
               checked={formData.applyGST}
               onChange={handleChange}
+              error={errors.applyGST}
             />
 
             {formData.applyGST && (
@@ -297,6 +317,7 @@ export default function ServiceProviderForm({
                 name="gstPercent"
                 value={formData.gstPercent}
                 onChange={handleChange}
+                error={errors.gstPercent}
               />
             )}
           </>
@@ -309,6 +330,7 @@ export default function ServiceProviderForm({
               name="category"
               value={formData.category}
               onChange={handleChange}
+              error={errors.category}
             />
 
             <InputField
@@ -316,6 +338,7 @@ export default function ServiceProviderForm({
               name="operator"
               value={formData.operator}
               onChange={handleChange}
+              error={errors.operator}
             />
 
             <InputField
@@ -323,6 +346,7 @@ export default function ServiceProviderForm({
               name="operatorCode"
               value={formData.operatorCode}
               onChange={handleChange}
+              error={errors.operatorCode}
             />
 
             <InputField
@@ -330,6 +354,7 @@ export default function ServiceProviderForm({
               name="paymentMethod"
               value={formData.paymentMethod}
               onChange={handleChange}
+              error={errors.paymentMethod}
             />
 
             <InputField
@@ -337,6 +362,7 @@ export default function ServiceProviderForm({
               name="network"
               value={formData.network}
               onChange={handleChange}
+              error={errors.network}
             />
 
             <InputField
@@ -344,6 +370,7 @@ export default function ServiceProviderForm({
               name="bankCode"
               value={formData.bankCode}
               onChange={handleChange}
+              error={errors.bankCode}
             />
           </>
         )}
@@ -353,6 +380,7 @@ export default function ServiceProviderForm({
           name="transactionType"
           value={formData.transactionType}
           onChange={handleChange}
+          error={errors.transactionType}
         />
 
         {formData.supportsSlab && (
@@ -362,6 +390,7 @@ export default function ServiceProviderForm({
               name="minAmount"
               value={formData.minAmount}
               onChange={handleChange}
+              error={errors.minAmount}
             />
 
             <InputField
@@ -369,6 +398,7 @@ export default function ServiceProviderForm({
               name="maxAmount"
               value={formData.maxAmount}
               onChange={handleChange}
+              error={errors.maxAmount}
             />
 
             <InputField
@@ -376,6 +406,7 @@ export default function ServiceProviderForm({
               name="value"
               value={formData.value}
               onChange={handleChange}
+              error={errors.value}
             />
           </>
         )}
