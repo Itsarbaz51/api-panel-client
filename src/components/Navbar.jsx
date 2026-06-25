@@ -39,7 +39,7 @@ export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [credential, setCredential] = useState(null);
-  
+
   // 1. Dropdown को hold करने के लिए state और ref (Pure JS)
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
@@ -180,11 +180,52 @@ export default function Navbar() {
     setOpenDropdown(openDropdown === title ? null : title);
   };
 
+  const handleApiKeyChange = (field, value, index) => {
+    setCredential((prev) => {
+      if (field === "allowedIps") {
+        const ips = [...(prev.allowedIps || [])];
+        ips[index] = value;
+
+        return {
+          ...prev,
+          allowedIps: ips,
+        };
+      }
+
+      return {
+        ...prev,
+        [field]: value,
+      };
+    });
+  };
+
+  const handleAddIp = () => {
+    setCredential((prev) => ({
+      ...prev,
+      allowedIps: [...(prev?.allowedIps || []), ""],
+    }));
+  };
+
+  const handleRemoveIp = (index) => {
+    setCredential((prev) => ({
+      ...prev,
+      allowedIps: prev.allowedIps.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async () => {
+    await updateApiKey.mutateAsync({
+      id: credential.id,
+      payload: {
+        allowedIps: credential.allowedIps,
+      },
+    });
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs backdrop-blur-md bg-white/95">
         <div className="h-18 px-4 lg:px-8 flex items-center justify-between">
-          
           {/* Left Logo / Company Profile */}
           <div className="flex items-center gap-8">
             <div className="flex flex-col">
@@ -215,7 +256,10 @@ export default function Navbar() {
                           : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                       }`}
                     >
-                      <Icon size={16} className={active ? "text-sky-600" : "text-slate-400"} />
+                      <Icon
+                        size={16}
+                        className={active ? "text-sky-600" : "text-slate-400"}
+                      />
                       {item.title}
                     </Link>
                   ) : (
@@ -229,9 +273,19 @@ export default function Navbar() {
                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                         }`}
                       >
-                        <Icon size={16} className={active || isDropdownOpen ? "text-sky-600" : "text-slate-400"} />
+                        <Icon
+                          size={16}
+                          className={
+                            active || isDropdownOpen
+                              ? "text-sky-600"
+                              : "text-slate-400"
+                          }
+                        />
                         {item.title}
-                        <ChevronDown size={14} className={`opacity-70 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
+                        <ChevronDown
+                          size={14}
+                          className={`opacity-70 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+                        />
                       </button>
 
                       {/* State-based open/close */}
@@ -286,7 +340,10 @@ export default function Navbar() {
                 <span className="hidden sm:inline text-sm font-medium text-slate-700 capitalize">
                   {user?.fullName || "Profile"}
                 </span>
-                <ChevronDown size={14} className="text-slate-400 hidden sm:inline" />
+                <ChevronDown
+                  size={14}
+                  className="text-slate-400 hidden sm:inline"
+                />
               </button>
 
               {showProfileMenu && (
@@ -331,7 +388,7 @@ export default function Navbar() {
           <div className="lg:hidden border-t border-slate-100 bg-white px-3 py-2 space-y-1 shadow-inner max-h-[calc(100vh-4rem)] overflow-y-auto">
             {menuItems.map((item) => {
               const active = isItemActive(item);
-              
+
               if (item.href) {
                 return (
                   <Link
@@ -348,7 +405,7 @@ export default function Navbar() {
                   </Link>
                 );
               }
-              
+
               return (
                 <div key={item.title} className="space-y-0.5">
                   <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">
@@ -384,6 +441,10 @@ export default function Navbar() {
         data={credential}
         role={user?.role}
         loading={updateApiKey.isPending}
+        onChange={handleApiKeyChange}
+        onAddIp={handleAddIp}
+        onRemoveIp={handleRemoveIp}
+        onSubmit={handleSubmit}
       />
     </>
   );
