@@ -40,7 +40,6 @@ export default function Navbar() {
   const [modalOpen, setModalOpen] = useState(false);
   const [credential, setCredential] = useState(null);
 
-  // 1. Dropdown को hold करने के लिए state और ref (Pure JS)
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
@@ -52,7 +51,6 @@ export default function Navbar() {
   const createApiKey = useCreateApiKey();
   const updateApiKey = useUpdateApiKey();
 
-  // बाहर क्लिक करने पर ड्रॉपडाउन बंद करने के लिए Effect
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
