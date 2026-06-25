@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Editor from "@monaco-editor/react";
 import InputField from "@/components/ui/InputField";
 import SelectField from "@/components/ui/SelectField";
 import Button from "@/components/ui/Button";
@@ -14,6 +13,7 @@ import { useGetAllProviders } from "@/hooks/useProvider";
 
 import { serviceProviderValidation } from "@/validation/serviceProviderValidation";
 import { getValidationErrors } from "@/utils/validationErrors";
+import Checkbox from "../ui/Checkbox";
 
 export default function ServiceProviderForm({
   initialData,
@@ -44,7 +44,6 @@ export default function ServiceProviderForm({
     pricingValueType: "NONE",
 
     value: 0,
-    providerCost: 0,
 
     supportsSlab: false,
     supportPaymentMethod: false,
@@ -56,7 +55,7 @@ export default function ServiceProviderForm({
     applyTDS: false,
     tdsPercent: 0,
 
-    config: "{}",
+    config: [{ key: "", value: "" }],
   });
 
   const { data: servicesResponse } = useGetAllServices({
@@ -77,12 +76,41 @@ export default function ServiceProviderForm({
   useEffect(() => {
     if (!initialData) return;
 
+    const configArray = Object.entries(initialData.config || {}).map(
+      ([key, value]) => ({
+        key,
+        value: String(value),
+      }),
+    );
+
     setFormData({
       ...initialData,
-
-      config: JSON.stringify(initialData.config || {}, null, 2),
+      config: configArray.length > 0 ? configArray : [{ key: "", value: "" }],
     });
   }, [initialData]);
+
+  const addConfigRow = () => {
+    setFormData((prev) => ({
+      ...prev,
+      config: [...prev.config, { key: "", value: "" }],
+    }));
+  };
+
+  const removeConfigRow = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      config: prev.config.filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateConfigRow = (index, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      config: prev.config.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item,
+      ),
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -104,24 +132,30 @@ export default function ServiceProviderForm({
         maxAmount: Number(formData.maxAmount || 0),
 
         value: Number(formData.value || 0),
-        providerCost: Number(formData.providerCost || 0),
 
         gstPercent: Number(formData.gstPercent || 0),
         tdsPercent: Number(formData.tdsPercent || 0),
 
-        config: JSON.parse(formData.config || "{}"),
+        config: formData.config.reduce((acc, item) => {
+          if (item.key?.trim()) {
+            acc[item.key] = item.value;
+          }
+
+          return acc;
+        }, {}),
       };
 
       const validation = serviceProviderValidation.safeParse(payload);
-
       if (!validation.success) {
         setErrors(getValidationErrors(validation.error.issues));
         return;
       }
 
       await onSubmit(validation.data);
-    } catch {
-      setFormError("Invalid JSON Config");
+    } catch (err) {
+      console.error(err);
+
+      setFormError(err?.message || "Something went wrong");
     }
   };
 
@@ -147,6 +181,7 @@ export default function ServiceProviderForm({
               serviceId: value,
             }))
           }
+          error={errors.serviceId}
         />
 
         <SelectField
@@ -162,6 +197,33 @@ export default function ServiceProviderForm({
               providerId: value,
             }))
           }
+          error={errors.providerId}
+        />
+
+        <SelectField
+          label="Mode"
+          value={formData.mode}
+          options={[
+            {
+              label: "None",
+              value: "NONE",
+            },
+            {
+              label: "Commission",
+              value: "COMMISSION",
+            },
+            {
+              label: "Surcharge",
+              value: "SURCHARGE",
+            },
+          ]}
+          onChange={(value) =>
+            setFormData((p) => ({
+              ...p,
+              mode: value,
+            }))
+          }
+          error={errors.mode}
         />
 
         <InputField
@@ -169,6 +231,7 @@ export default function ServiceProviderForm({
           name="baseUrl"
           value={formData.baseUrl}
           onChange={handleChange}
+          error={errors.baseUrl}
         />
 
         <InputField
@@ -178,47 +241,112 @@ export default function ServiceProviderForm({
           onChange={handleChange}
         />
 
-        <InputField
-          label="Category"
-          name="category"
-          value={formData.category}
+        <Checkbox
+          name="isActive"
+          label="Active"
+          checked={formData.isActive}
           onChange={handleChange}
         />
 
-        <InputField
-          label="Operator"
-          name="operator"
-          value={formData.operator}
+        <Checkbox
+          name="supportsSlab"
+          label="Supports Slab"
+          checked={formData.supportsSlab}
           onChange={handleChange}
         />
 
-        <InputField
-          label="Operator Code"
-          name="operatorCode"
-          value={formData.operatorCode}
+        <Checkbox
+          name="supportPaymentMethod"
+          label="Support Payment Method"
+          checked={formData.supportPaymentMethod}
           onChange={handleChange}
         />
 
-        <InputField
-          label="Payment Method"
-          name="paymentMethod"
-          value={formData.paymentMethod}
-          onChange={handleChange}
-        />
+        {formData.mode === "COMMISSION" && (
+          <>
+            <Checkbox
+              name="applyTDS"
+              label="Apply TDS"
+              checked={formData.applyTDS}
+              onChange={handleChange}
+            />
 
-        <InputField
-          label="Network"
-          name="network"
-          value={formData.network}
-          onChange={handleChange}
-        />
+            {formData.applyTDS && (
+              <InputField
+                label="TDS Percent"
+                name="tdsPercent"
+                value={formData.tdsPercent}
+                onChange={handleChange}
+              />
+            )}
+          </>
+        )}
 
-        <InputField
-          label="Bank Code"
-          name="bankCode"
-          value={formData.bankCode}
-          onChange={handleChange}
-        />
+        {formData.mode === "SURCHARGE" && (
+          <>
+            <Checkbox
+              name="applyGST"
+              label="Apply GST"
+              checked={formData.applyGST}
+              onChange={handleChange}
+            />
+
+            {formData.applyGST && (
+              <InputField
+                label="GST Percent"
+                name="gstPercent"
+                value={formData.gstPercent}
+                onChange={handleChange}
+              />
+            )}
+          </>
+        )}
+
+        {formData.supportPaymentMethod && (
+          <>
+            <InputField
+              label="Category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label="Operator"
+              name="operator"
+              value={formData.operator}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label="Operator Code"
+              name="operatorCode"
+              value={formData.operatorCode}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label="Payment Method"
+              name="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label="Network"
+              name="network"
+              value={formData.network}
+              onChange={handleChange}
+            />
+
+            <InputField
+              label="Bank Code"
+              name="bankCode"
+              value={formData.bankCode}
+              onChange={handleChange}
+            />
+          </>
+        )}
 
         <InputField
           label="Transaction Type"
@@ -227,102 +355,72 @@ export default function ServiceProviderForm({
           onChange={handleChange}
         />
 
-        <InputField
-          label="Min Amount"
-          name="minAmount"
-          value={formData.minAmount}
-          onChange={handleChange}
-        />
+        {formData.supportsSlab && (
+          <>
+            <InputField
+              label="Min Amount"
+              name="minAmount"
+              value={formData.minAmount}
+              onChange={handleChange}
+            />
 
-        <InputField
-          label="Max Amount"
-          name="maxAmount"
-          value={formData.maxAmount}
-          onChange={handleChange}
-        />
+            <InputField
+              label="Max Amount"
+              name="maxAmount"
+              value={formData.maxAmount}
+              onChange={handleChange}
+            />
 
-        <InputField
-          label="Value"
-          name="value"
-          value={formData.value}
-          onChange={handleChange}
-        />
-
-        <InputField
-          label="Provider Cost"
-          name="providerCost"
-          value={formData.providerCost}
-          onChange={handleChange}
-        />
+            <InputField
+              label="Value"
+              name="value"
+              value={formData.value}
+              onChange={handleChange}
+            />
+          </>
+        )}
       </div>
 
-      <div>
-        <label className="block mb-2 font-medium">Config JSON</label>
+      <div className="border rounded-xl p-5 space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold">Configuration</h3>
 
-        <div className="border rounded-xl overflow-hidden">
-          <Editor
-            height="400px"
-            defaultLanguage="json"
-            theme="vs-dark"
-            value={formData.config}
-            onChange={(value) =>
-              setFormData((prev) => ({
-                ...prev,
-                config: value || "{}",
-              }))
-            }
-            options={{
-              minimap: {
-                enabled: false,
-              },
-              fontSize: 14,
-              formatOnPaste: true,
-              formatOnType: true,
-            }}
-          />
+          <Button type="button" onClick={addConfigRow}>
+            Add Config
+          </Button>
         </div>
-      </div>
 
-      <div className="grid grid-cols-4 gap-4">
-        <label>
-          <input
-            type="checkbox"
-            name="isActive"
-            checked={formData.isActive}
-            onChange={handleChange}
-          />
-          Active
-        </label>
+        {formData.config.map((item, index) => (
+          <div key={index} className="grid grid-cols-12 gap-3">
+            <div className="col-span-5">
+              <InputField
+                label="Key"
+                value={item.key}
+                onChange={(e) => updateConfigRow(index, "key", e.target.value)}
+              />
+            </div>
 
-        <label>
-          <input
-            type="checkbox"
-            name="supportsSlab"
-            checked={formData.supportsSlab}
-            onChange={handleChange}
-          />
-          Supports Slab
-        </label>
+            <div className="col-span-5">
+              <InputField
+                label="Value"
+                value={item.value}
+                onChange={(e) =>
+                  updateConfigRow(index, "value", e.target.value)
+                }
+              />
+            </div>
 
-        <label>
-          <input
-            type="checkbox"
-            name="applyGST"
-            checked={formData.applyGST}
-            onChange={handleChange}
-          />
-          Apply GST
-        </label>
-
-        <label>
-          <input
-            type="checkbox"
-            name="applyTDS"
-            checked={formData.applyTDS}
-            onChange={handleChange}
-          />
-          Apply TDS
-        </label>
+            <div className="col-span-2 flex items-end">
+              <Button
+                type="button"
+                variant="danger"
+                onClick={() => removeConfigRow(index)}
+              >
+                Remove
+              </Button>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="flex justify-end gap-3 border-t pt-5">
