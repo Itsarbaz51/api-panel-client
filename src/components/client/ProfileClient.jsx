@@ -16,7 +16,7 @@ import {
   ShieldCheck,
   Lock,
   CheckCircle2,
-  } from "lucide-react";
+} from "lucide-react";
 
 // --- Custom UI Imports ---
 import Header from "@/components/ui/Header";
@@ -121,7 +121,7 @@ export default function ProfileClient() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center bg-slate-50/50">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-green-200 border-t-green-500 rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-sky-100 border-t-sky-500 rounded-full animate-spin"></div>
           <p className="text-sm font-medium text-slate-500 mt-2">
             Loading profile...
           </p>
@@ -154,12 +154,14 @@ export default function ProfileClient() {
           {/* --- Left Column: Profile Summary --- */}
           <div className="w-full lg:w-1/3 space-y-6">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="h-24 bg-linear-to-r from-green-400 to-green-600"></div>
+              {/* --- 1. LIGHT BANNER (Match Dashboard Light Blue) --- */}
+              <div className="h-24 bg-sky-100/70 border-b border-sky-100"></div>
+              
               <div className="px-6 pb-6 flex flex-col items-center text-center -mt-12">
                 {/* Avatar */}
                 <div className="relative">
-                  <div className="w-24 h-24 rounded-full bg-white p-1 shadow-md">
-                    <div className="w-full h-full rounded-full bg-green-50 flex items-center justify-center overflow-hidden border border-slate-100">
+                  <div className="w-24 h-24 rounded-full bg-white p-1 shadow-sm">
+                    <div className="w-full h-full rounded-full bg-sky-50 flex items-center justify-center overflow-hidden border border-sky-100">
                       {user?.profileImage ? (
                         <img
                           src={user.profileImage}
@@ -167,14 +169,14 @@ export default function ProfileClient() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-green-600 text-3xl font-bold uppercase">
+                        <span className="text-sky-600 text-3xl font-bold uppercase">
                           {user?.fullName?.charAt(0) || "F"}
                         </span>
                       )}
                     </div>
                   </div>
                   <div
-                    className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center ${isActive ? "bg-green-500" : "bg-amber-500"}`}
+                    className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center ${isActive ? "bg-sky-500" : "bg-amber-500"}`}
                   >
                     {isActive ? (
                       <CheckCircle2 className="w-3 h-3 text-white" />
@@ -189,8 +191,9 @@ export default function ProfileClient() {
                   <h2 className="text-xl font-bold text-slate-900 capitalize">
                     {user?.fullName || "Faiz"}
                   </h2>
-                  <p className="text-sm font-medium text-green-600 mt-1 flex items-center justify-center gap-1.5">
-                    <Shield className="w-4 h-4" />
+                  {/* --- 2. LIGHT BADGE FOR ROLE --- */}
+                  <p className="text-xs font-semibold text-sky-600 bg-sky-50 px-3 py-1 rounded-full mt-2 inline-flex items-center gap-1.5 border border-sky-100">
+                    <Shield className="w-3.5 h-3.5" />
                     {formatText(user?.role) || "Super Admin"}
                   </p>
                 </div>
@@ -220,42 +223,44 @@ export default function ProfileClient() {
                       <span>KYC Status</span>
                     </div>
                     <span
-                      className={`text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide ${user?.isKycVerified !== false ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}
+                      className={`text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide ${user?.isKycVerified !== false ? "bg-sky-50 text-sky-700" : "bg-amber-50 text-amber-700"}`}
                     >
                       {user?.isKycVerified !== false ? "Verified" : "Pending"}
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-1.5">
                     <div
-                      className={`h-full rounded-full ${user?.isKycVerified !== false ? "bg-green-500 w-full" : "bg-amber-500 w-1/2"}`}
+                      className={`h-full rounded-full ${user?.isKycVerified !== false ? "bg-sky-500 w-full" : "bg-amber-500 w-1/2"}`}
                     />
                   </div>
                 </div>
               </div>
             </div>
-            {/* Security Action */}
-            <div className="bg-green-800 rounded-2xl shadow-sm border border-green-700 p-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-green-400 opacity-20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+            
+            {/* --- 3. LIGHT SECURITY ACTION BOX (Clean Light Theme) --- */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-sky-50 opacity-60 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none" />
 
               <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
-                    <Lock className="w-6 h-6 text-green-300" />
+                  {/* Light blue icon background */}
+                  <div className="w-12 h-12 bg-sky-50 border border-sky-100 rounded-xl flex items-center justify-center shrink-0">
+                    <Lock className="w-5 h-5 text-sky-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">
+                    <h3 className="text-md font-bold text-slate-900">
                       Account Security
                     </h3>
-                    <p className="text-green-100 text-sm mt-1">
-                      Update your password regularly to keep your account
-                      secure.
+                    <p className="text-slate-500 text-sm mt-0.5">
+                      Update your password regularly to keep your account secure.
                     </p>
                   </div>
                 </div>
 
+                {/* --- 4. NAVIGATION MATCHED ACTION BUTTON --- */}
                 <button
                   onClick={() => setIsPasswordModalOpen(true)}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-white text-green-800 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap"
+                  className="w-full sm:w-auto px-5 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-200 rounded-lg text-sm font-semibold transition-all shadow-xs whitespace-nowrap"
                 >
                   Change Password
                 </button>
@@ -267,7 +272,7 @@ export default function ProfileClient() {
           <div className="w-full lg:w-2/3 space-y-6">
             {/* Personal Details */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
                 Personal Information
               </h3>
               <div className="space-y-1">
@@ -292,7 +297,7 @@ export default function ProfileClient() {
 
             {/* Company Details */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
                 Company Details
               </h3>
               <div className="space-y-1">

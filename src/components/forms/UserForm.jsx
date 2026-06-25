@@ -156,9 +156,9 @@ export default function UserForm({
           />
 
           <div>
-            <label className="block text-xs font-semibold  uppercase tracking-wide">
+            {/* <label className="block text-xs font-semibold  uppercase tracking-wide">
               COMPANY TYPE
-            </label>
+            </label> */}
             <SelectField
               label="COMPANY TYPE"
               value={formData.companyType}
@@ -175,9 +175,9 @@ export default function UserForm({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold  uppercase tracking-wide">
+            {/* <label className="block text-xs font-semibold  uppercase tracking-wide">
               STATUS
-            </label>
+            </label> */}
 
             <SelectField
               label="STATUS"

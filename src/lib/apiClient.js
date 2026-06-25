@@ -1,35 +1,54 @@
 export const apiClient = async (url, options = {}) => {
-  const isFormData = options.body instanceof FormData;
+	const isFormData = options.body instanceof FormData;
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  if (!API_URL) {
-    throw new Error("NEXT_PUBLIC_API_URL is missing in env");
-  }
+	if (!API_URL) {
+		throw new Error('NEXT_PUBLIC_API_URL is missing in env');
+	}
 
-  const res = await fetch(`${API_URL}${url}`, {
-    ...options,
-    credentials: "include",
-    headers: {
-      ...(isFormData ? {} : { "Content-Type": "application/json" }),
-      ...options.headers,
-    },
-  });
+	try {
+		const res = await fetch(`${API_URL}${url}`, {
+			...options,
+			credentials: 'include',
+			headers: {
+				...(isFormData
+					? {}
+					: {
+							'Content-Type': 'application/json',
+						}),
+				...options.headers,
+			},
+		});
 
-  // safe parse
-  const contentType = res.headers.get("content-type") || "";
+		const contentType = res.headers.get('content-type') || '';
 
-  const data = contentType.includes("application/json")
-    ? await res.json()
-    : await res.text();
+		let data;
 
-  if (!res.ok) {
-    const error = new Error(data?.message || "Request failed");
+		try {
+			data = contentType.includes('application/json')
+				? await res.json()
+				: await res.text();
+		} catch {
+			data = null;
+		}
 
-    error.response = { data };
-    error.status = res.status;
-    throw error;
-  }
+		if (!res.ok) {
+			const error = new Error(data?.message || data || 'Request failed');
 
-  return data;
+			error.response = {
+				data,
+			};
+
+			error.status = res.status;
+
+			throw error;
+		}
+
+		return data;
+	} catch (error) {
+		console.error('API Client Error:', error);
+
+		throw error;
+	}
 };

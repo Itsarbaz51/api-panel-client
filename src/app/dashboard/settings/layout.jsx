@@ -21,6 +21,12 @@ export default function SettingsLayout({ children }) {
       icon: ShieldCheck,
       href: "/dashboard/settings/api-integration",
     },
+    {
+      label: "Docs Configuration",
+      value: "docs-configuration",
+      icon: Settings,
+      href: "/dashboard/settings/docs-Configuration",
+    },
   ];
 
   const activeTab =
