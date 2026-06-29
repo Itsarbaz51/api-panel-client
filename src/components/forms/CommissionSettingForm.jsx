@@ -8,6 +8,8 @@ import Button from "@/components/ui/Button";
 import Checkbox from "../ui/Checkbox";
 import { getValidationErrors } from "@/utils/validationErrors";
 import { commissionSettingValidation } from "@/validation/commissionSettingValidation";
+import Alert from "../ui/Alert";
+import { AlertCircle } from "lucide-react";
 
 export default function CommissionSettingForm({
   initialData,
@@ -42,7 +44,7 @@ export default function CommissionSettingForm({
     transactionType: "",
 
     mode: "COMMISSION",
-    type: "FIXED",
+    type: "FLAT",
 
     value: 0,
 
@@ -147,6 +149,11 @@ export default function CommissionSettingForm({
   return (
     <form onSubmit={submit} className="space-y-6">
       <div className="grid grid-cols-2 gap-5">
+        {formError && (
+          <Alert type="error" title="Error" icon={<AlertCircle />}>
+            {formError}
+          </Alert>
+        )}
         {formError && (
           <div className="rounded-xl border border-red-200 bg-red-50 p-3">
             <p className="text-sm text-red-600">{formError}</p>
@@ -290,61 +297,69 @@ export default function CommissionSettingForm({
           onChange={(e) => handleChange("value", e.target.value)}
         />
 
-        <InputField
-          label="Min Amount"
-          value={formData.minAmount}
-          error={errors.minAmount}
-          onChange={(e) => handleChange("minAmount", e.target.value)}
-        />
+        {formData.supportsSlab && (
+          <>
+            <InputField
+              label="Min Amount"
+              value={formData.minAmount}
+              error={errors.minAmount}
+              onChange={(e) => handleChange("minAmount", e.target.value)}
+            />
 
-        <InputField
-          label="Max Amount"
-          value={formData.maxAmount}
-          error={errors.maxAmount}
-          onChange={(e) => handleChange("maxAmount", e.target.value)}
-        />
+            <InputField
+              label="Max Amount"
+              value={formData.maxAmount}
+              error={errors.maxAmount}
+              onChange={(e) => handleChange("maxAmount", e.target.value)}
+            />
+          </>
+        )}
 
-        <InputField
-          label="Payment Method"
-          value={formData.paymentMethod}
-          error={errors.paymentMethod}
-          onChange={(e) => handleChange("paymentMethod", e.target.value)}
-        />
+        {formData.supportPaymentMethod && (
+          <>
+            <InputField
+              label="Payment Method"
+              value={formData.paymentMethod}
+              error={errors.paymentMethod}
+              onChange={(e) => handleChange("paymentMethod", e.target.value)}
+            />
 
-        <InputField
-          label="Network"
-          value={formData.network}
-          error={errors.network}
-          onChange={(e) => handleChange("network", e.target.value)}
-        />
+            <InputField
+              label="Network"
+              value={formData.network}
+              error={errors.network}
+              onChange={(e) => handleChange("network", e.target.value)}
+            />
 
-        <InputField
-          label="Category"
-          value={formData.category}
-          error={errors.category}
-          onChange={(e) => handleChange("category", e.target.value)}
-        />
+            <InputField
+              label="Category"
+              value={formData.category}
+              error={errors.category}
+              onChange={(e) => handleChange("category", e.target.value)}
+            />
 
-        <InputField
-          label="Operator"
-          value={formData.operator}
-          error={errors.operator}
-          onChange={(e) => handleChange("operator", e.target.value)}
-        />
+            <InputField
+              label="Operator"
+              value={formData.operator}
+              error={errors.operator}
+              onChange={(e) => handleChange("operator", e.target.value)}
+            />
 
-        <InputField
-          label="Operator Code"
-          value={formData.operatorCode}
-          error={errors.operatorCode}
-          onChange={(e) => handleChange("operatorCode", e.target.value)}
-        />
+            <InputField
+              label="Operator Code"
+              value={formData.operatorCode}
+              error={errors.operatorCode}
+              onChange={(e) => handleChange("operatorCode", e.target.value)}
+            />
 
-        <InputField
-          label="Bank Code"
-          value={formData.bankCode}
-          error={errors.bankCode}
-          onChange={(e) => handleChange("bankCode", e.target.value)}
-        />
+            <InputField
+              label="Bank Code"
+              value={formData.bankCode}
+              error={errors.bankCode}
+              onChange={(e) => handleChange("bankCode", e.target.value)}
+            />
+          </>
+        )}
 
         <InputField
           label="Transaction Type"
@@ -353,19 +368,23 @@ export default function CommissionSettingForm({
           onChange={(e) => handleChange("transactionType", e.target.value)}
         />
 
-        <InputField
-          label="GST %"
-          value={formData.gstPercent}
-          error={errors.gstPercent}
-          onChange={(e) => handleChange("gstPercent", e.target.value)}
-        />
+        {formData.mode === "SURCHARGE" && formData.applyGST && (
+          <InputField
+            label="GST %"
+            value={formData.gstPercent}
+            error={errors.gstPercent}
+            onChange={(e) => handleChange("gstPercent", e.target.value)}
+          />
+        )}
 
-        <InputField
-          label="TDS %"
-          value={formData.tdsPercent}
-          error={errors.tdsPercent}
-          onChange={(e) => handleChange("tdsPercent", e.target.value)}
-        />
+        {formData.mode === "COMMISSION" && formData.applyTDS && (
+          <InputField
+            label="TDS %"
+            value={formData.tdsPercent}
+            error={errors.tdsPercent}
+            onChange={(e) => handleChange("tdsPercent", e.target.value)}
+          />
+        )}
       </div>
 
       {/* Checkboxes */}
@@ -378,22 +397,38 @@ export default function CommissionSettingForm({
         />
 
         <Checkbox
+          label="Support Payment Method"
+          checked={formData.supportPaymentMethod}
+          onChange={(e) =>
+            handleChange("supportPaymentMethod", e.target.checked)
+          }
+        />
+
+        <Checkbox
           label="Supports Slab"
           checked={formData.supportsSlab}
           onChange={(e) => handleChange("supportsSlab", e.target.checked)}
         />
 
-        <Checkbox
-          label="Apply GST"
-          checked={formData.applyGST}
-          onChange={(e) => handleChange("applyGST", e.target.checked)}
-        />
+        {formData.mode === "SURCHARGE" && (
+          <>
+            <Checkbox
+              label="Apply GST"
+              checked={formData.applyGST}
+              onChange={(e) => handleChange("applyGST", e.target.checked)}
+            />
+          </>
+        )}
 
-        <Checkbox
-          label="Apply TDS"
-          checked={formData.applyTDS}
-          onChange={(e) => handleChange("applyTDS", e.target.checked)}
-        />
+        {formData.mode === "COMMISSION" && (
+          <>
+            <Checkbox
+              label="Apply TDS"
+              checked={formData.applyTDS}
+              onChange={(e) => handleChange("applyTDS", e.target.checked)}
+            />
+          </>
+        )}
       </div>
 
       <div className="flex justify-end gap-3 border-t pt-5">

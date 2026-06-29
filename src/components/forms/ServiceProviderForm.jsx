@@ -400,16 +400,15 @@ export default function ServiceProviderForm({
               onChange={handleChange}
               error={errors.maxAmount}
             />
-
-            <InputField
-              label="Value"
-              name="value"
-              value={formData.value}
-              onChange={handleChange}
-              error={errors.value}
-            />
           </>
         )}
+        <InputField
+          label="Value"
+          name="value"
+          value={formData.value}
+          onChange={handleChange}
+          error={errors.value}
+        />
       </div>
 
       <div className="border rounded-xl p-5 space-y-4">
