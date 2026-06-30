@@ -365,8 +365,11 @@ export default function UserClient() {
       />
 
       <ApiKeyModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        open={apiKeyOpen}
+        onClose={() => {
+          setApiKeyOpen(false);
+          setCredentials(null);
+        }}
         data={credentials}
         role={user?.role}
         loading={updateApiKey.isPending}

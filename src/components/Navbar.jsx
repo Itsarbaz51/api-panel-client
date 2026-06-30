@@ -357,6 +357,26 @@ export default function Navbar() {
 
                   <div className="h-px bg-slate-100 my-1" />
 
+                  <div className="border-t border-slate-100 my-2 pt-2">
+                    <p className="px-3 text-xs font-semibold uppercase text-slate-400 mb-2">
+                      Wallets
+                    </p>
+
+                    {(user?.wallets || []).map((wallet) => (
+                      <div
+                        key={wallet.walletType}
+                        className="flex items-center justify-between px-3 py-2 text-sm rounded-lg hover:bg-slate-50"
+                      >
+                        <span className="font-medium text-slate-600">
+                          {wallet.walletType}
+                        </span>
+
+                        <span className="font-semibold text-sky-600">
+                          ₹{Number(wallet.balance).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
