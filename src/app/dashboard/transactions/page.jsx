@@ -1,9 +1,8 @@
-import React from 'react'
+import TransactionClient from "@/components/client/TransactionClient";
+import React from "react";
 
 function page() {
-  return (
-    <div>page</div>
-  )
+  return <TransactionClient />;
 }
 
-export default page
+export default page;

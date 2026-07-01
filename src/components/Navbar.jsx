@@ -16,6 +16,7 @@ import {
   Settings,
   CirclePercent,
   Webhook,
+  ArrowLeftRight,
 } from "lucide-react";
 
 import { logout } from "@/store/authSlice";
@@ -66,6 +67,11 @@ export default function Navbar() {
       title: "Dashboard",
       icon: LayoutDashboard,
       href: "/dashboard",
+    },
+    {
+      title: "Transactions",
+      icon: ArrowLeftRight,
+      href: "/dashboard/transactions",
     },
     {
       title: "Developer API",
