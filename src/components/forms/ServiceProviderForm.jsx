@@ -43,7 +43,7 @@ export default function ServiceProviderForm({
     mode: "NONE",
     pricingValueType: "NONE",
 
-    value: 0,
+    providerCost: 0,
 
     supportsSlab: false,
     supportPaymentMethod: false,
@@ -140,7 +140,7 @@ export default function ServiceProviderForm({
         minAmount: Number(formData.minAmount || 0),
         maxAmount: Number(formData.maxAmount || 0),
 
-        value: Number(formData.value || 0),
+        providerCost: Number(formData.providerCost || 0),
 
         gstPercent: Number(formData.gstPercent || 0),
         tdsPercent: Number(formData.tdsPercent || 0),
@@ -157,9 +157,6 @@ export default function ServiceProviderForm({
       const validation = serviceProviderValidation.safeParse(payload);
 
       if (!validation.success) {
-        console.log(validation.error.flatten());
-        console.log(validation.error.issues);
-
         setErrors(getValidationErrors(validation.error.issues));
         return;
       }
@@ -237,6 +234,31 @@ export default function ServiceProviderForm({
             }))
           }
           error={errors.mode}
+        />
+        <SelectField
+          label="Pricing Value Type"
+          value={formData.pricingValueType}
+          options={[
+            {
+              label: "None",
+              value: "NONE",
+            },
+            {
+              label: "Flat",
+              value: "FLAT",
+            },
+            {
+              label: "Percentage",
+              value: "PERCENTAGE",
+            },
+          ]}
+          onChange={(value) =>
+            setFormData((p) => ({
+              ...p,
+              pricingValueType: value,
+            }))
+          }
+          error={errors.pricingValueType}
         />
 
         <InputField
@@ -403,11 +425,11 @@ export default function ServiceProviderForm({
           </>
         )}
         <InputField
-          label="Value"
-          name="value"
-          value={formData.value}
+          label="provider cost"
+          name="providerCost"
+          value={formData.providerCost}
           onChange={handleChange}
-          error={errors.value}
+          error={errors.providerCost}
         />
       </div>
 

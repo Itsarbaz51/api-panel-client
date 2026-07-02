@@ -12,9 +12,9 @@ export const serviceProviderValidation = z
 
     mode: z.enum(["NONE", "COMMISSION", "SURCHARGE"]).default("NONE"),
 
-    pricingValueType: z.enum(["NONE", "FIXED", "PERCENTAGE"]).default("NONE"),
+    pricingValueType: z.enum(["NONE", "FLAT", "PERCENTAGE"]).default("NONE"),
 
-    value: z.coerce.number().default(0),
+    providerCost: z.coerce.number().default(0),
 
     minAmount: z.coerce.number().optional(),
     maxAmount: z.coerce.number().optional(),

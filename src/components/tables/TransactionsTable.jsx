@@ -125,8 +125,6 @@ export default function TransactionsTable({
     },
   ];
 
-  console.log(transactions);
-
   return (
     <TableShell>
       <TableHeader
