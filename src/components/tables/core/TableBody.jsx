@@ -10,7 +10,7 @@ export default function TableBody({
   onDelete,
 }) {
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto overflow-y-visible">
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-border">

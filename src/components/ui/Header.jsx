@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function Header({ title, subtitle, icon, actions, children }) {
 	return (
-		<div className="relative overflow-hidden rounded-[32px] border border-slate-200/60 bg-white/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.06)] p-8 mb-10">
+		<div className="relative overflow-hidden rounded-4xl border border-slate-200/60 bg-white/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.06)] p-8 mb-10">
 			{/* Glow */}
 			<div className="absolute top-0 right-0 h-40 w-40 bg-theme/10 blur-3xl rounded-full" />
 
