@@ -109,6 +109,20 @@ export default function Navbar() {
             ],
           },
           {
+            title: "KYC",
+            icon: User,
+            children: [
+              {
+                title: "Profile Verification",
+                href: "/dashboard/kyc/profile-verification",
+              },
+              {
+                title: "Bank Verification",
+                href: "/dashboard/kyc/bank-verification",
+              },
+            ],
+          },
+          {
             title: "Commission",
             icon: CirclePercent,
             href: "/dashboard/commission-management",
