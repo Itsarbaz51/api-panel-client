@@ -29,9 +29,7 @@ export default function ServiceProviderTable({
       render: (row) => (
         <div>
           <div className="font-medium">{row.service?.name}</div>
-          <div className="text-xs text-slate-500">
-            {row.service?.code}
-          </div>
+          <div className="text-xs text-slate-500">{row.service?.code}</div>
         </div>
       ),
     },
@@ -43,9 +41,7 @@ export default function ServiceProviderTable({
       render: (row) => (
         <div>
           <div className="font-medium">{row.provider?.name}</div>
-          <div className="text-xs text-slate-500">
-            {row.provider?.type}
-          </div>
+          <div className="text-xs text-slate-500">{row.provider?.type}</div>
         </div>
       ),
     },
@@ -55,9 +51,7 @@ export default function ServiceProviderTable({
       label: "Base URL",
 
       render: (row) => (
-        <div className="max-w-[220px] truncate">
-          {row.baseUrl}
-        </div>
+        <div className="max-w-[220px] truncate">{row.baseUrl}</div>
       ),
     },
 
@@ -83,24 +77,18 @@ export default function ServiceProviderTable({
         <div>
           <div>{row.mode}</div>
 
-          <div className="text-xs text-slate-500">
-            {row.pricingValueType}
-          </div>
+          <div className="text-xs text-slate-500">{row.pricingValueType}</div>
         </div>
       ),
     },
 
     {
-      key: "value",
-      label: "Value",
+      key: "providerCost",
+      label: "Provider Cost",
 
       render: (row) => (
         <div>
-          <div>{row.value}</div>
-
-          <div className="text-xs text-slate-500">
-            Cost : {row.providerCost}
-          </div>
+          <div>₹{row.providerCost}</div>
         </div>
       ),
     },
@@ -112,8 +100,7 @@ export default function ServiceProviderTable({
       render: (row) => (
         <div>
           ₹{row.minAmount || 0}
-          <br />
-          ₹{row.maxAmount || 0}
+          <br />₹{row.maxAmount || 0}
         </div>
       ),
     },
@@ -187,9 +174,7 @@ export default function ServiceProviderTable({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-2xl w-full max-w-4xl p-6">
             <div className="flex justify-between mb-4">
-              <h2 className="text-xl font-semibold">
-                Provider Config
-              </h2>
+              <h2 className="text-xl font-semibold">Provider Config</h2>
 
               <button
                 onClick={() => setSelectedConfig(null)}
