@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import KYCForm from '@/components/forms/KYCForm';
 
-import { useCreateKYC } from '@/hooks/useKYC';
+import { useCreateKYC } from '@/hooks/useProfileVerification';
 import { addKyc } from '@/store/kycSlice';
 
 export default function KycApplyClient() {

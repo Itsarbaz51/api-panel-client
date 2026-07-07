@@ -41,11 +41,11 @@ export default function ApiKeyModal({
           <ApiKeyForm
             data={data}
             role={role}
-            onChange={onChange}
-            onRemoveIp={onRemoveIp}
-            onAddIp={onAddIp}
-            onSubmit={onSubmit}
             loading={loading}
+            onChange={onChange}
+            onAddIp={onAddIp}
+            onRemoveIp={onRemoveIp}
+            onSubmit={onSubmit}
           />
         </div>
       </div>

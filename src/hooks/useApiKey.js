@@ -10,6 +10,15 @@ export const useGetCredentials = () =>
       }),
   });
 
+// GET ALL API KEYS
+export const useGetApiKeys = () =>
+  useMutation({
+    mutationFn: async () =>
+      apiClient("/api-key", {
+        method: "GET",
+      }),
+  });
+
 // CREATE FIRST TIME
 export const useCreateApiKey = () =>
   useMutation({

@@ -31,6 +31,9 @@ export default function ConfirmDialog({
   cancelText = "Cancel",
   variant = "danger",
   loading = false,
+  showReason = false,
+  reason = "",
+  setReason,
 }) {
   if (!open) return null;
 
@@ -52,6 +55,15 @@ export default function ConfirmDialog({
 
           {description && (
             <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+          )}
+          {showReason && (
+            <textarea
+              value={reason}
+              onChange={(e) => setReason?.(e.target.value)}
+              placeholder="Enter reject reason..."
+              className="mt-4 w-full rounded-lg border p-3 text-sm outline-none focus:ring-2 focus:ring-red-500"
+              rows={4}
+            />
           )}
         </div>
 

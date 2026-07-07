@@ -28,4 +28,9 @@ export const userValidation = z.object({
     .string()
     .min(1, "Package is required")
     .uuid("Select a valid package"),
+
+  profileImage: z
+    .instanceof(File)
+    .optional()
+    .nullable(),
 });

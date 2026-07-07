@@ -111,25 +111,13 @@ export default function UserClient() {
     currentPage * limit,
   );
 
-  const handleSubmit = async (payload) => {
-    try {
-      if (editingUser?.id) {
-        await updateUser.mutateAsync({
-          id: editingUser.id,
-          payload,
-        });
-      } else {
-        await createUser.mutateAsync(payload);
-      }
-
-      await refetch();
-      setOpenModal(false);
-      setEditingUser(null);
-
-      return { success: true };
-    } catch {
-      return { success: false };
-    }
+  const handleSubmit = async () => {
+    await updateApiKey.mutateAsync({
+      id: credentials.id,
+      payload: {
+        allowedIps: credentials.allowedIps,
+      },
+    });
   };
 
   const handleEdit = async (user) => {
@@ -158,30 +146,37 @@ export default function UserClient() {
 
   const handleApiKeyChange = (field, value, index) => {
     if (field === "allowedIps") {
+<<<<<<< HEAD
       const ips = [...(apiKeyData?.allowedIps || [])];
       ips[index] = value;
       setApiKeyData((prev) => ({
+=======
+      const ips = [...(credential?.allowedIps || [])];
+      ips[index] = value;
+
+      setCredential((prev) => ({
+>>>>>>> 028e1c7fe8f281d0f3caa712ea02f5bbfea326a2
         ...prev,
         allowedIps: ips,
       }));
       return;
     }
 
-    setApiKeyData((prev) => ({
+    setCredentials((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleAddIp = () => {
-    setApiKeyData((prev) => ({
+    setCredentials((prev) => ({
       ...prev,
       allowedIps: [...(prev?.allowedIps || []), ""],
     }));
   };
 
   const handleRemoveIp = (index) => {
-    setApiKeyData((prev) => ({
+    setCredentials((prev) => ({
       ...prev,
       allowedIps: prev.allowedIps.filter((_, i) => i !== index),
     }));
@@ -374,17 +369,17 @@ export default function UserClient() {
 
       <ApiKeyModal
         open={apiKeyOpen}
-        data={apiKeyData}
+        onClose={() => {
+          setApiKeyOpen(false);
+          setCredentials(null);
+        }}
+        data={credentials}
         role={user?.role}
         loading={updateApiKey.isPending}
         onChange={handleApiKeyChange}
         onAddIp={handleAddIp}
         onRemoveIp={handleRemoveIp}
-        onSubmit={handleApiKeySubmit}
-        onClose={() => {
-          setApiKeyOpen(false);
-          setApiKeyData(null);
-        }}
+        onSubmit={handleSubmit}
       />
 
       <PermissionModal

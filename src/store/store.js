@@ -9,6 +9,7 @@ import serviceReducer from './serviceSlice';
 import providerReducer from './providerSlice';
 import serviceProviderReducer from './serviceProviderSlice';
 import kycReducer from './kycSlice';
+import apiKeyProviderMappingReducer from './apiKeyProviderMappingSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -21,5 +22,6 @@ export const store = configureStore({
 		providers: providerReducer,
 		serviceProviders: serviceProviderReducer,
 		kyc: kycReducer,
+		apiKeyProviderMapping: apiKeyProviderMappingReducer,
 	},
 });

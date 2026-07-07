@@ -45,6 +45,15 @@ const formatValue = (key, value) => {
         return <span className="text-slate-400 italic font-normal">Not provided</span>;
     }
 
+    // Handle image fields
+    if (key.toLowerCase().includes('image') && typeof value === 'string' && (value.startsWith('http') || value.startsWith('/'))) {
+        return (
+            <div className="mt-2 rounded-lg overflow-hidden border border-slate-100 shadow-sm inline-block">
+                <img src={value} alt={key} className="h-40 w-40 object-cover" />
+            </div>
+        );
+    }
+
     if (typeof value === 'boolean') {
         return (
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${value ? 'bg-primary/10 text-primary ring-1 ring-emerald-600/10' : 'bg-slate-100 text-slate-700 ring-1 ring-slate-600/10'

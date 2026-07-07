@@ -17,7 +17,7 @@ export default function TableHeader({
   exportIcon,
 }) {
   return (
-    <div className="p-6 border-b border-border">
+    <div className="p-6 border-b border-border ">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-foreground">{title}</h2>

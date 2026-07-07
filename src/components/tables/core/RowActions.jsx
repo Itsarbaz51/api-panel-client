@@ -50,80 +50,90 @@ export default function RowActions({
   };
 
   return (
-    <div className="relative flex justify-end" ref={ref}>
-      {/* TRIGGER */}
+    <div className="relative inline-flex" ref={ref}>
       <Button
         type="button"
-        size="icon"
         variant="ghost"
+        size="icon"
         onClick={toggle}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        className="h-9 w-9 rounded-xl"
+        className="
+      h-10 w-10 rounded-xl
+      bg-primary/10
+      hover:bg-primary/20
+      border border-border
+      transition-all duration-200
+    "
       >
         <MoreVertical className="h-4 w-4 text-muted-foreground" />
       </Button>
 
-      {/* DROPDOWN */}
       {open && (
-        <div
-          className={`absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-2xl border border-border bg-card shadow-xl ${
-            openUp ? "bottom-full mb-2" : "top-full mt-2"
-          }`}
-        >
-          {/* VIEW */}
-          {onView && (
-            <MenuItem
-              icon={Eye}
-              label="View"
-              onClick={() => {
-                onView();
-                setOpen(false);
-              }}
-            />
-          )}
-
-          {/* EDIT */}
-          {onEdit && (
-            <MenuItem
-              icon={Edit}
-              label="Edit"
-              onClick={() => {
-                onEdit();
-                setOpen(false);
-              }}
-            />
-          )}
-
-          {/* EXTRA ACTIONS */}
-          {extraActions.map((a, i) => (
-            <MenuItem
-              key={i}
-              icon={a.icon}
-              label={a.label}
-              onClick={() => {
-                a.onClick();
-                setOpen(false);
-              }}
-            />
-          ))}
-
-          {/* DELETE */}
-          {onDelete && (
-            <>
-              <div className="h-px bg-border" />
-
+        <div className=" absolute right-0 top-10">
+          <div
+            className={`
+      
+      min-w-52.5
+      rounded-2xl border border-border bg-card shadow-2xl
+      ${openUp ? "bottom-full mb-2" : "top-full mt-2"}
+    `}
+          >
+            {onView && (
               <MenuItem
-                icon={Trash2}
-                label="Delete"
-                danger
+                icon={Eye}
+                label="View Details"
                 onClick={() => {
-                  onDelete();
+                  onView();
                   setOpen(false);
                 }}
               />
-            </>
-          )}
+            )}
+
+            {onEdit && (
+              <MenuItem
+                icon={Edit}
+                label="Edit"
+                onClick={() => {
+                  onEdit();
+                  setOpen(false);
+                }}
+              />
+            )}
+
+            {extraActions.length > 0 && (
+              <>
+                <div className="mx-3 h-px bg-border" />
+
+                {extraActions.map((item, i) => (
+                  <MenuItem
+                    key={i}
+                    icon={item.icon}
+                    label={item.label}
+                    danger={item.danger}
+                    onClick={() => {
+                      item.onClick();
+                      setOpen(false);
+                    }}
+                  />
+                ))}
+              </>
+            )}
+
+            {onDelete && (
+              <>
+                <div className="mx-3 h-px bg-border" />
+
+                <MenuItem
+                  icon={Trash2}
+                  label="Delete"
+                  danger
+                  onClick={() => {
+                    onDelete();
+                    setOpen(false);
+                  }}
+                />
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -137,10 +147,19 @@ export default function RowActions({
 function MenuItem({ icon: Icon, label, onClick, danger = false }) {
   return (
     <button
-      type="button"
       onClick={onClick}
       className={`
-        flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition-colors
+        group
+        flex
+        w-full
+        items-center
+        gap-3
+        px-4
+        py-3
+        text-sm
+        transition-all
+        duration-200
+
         ${
           danger
             ? "text-red-500 hover:bg-red-50"
@@ -148,9 +167,28 @@ function MenuItem({ icon: Icon, label, onClick, danger = false }) {
         }
       `}
     >
-      {Icon && <Icon className="h-4 w-4 shrink-0 opacity-90" />}
+      <div
+        className={`
+          flex
+          h-8
+          w-8
+          items-center
+          justify-center
+          rounded-lg
+          transition
 
-      <span className="flex-1 text-left">{label}</span>
+          ${
+            danger
+              ? "bg-red-100 text-red-500"
+              : "bg-primary/10 text-primary group-hover:bg-primary/20"
+          }
+        `}
+      >
+        <Icon className="h-4 w-4" />
+      </div>
+
+      <span className="font-medium">{label}</span>
+      <div className="absolute right-4 -top-2 h-4 w-4 rotate-45 bg-card border-l border-t border-border"></div>
     </button>
   );
 }
