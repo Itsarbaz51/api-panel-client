@@ -6,7 +6,6 @@ import { Users, UserPlus, UserCheck, UserX } from "lucide-react";
 import UsersTable from "@/components/tables/UsersTable";
 import QuickStats from "@/components/QuickStats";
 import UserModal from "../modals/UserModal";
-import View from "../ui/View";
 import Header from "../ui/Header";
 import Button from "@/components/ui/Button";
 import CredentialsModal from "../ui/Credentials";
@@ -31,6 +30,7 @@ import { useSelector } from "react-redux";
 import ConfirmDialog from "../ConfirmDialog";
 import PermissionModal from "../modals/PermissionModal";
 import { useGetAllServices } from "@/hooks/useService";
+import UserProfileModal from "../ui/ViewUser";
 
 export default function UserClient() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -88,7 +88,6 @@ export default function UserClient() {
   const getCredentials = useGetCredentials();
   const getApiCredentials = useGetApiCredentials();
   const createApiKey = useCreateApiKey();
-
   const updateApiKey = useUpdateApiKey();
 
   const allUsers = usersResponse?.data || [];
@@ -160,14 +159,11 @@ export default function UserClient() {
   const handleApiKeyChange = (field, value, index) => {
     if (field === "allowedIps") {
       const ips = [...(apiKeyData?.allowedIps || [])];
-
       ips[index] = value;
-
       setApiKeyData((prev) => ({
         ...prev,
         allowedIps: ips,
       }));
-
       return;
     }
 
@@ -218,7 +214,7 @@ export default function UserClient() {
         payload,
       });
 
-      setApiKeyData(res.data);
+      setApiKeyData(res);
 
       setApiKeyErrorDialog({
         open: true,
@@ -255,7 +251,6 @@ export default function UserClient() {
   const handleViewApiKey = async (selectedUser) => {
     try {
       let res;
-
       try {
         res = await getApiCredentials.mutateAsync(selectedUser.id);
       } catch (err) {
@@ -283,7 +278,6 @@ export default function UserClient() {
   const handlePermissionSuccess = async () => {
     try {
       await refetch();
-
       setPermissionDialog({
         open: true,
         message: "Permissions Updated Successfully",
@@ -358,7 +352,8 @@ export default function UserClient() {
         }}
       />
 
-      <View
+      {/* Profile Viewer Popup (Image_8f1761.png context details mapped correctly) */}
+      <UserProfileModal
         open={viewOpen}
         title="User Details"
         data={viewUser}
