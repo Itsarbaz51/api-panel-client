@@ -146,16 +146,10 @@ export default function UserClient() {
 
   const handleApiKeyChange = (field, value, index) => {
     if (field === "allowedIps") {
-<<<<<<< HEAD
-      const ips = [...(apiKeyData?.allowedIps || [])];
-      ips[index] = value;
-      setApiKeyData((prev) => ({
-=======
-      const ips = [...(credential?.allowedIps || [])];
+      const ips = [...(credentials?.allowedIps || [])];
       ips[index] = value;
 
-      setCredential((prev) => ({
->>>>>>> 028e1c7fe8f281d0f3caa712ea02f5bbfea326a2
+      setCredentials((prev) => ({
         ...prev,
         allowedIps: ips,
       }));
