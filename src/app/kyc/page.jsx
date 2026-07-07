@@ -1,5 +1,5 @@
-import KycApplyClient from "@/components/client/KycApplyClient";
+import ProfileVerificationApplyClient from "@/components/client/ProfileVerificationApplyClient";
 
-export default function KYCPage() {
- return <KycApplyClient />
+export default function page() {
+  return <ProfileVerificationApplyClient />;
 }

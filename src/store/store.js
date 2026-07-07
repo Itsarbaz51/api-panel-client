@@ -8,7 +8,7 @@ import logReducer from './logSlice';
 import serviceReducer from './serviceSlice';
 import providerReducer from './providerSlice';
 import serviceProviderReducer from './serviceProviderSlice';
-import kycReducer from './kycSlice';
+import kycReducer from './profileVerificationSlice';
 import apiKeyProviderMappingReducer from './apiKeyProviderMappingSlice';
 
 export const store = configureStore({

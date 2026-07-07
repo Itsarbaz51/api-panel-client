@@ -1,6 +1,6 @@
 'use client';
 
-import KYCForm from '../forms/KYCForm';
+import KYCForm from '../forms/ProfileVerificationForm';
 
 export default function KYCModal({ open, close, submit, loading }) {
     if (!open) return null;
