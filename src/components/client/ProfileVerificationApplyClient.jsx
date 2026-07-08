@@ -1,14 +1,12 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-
 import ProfileVerificationForm from "@/components/forms/ProfileVerificationForm";
 import { useCreateKyc } from "@/hooks/useProfileVerification";
 import { addKyc } from "@/store/profileVerificationSlice";
 
 export default function ProfileVerificationApplyClient() {
   const dispatch = useDispatch();
-
   const createKyc = useCreateKyc();
 
   const handleSubmit = async (payload) => {

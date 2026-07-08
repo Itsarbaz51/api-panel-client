@@ -75,7 +75,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
     formData.append("file", file);
     formData.append("type", type);
     try {
-      // Try external API first when configured. If it fails, fall back to local Next API.
       if (process.env.NEXT_PUBLIC_API_URL) {
         try {
           const data = await apiClient("/upload", {
@@ -89,7 +88,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
             "External upload failed, falling back to local /api/upload",
             err,
           );
-          // continue to local fallback
         }
       }
 
@@ -164,7 +162,17 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
     const result = schema.safeParse(form);
 
     if (!result.success) {
-      toast.error(result.error.errors[0].message);
+      // 1. Log the exact error structure to the console for you to debug
+      console.log(
+        "Zod Validation Failed on Step " + step + ":",
+        result.error.format(),
+      );
+
+      // 2. Alert the user with the precise message Zod generated
+      const firstErrorMessage =
+        result.error?.errors?.[0]?.message ||
+        "Please fill all required fields correctly.";
+      toast.error(firstErrorMessage);
       return false;
     }
 
@@ -181,6 +189,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
       behavior: "smooth",
     });
   };
+
   const handlePrev = () => {
     setStep(step - 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -243,8 +252,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
       toast.success("Documents uploaded successfully", { id: "upload" });
 
       const payload = {
-        // Temporary: include a generated registrationNumber to satisfy backend
-        // requirements until the backend generates it server-side.
         registrationNumber: `KYC-${Date.now()}`,
         userId: currentUserId,
         fullName: form.fullName,
@@ -296,7 +303,14 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
         ],
       };
 
-      onSubmit(payload);
+      // Await parent mutation execution
+      const executionResult = await onSubmit(payload);
+
+      if (executionResult?.success) {
+        toast.success(executionResult.message || "KYC Submitted Successfully!");
+      } else {
+        toast.error(executionResult?.message || "KYC Submission Failed.");
+      }
     } catch (error) {
       toast.error("Failed to upload documents. Please try again.", {
         id: "upload",
@@ -384,6 +398,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
       </div>
 
       <form onSubmit={submit} className="space-y-8">
+        
         {/* --- STEP 1: Basic Information --- */}
         {step === 1 && (
           <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -433,6 +448,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
                 value={form.phoneNumber}
                 onChange={(e) => handleFieldChange("phoneNumber", e)}
                 required={true}
+                maxLength={10}
               />
               <InputField
                 label="Company Name"
@@ -479,6 +495,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
                     placeholder="Enter PIN code"
                     value={form.homePin}
                     onChange={(e) => handleFieldChange("homePin", e)}
+                    maxLength={6}
                   />
                   <InputField
                     label="City *"
@@ -524,6 +541,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
                     placeholder="Enter PIN code"
                     value={form.businessPin}
                     onChange={(e) => handleFieldChange("businessPin", e)}
+                    maxLength={6}
                   />
                   <InputField
                     label="City"
@@ -581,6 +599,7 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
                   placeholder="Enter Aadhaar number"
                   value={form.aadhaar}
                   onChange={(e) => handleFieldChange("aadhaar", e)}
+                  maxLength={12}
                 />
                 <FileUploadUI
                   label="Aadhaar Card Upload"
@@ -630,7 +649,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
             <h2 className="text-xl font-bold text-slate-900 mb-6">
               Additional Info
             </h2>
-            {/* लेआउट फिक्स: फुल विड्थ देने के लिए grid wrapper जोड़ा */}
             <div className="grid grid-cols-1 w-full">
               <TextareaField
                 label="Remarks / Notes"
