@@ -32,19 +32,14 @@ export default function TextareaField({
         placeholder={placeholder}
         disabled={disabled}
         {...(register ? register(name) : {})}
-        className={
-          "w-full rounded-md border border-input bg-background px-3 py-2 text-sm",
-          "placeholder:text-muted-foreground",
-          "focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          error && "border-destructive focus:ring-destructive/40",
-          className
-        }
+        className={`w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50 ${error ? "border-destructive focus:ring-destructive/40" : ""} ${className || ""}`}
         {...rest}
       />
 
       {error && (
-        <p className="text-xs text-destructive mt-0.5">{error.message}</p>
+        <p className="text-xs text-destructive mt-0.5">
+          {typeof error === "string" ? error : error?.message}
+        </p>
       )}
     </div>
   );

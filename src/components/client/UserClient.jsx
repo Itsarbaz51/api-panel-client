@@ -78,7 +78,7 @@ export default function UserClient() {
 
   const { data: services } = useGetAllServices({
     page: 1,
-    limit: 100,
+    limit: 100, 
     search: "",
   });
 
@@ -111,13 +111,24 @@ export default function UserClient() {
     currentPage * limit,
   );
 
-  const handleSubmit = async () => {
-    await updateApiKey.mutateAsync({
-      id: credentials.id,
-      payload: {
-        allowedIps: credentials.allowedIps,
-      },
-    });
+  const handleUserModalSubmit = async (payload) => {
+    try {
+      if (editingUser) {
+        await updateUser.mutateAsync({ id: editingUser.id, payload });
+      } else {
+        await createUser.mutateAsync(payload);
+      }
+
+      setOpenModal(false);
+      setEditingUser(null);
+      try {
+        await refetch();
+      } catch (err) {
+        // ignore refetch errors
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleEdit = async (user) => {
@@ -332,7 +343,7 @@ export default function UserClient() {
       <UserModal
         open={openModal}
         initialData={editingUser}
-        onSubmit={handleSubmit}
+        onSubmit={handleUserModalSubmit}
         packages={packageData?.data || []}
         packageLoading={packageLoading}
         onClose={() => {
@@ -373,7 +384,7 @@ export default function UserClient() {
         onChange={handleApiKeyChange}
         onAddIp={handleAddIp}
         onRemoveIp={handleRemoveIp}
-        onSubmit={handleSubmit}
+        onSubmit={handleApiKeySubmit}
       />
 
       <PermissionModal
