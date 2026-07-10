@@ -147,6 +147,28 @@ export default function Navbar() {
           },
         ]
       : []),
+
+    {
+      title: "Other Features",
+      icon: Activity,
+      children: [
+        {
+          title: "Fund Requests",
+          icon: Webhook,
+          href: "/dashboard/fund-requests",
+        },
+        {
+          title: "Wallet Ledger",
+          icon: Webhook,
+          href: "/dashboard/ledgers",
+        },
+        {
+          title: "Add Bank Account",
+          icon: Webhook,
+          href: "/dashboard/add-bank-account",
+        },
+      ],
+    },
   ];
 
   const isItemActive = (item) => {

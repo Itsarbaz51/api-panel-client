@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Settings, ShieldCheck, Bell, Languages, Code } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 import Tabs from "@/components/ui/Tabs";
 
@@ -10,12 +10,6 @@ export default function ApiIntegrationLayout({ children }) {
 
   const tabs = [
     {
-      label: "Languages",
-      value: "languages",
-      icon: Code,
-      href: "/dashboard/settings/docs-Configuration/languages",
-    },
-    {
       label: "Docs",
       value: "docs",
       icon: ShieldCheck,
@@ -23,8 +17,7 @@ export default function ApiIntegrationLayout({ children }) {
     },
   ];
 
-  const activeTab =
-    tabs.find((tab) => pathname.startsWith(tab.href))?.value || "languages";
+  const activeTab = tabs.find((tab) => pathname.startsWith(tab.href))?.value;
 
   return (
     <div className="relative">
