@@ -27,12 +27,6 @@ export default function ApiIntegrationLayout({ children }) {
       icon: Bell,
       href: "/dashboard/settings/api-integration/service-provider",
     },
-    {
-      label: "ApiKey Provider Mapping",
-      value: "ApiKeyProviderMapping",
-      icon: Bell,
-      href: "/dashboard/settings/api-integration/ApiKeyProviderMapping",
-    },
   ];
 
   const activeTab =

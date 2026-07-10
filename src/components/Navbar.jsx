@@ -143,6 +143,10 @@ export default function Navbar() {
                 title: "Docs Configuration",
                 href: "/dashboard/settings/docs-Configuration",
               },
+              {
+                title: "ApiKey Provider Mapping",
+                href: "/dashboard/settings/api-key-provider-mapping",
+              },
             ],
           },
         ]

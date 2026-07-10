@@ -9,9 +9,49 @@ export default function ProfileVerificationApplyClient() {
   const dispatch = useDispatch();
   const createKyc = useCreateKyc();
 
-  const handleSubmit = async (payload) => {
+  const uploadFileMock = async (file) => {
+    if (!file) return "";
+    
     try {
-      const res = await createKyc.mutateAsync(payload);
+
+      
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+      });
+    } catch (e) {
+      console.error("File upload failed:", e);
+      return "";
+    }
+  };
+
+  const handleSubmit = async (structuredPayload) => {
+    try {
+     
+      const updatedDocuments = await Promise.all(
+        structuredPayload.documents.map(async (doc) => {
+          
+          return {
+            ...doc,
+            fileUrl: "https://placehold.co/600x400.png", 
+          };
+        })
+      );
+
+      
+      const finalPayload = {
+        ...structuredPayload,
+        documents: updatedDocuments,
+        
+        ownerPhoto: "https://placehold.co/150x150.png",
+        businessPhoto: "https://placehold.co/600x400.png",
+      };
+
+      
+      const res = await createKyc.mutateAsync(finalPayload);
 
       dispatch(addKyc(res.data ?? res));
 
