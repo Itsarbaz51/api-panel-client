@@ -10,13 +10,12 @@ import FileUpload from "@/components/ui/FileUpload";
 import Button from "@/components/ui/Button";
 import Alert from "@/components/ui/Alert";
 
-import { bankDetailSchema, defaultValues } from "@/validation/bankDetailSchema";
+import { bankDetailSchema } from "@/validation/bankDetailSchema";
 
 import { getValidationErrors } from "@/utils/validationErrors";
 
 export default function BankDetailForm({
-  data = defaultValues,
-  users = [],
+  data,
   loading = false,
   onChange,
   onSubmit,
@@ -43,13 +42,13 @@ export default function BankDetailForm({
 
     const formData = new FormData();
 
-    Object.entries(data).forEach(([key, value]) => {
-      if (key === "bankProofFile") return;
-
-      if (value !== undefined && value !== null && value !== "") {
-        formData.append(key, value);
-      }
-    });
+    formData.append("accountHolder", data.accountHolder);
+    formData.append("accountNumber", data.accountNumber);
+    formData.append("phoneNumber", data.phoneNumber);
+    formData.append("bankName", data.bankName);
+    formData.append("ifscCode", data.ifscCode);
+    formData.append("accountType", data.accountType);
+    formData.append("isPrimary", data.isPrimary);
 
     if (data.bankProofFile instanceof File) {
       formData.append("bankProofFile", data.bankProofFile);
@@ -66,95 +65,87 @@ export default function BankDetailForm({
         </Alert>
       )}
 
-      {/* USER */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* ACCOUNT HOLDER */}
 
-      <SelectField
-        label="User"
-        value={data.userId}
-        onChange={(value) => onChange("userId", value)}
-        options={users.map((user) => ({
-          label: user.fullName,
-          value: user.id,
-        }))}
-        placeholder="Select User"
-        error={errors.userId}
-      />
+        <InputField
+          label="Account Holder"
+          placeholder="Enter Account Holder"
+          value={data.accountHolder}
+          onChange={(e) => onChange("accountHolder", e.target.value)}
+          error={errors.accountHolder}
+        />
 
-      {/* ACCOUNT HOLDER */}
+        {/* ACCOUNT NUMBER */}
 
-      <InputField
-        label="Account Holder"
-        placeholder="Enter Account Holder"
-        value={data.accountHolder}
-        onChange={(e) => onChange("accountHolder", e.target.value)}
-        error={errors.accountHolder}
-      />
-
-      {/* ACCOUNT NUMBER */}
-
-      <InputField
-        label="Account Number"
-        placeholder="Enter Account Number"
-        value={data.accountNumber}
-        onChange={(e) => onChange("accountNumber", e.target.value)}
-        error={errors.accountNumber}
-      />
+        <InputField
+          label="Account Number"
+          placeholder="Enter Account Number"
+          value={data.accountNumber}
+          onChange={(e) => onChange("accountNumber", e.target.value)}
+          error={errors.accountNumber}
+          maxLength={18}
+        />
+      </div>
 
       {/* PHONE */}
 
-      <InputField
-        label="Phone Number"
-        placeholder="Enter Phone Number"
-        value={data.phoneNumber}
-        onChange={(e) => onChange("phoneNumber", e.target.value)}
-        error={errors.phoneNumber}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Phone Number"
+          placeholder="Enter Phone Number"
+          value={data.phoneNumber}
+          onChange={(e) => onChange("phoneNumber", e.target.value)}
+          error={errors.phoneNumber}
+          maxLength={10}
+        />
 
-      {/* BANK NAME */}
+        {/* BANK NAME */}
 
-      <InputField
-        label="Bank Name"
-        placeholder="Enter Bank Name"
-        value={data.bankName}
-        onChange={(e) => onChange("bankName", e.target.value)}
-        error={errors.bankName}
-      />
+        <InputField
+          label="Bank Name"
+          placeholder="Enter Bank Name"
+          value={data.bankName}
+          onChange={(e) => onChange("bankName", e.target.value)}
+          error={errors.bankName}
+        />
+      </div>
 
-      {/* IFSC */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* IFSC */}
+        <InputField
+          label="IFSC Code"
+          placeholder="Enter IFSC Code"
+          value={data.ifscCode}
+          onChange={(e) => onChange("ifscCode", e.target.value.toUpperCase())}
+          error={errors.ifscCode}
+        />
 
-      <InputField
-        label="IFSC Code"
-        placeholder="Enter IFSC Code"
-        value={data.ifscCode}
-        onChange={(e) => onChange("ifscCode", e.target.value.toUpperCase())}
-        error={errors.ifscCode}
-      />
-
-      {/* ACCOUNT TYPE */}
-
-      <SelectField
-        label="Account Type"
-        value={data.accountType}
-        onChange={(value) => onChange("accountType", value)}
-        options={[
-          {
-            label: "Savings",
-            value: "SAVINGS",
-          },
-          {
-            label: "Current",
-            value: "CURRENT",
-          },
-        ]}
-        error={errors.accountType}
-      />
+        {/* ACCOUNT TYPE */}
+        <SelectField
+          label="Account Type"
+          value={data.accountType}
+          onChange={(value) => onChange("accountType", value)}
+          options={[
+            {
+              label: "Personal",
+              value: "PERSONAL",
+            },
+            {
+              label: "Business",
+              value: "BUSINESS",
+            },
+          ]}
+          error={errors.accountType}
+        />
+      </div>
 
       {/* PRIMARY */}
-
       <Checkbox
         label="Set As Primary Account"
         checked={data.isPrimary}
         onChange={(e) => onChange("isPrimary", e.target.checked)}
+        error={errors.isPrimary}
       />
 
       {/* FILE */}

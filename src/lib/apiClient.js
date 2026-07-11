@@ -33,17 +33,17 @@ export const apiClient = async (url, options = {}) => {
       data = null;
     }
 
-    if (!res.ok) {
-      const error = new Error(data?.message || data || "Request failed");
+    // if (!res?.success) {
+    //   const error = new Error(data?.message || data || "Request failed");
 
-      error.response = {
-        data,
-      };
+    //   error.response = {
+    //     data,
+    //   };
 
-      error.status = res.status;
+    //   error.status = res.status;
 
-      throw error;
-    }
+    //   throw error;
+    // }
 
     return data;
   } catch (error) {

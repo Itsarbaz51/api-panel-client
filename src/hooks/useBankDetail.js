@@ -16,17 +16,42 @@ export const useCreateBankDetail = () => {
 
   return useMutation({
     mutationFn: async (payload) =>
-      apiClient("/bank-details", {
+      apiClient("/bank", {
         method: "POST",
         body: payload,
       }),
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["bank-details"],
+        queryKey: ["bank"],
       }),
   });
 };
+
+/* ================= GET ALL ================= */
+
+export const useGetAllMyBankDetails = ({
+  page = 1,
+  limit = 10,
+  search = "",
+  userId = "",
+  status = "",
+}) =>
+  useQuery({
+    queryKey: ["bank", page, limit, search, userId, status],
+
+    queryFn: async () =>
+      apiClient(
+        `/bank/my?page=${page}&limit=${limit}&search=${search}&status=${status}`,
+        {
+          method: "GET",
+        },
+      ),
+
+    placeholderData: keepPreviousData,
+
+    retry: false,
+  });
 
 /* ================= GET ALL ================= */
 
@@ -38,7 +63,7 @@ export const useGetAllBankDetails = ({
   status = "",
 }) =>
   useQuery({
-    queryKey: ["bank-details", page, limit, search, userId, status],
+    queryKey: ["bank", page, limit, search, userId, status],
 
     queryFn: async () =>
       apiClient(
@@ -53,22 +78,6 @@ export const useGetAllBankDetails = ({
     retry: false,
   });
 
-/* ================= GET ONE ================= */
-/* Backend me GET BY ID API nahi hai */
-/* Jab ban jaye tab enable kar dena */
-
-// export const useGetBankDetail = (id) =>
-//   useQuery({
-//     queryKey: ["bank-detail", id],
-//
-//     queryFn: async () =>
-//       apiClient(`/bank-details/${id}`, {
-//         method: "GET",
-//       }),
-//
-//     enabled: !!id,
-//   });
-
 /* ================= UPDATE ================= */
 
 export const useUpdateBankDetail = () => {
@@ -76,14 +85,34 @@ export const useUpdateBankDetail = () => {
 
   return useMutation({
     mutationFn: async ({ id, payload }) =>
-      apiClient(`/bank-details/${id}`, {
+      apiClient(`/bank/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }),
+
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["bank"],
+      }),
+  });
+};
+
+export const useUpdateAddBankDetail = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, payload }) =>
+      apiClient(`/bank/${id}`, {
         method: "PATCH",
         body: payload,
       }),
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["bank-details"],
+        queryKey: ["bank"],
       }),
   });
 };
@@ -95,13 +124,13 @@ export const useDeleteBankDetail = () => {
 
   return useMutation({
     mutationFn: async (id) =>
-      apiClient(`/bank-details/${id}`, {
+      apiClient(`/bank/${id}`, {
         method: "DELETE",
       }),
 
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["bank-details"],
+        queryKey: ["bank"],
       }),
   });
 };

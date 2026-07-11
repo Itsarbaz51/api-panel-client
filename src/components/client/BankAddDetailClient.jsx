@@ -1,36 +1,44 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Landmark, CheckCircle, Star } from "lucide-react";
+
+import { Landmark, CheckCircle, Star, Plus } from "lucide-react";
 
 import Header from "@/components/ui/Header";
+import Button from "@/components/ui/Button";
 import QuickStats from "@/components/QuickStats";
 import View from "@/components/ui/View";
 import ConfirmDialog from "@/components/ConfirmDialog";
 
 import BankDetailTable from "@/components/tables/BankDetailTable";
+import BankDetailModal from "@/components/modals/BankDetailModal";
 
 import {
-  useGetAllBankDetails,
+  useCreateBankDetail,
+  useUpdateAddBankDetail,
   useDeleteBankDetail,
-  useUpdateBankDetail,
+  useGetAllMyBankDetails,
 } from "@/hooks/useBankDetail";
 
-export default function BankDetailClient() {
+export default function BankAddDetailClient() {
   const [searchTerm, setSearchTerm] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
+
   const limit = 10;
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const [editingItem, setEditingItem] = useState(null);
+
   const [viewOpen, setViewOpen] = useState(false);
+
   const [viewItem, setViewItem] = useState(null);
+
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     item: null,
   });
-
-  const [selectedBank, setSelectedBank] = useState(null);
-  const [verifiedOpen, setVerifiedOpen] = useState(false);
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
 
   useEffect(() => {
     setCurrentPage(1);
@@ -42,27 +50,57 @@ export default function BankDetailClient() {
     data: response,
     refetch,
     isLoading,
-  } = useGetAllBankDetails({
+  } = useGetAllMyBankDetails({
     page: currentPage,
     limit,
     search: searchTerm,
   });
 
   const bankDetails = response?.data?.data || [];
+
   const total = response?.data?.total || 0;
 
   /* ================= STATS ================= */
+
   const primaryBanks = bankDetails.filter((x) => x.isPrimary).length;
+
   const savingsAccounts = bankDetails.filter(
-    (x) => x.accountType === "SAVINGS",
+    (x) => x.accountType === "PERSONAL",
   ).length;
+
   const currentAccounts = bankDetails.filter(
-    (x) => x.accountType === "CURRENT",
+    (x) => x.accountType === "BUSINESS",
   ).length;
 
   /* ================= MUTATIONS ================= */
+
+  const createBankDetail = useCreateBankDetail();
+  const updateBankDetail = useUpdateAddBankDetail();
   const deleteBankDetail = useDeleteBankDetail();
-  const { mutate: updateBankDetail, isPending } = useUpdateBankDetail();
+
+  /* ================= CREATE / UPDATE ================= */
+
+  const handleSubmit = async (payload) => {
+    console.log(payload);
+
+    try {
+      if (editingItem) {
+        await updateBankDetail.mutateAsync({
+          id: editingItem.id,
+          payload,
+        });
+      } else {
+        await createBankDetail.mutateAsync(payload);
+      }
+
+      refetch();
+
+      setOpenModal(false);
+      setEditingItem(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   /* ================= VIEW ================= */
 
@@ -71,7 +109,15 @@ export default function BankDetailClient() {
     setViewOpen(true);
   };
 
+  /* ================= EDIT ================= */
+
+  const handleEdit = (item) => {
+    setEditingItem(item);
+    setOpenModal(true);
+  };
+
   /* ================= DELETE ================= */
+
   const handleDelete = async () => {
     try {
       await deleteBankDetail.mutateAsync(deleteDialog.item.id);
@@ -87,55 +133,23 @@ export default function BankDetailClient() {
     }
   };
 
-  const handleVerified = () => {
-    if (!selectedBank) return;
-
-    updateBankDetail(
-      {
-        id: selectedBank.id,
-        payload: {
-          status: "VERIFIED",
-        },
-      },
-      {
-        onSuccess: () => {
-          setVerifiedOpen(false);
-          setSelectedBank(null);
-          refetch();
-        },
-      },
-    );
-  };
-
-  const handleReject = () => {
-    if (!selectedBank) return;
-
-    if (!rejectReason.trim()) {
-      return alert("Reject reason is required");
-    }
-
-    updateBankDetail(
-      {
-        id: selectedBank.id,
-        payload: {
-          status: "REJECTED",
-          bankRejectionReason: rejectReason,
-        },
-      },
-      {
-        onSuccess: () => {
-          setRejectOpen(false);
-          setSelectedBank(null);
-          setRejectReason("");
-          refetch();
-        },
-      },
-    );
-  };
-
   return (
     <div className="space-y-8">
-      <Header title="Bank Details" subtitle="Manage User Bank Accounts" />
+      <Header
+        title="Bank Details"
+        subtitle="Manage User Bank Accounts"
+        actions={
+          <Button
+            leftIcon={<Plus />}
+            onClick={() => {
+              setEditingItem(null);
+              setOpenModal(true);
+            }}
+          >
+            Add Bank
+          </Button>
+        }
+      />
 
       <QuickStats
         stats={[
@@ -171,19 +185,23 @@ export default function BankDetailClient() {
         onSearch={setSearchTerm}
         onPageChange={setCurrentPage}
         onView={handleView}
+        onEdit={handleEdit}
         onDelete={(row) =>
           setDeleteDialog({
             open: true,
             item: row,
           })
         }
-        onVerified={(row) => {
-          setSelectedBank(row);
-          setVerifiedOpen(true);
-        }}
-        onReject={(row) => {
-          setSelectedBank(row);
-          setRejectOpen(true);
+      />
+
+      <BankDetailModal
+        open={openModal}
+        loading={createBankDetail.isPending || updateBankDetail.isPending}
+        initialData={editingItem}
+        onSubmit={handleSubmit}
+        onClose={() => {
+          setOpenModal(false);
+          setEditingItem(null);
         }}
       />
 
@@ -212,37 +230,6 @@ export default function BankDetailClient() {
             item: null,
           })
         }
-      />
-      <ConfirmDialog
-        open={verifiedOpen}
-        onClose={() => {
-          setVerifiedOpen(false);
-          setSelectedBank(null);
-        }}
-        onConfirm={handleVerified}
-        title="Verify Bank"
-        description="Are you sure you want to verify this bank account?"
-        confirmText="Verify"
-        variant="success"
-        loading={isPending}
-      />
-
-      <ConfirmDialog
-        open={rejectOpen}
-        onClose={() => {
-          setRejectOpen(false);
-          setSelectedBank(null);
-          setRejectReason("");
-        }}
-        onConfirm={handleReject}
-        title="Reject Bank Account"
-        description="Please provide the reason for rejecting this bank account."
-        confirmText="Reject"
-        variant="danger"
-        loading={isPending}
-        showReason
-        reason={rejectReason}
-        setReason={setRejectReason}
       />
     </div>
   );

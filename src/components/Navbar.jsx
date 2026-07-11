@@ -194,8 +194,14 @@ export default function Navbar() {
       try {
         const res = await getCredentials.mutateAsync(user.id);
         setCredential(res.data);
+        if (res?.statusCode === 404) {
+          const created = await createApiKey.mutateAsync({
+            userId: user.id,
+          });
+          setCredential(created.data);
+        }
       } catch (err) {
-        if (err?.response?.status === 404) {
+        if (err?.response?.statusCode === 404) {
           const created = await createApiKey.mutateAsync({
             userId: user.id,
           });

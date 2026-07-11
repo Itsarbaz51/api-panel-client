@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 export const bankDetailSchema = z.object({
-  userId: z.string().min(1, "User is required"),
-
   accountHolder: z.string().min(3, "Account holder name is required").max(100),
 
   accountNumber: z
@@ -10,9 +8,12 @@ export const bankDetailSchema = z.object({
     .min(8, "Account number is too short")
     .max(18, "Maximum 18 digits"),
 
-  phoneNumber: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
+  phoneNumber: z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number"),
 
-  accountType: z.enum(["SAVINGS", "CURRENT"], {
+  accountType: z.enum(["PERSONAL", "BUSINESS"], {
     required_error: "Select account type",
   }),
 

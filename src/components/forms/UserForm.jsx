@@ -38,13 +38,13 @@ export default function UserForm({
     email: "",
     phoneNumber: "",
     packageId: "",
-    profileImage: null, 
+    profileImage: null,
   });
 
   const [packageSearch, setPackageSearch] = useState("");
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
-  const [imagePreview, setImagePreview] = useState(""); 
+  const [imagePreview, setImagePreview] = useState("");
 
   /* EDIT DATA EFFECT */
   useEffect(() => {
@@ -57,11 +57,11 @@ export default function UserForm({
         email: initialData.email || "",
         phoneNumber: initialData.phoneNumber || "",
         packageId: initialData.packageId || initialData.package?.id || "",
-        profileImage: null, 
+        profileImage: null,
       });
 
       setPackageSearch(
-        initialData.package?.name || initialData.packageName || ""
+        initialData.package?.name || initialData.packageName || "",
       );
 
       if (initialData.profileImage) {
@@ -117,7 +117,7 @@ export default function UserForm({
         ...prev,
         profileImage: file,
       }));
-      
+
       setImagePreview(URL.createObjectURL(file));
       clearError("profileImage");
     }
@@ -126,8 +126,12 @@ export default function UserForm({
   const packageList = packages?.data || [];
 
   const filteredPackages = useMemo(() => {
+    if (!packageSearch.trim()) {
+      return packageList;
+    }
+
     return packageList.filter((pkg) =>
-      pkg?.name?.toLowerCase().includes(packageSearch.toLowerCase())
+      pkg?.name?.toLowerCase().includes(packageSearch.toLowerCase()),
     );
   }, [packageList, packageSearch]);
 
@@ -147,7 +151,7 @@ export default function UserForm({
       if (initialData) {
         // --- EDIT MODE: Send multipart FormData ---
         const dataToSend = new FormData();
-        
+
         Object.keys(validation.data).forEach((key) => {
           if (key !== "profileImage" && validation.data[key] !== undefined) {
             dataToSend.append(key, validation.data[key]);
@@ -194,13 +198,16 @@ export default function UserForm({
         )}
 
         <div className="grid grid-cols-2 gap-5">
-          
           {/* FIX: Yeh section ab sirf Edit mode (initialData) hone par hi render hoga */}
           {initialData && (
             <div className="col-span-2 flex items-center gap-4 p-4 border rounded-xl bg-gray-50/50">
               <div className="relative h-16 w-16 rounded-full border bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
                 {imagePreview ? (
-                  <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <Upload className="h-6 w-6 text-gray-400" />
                 )}
@@ -216,7 +223,9 @@ export default function UserForm({
                   className="text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                 />
                 {errors.profileImage && (
-                  <p className="text-red-500 text-xs mt-1">{errors.profileImage}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.profileImage}
+                  </p>
                 )}
               </div>
             </div>
@@ -291,8 +300,10 @@ export default function UserForm({
               label="SEARCH PACKAGE"
               value={packageSearch}
               placeholder="Search package"
+              onFocus={() => setPackageSearch("")}
               onChange={(e) => {
                 setPackageSearch(e.target.value);
+
                 setFormData((prev) => ({
                   ...prev,
                   packageId: "",
@@ -300,29 +311,30 @@ export default function UserForm({
               }}
             />
 
-            {packageSearch && (
-              <div className="absolute w-full bg-white border rounded-xl mt-1 z-50 max-h-48 overflow-y-auto shadow-lg">
-                {filteredPackages.length ? (
-                  filteredPackages.map((pkg) => (
-                    <div
-                      key={pkg.id}
-                      className="p-3 cursor-pointer hover:bg-gray-100"
-                      onClick={() => {
-                        setPackageSearch(pkg.name);
-                        setFormData((prev) => ({
-                          ...prev,
-                          packageId: pkg.id,
-                        }));
-                      }}
-                    >
-                      {pkg.name}
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-3 text-sm text-gray-500">No Package Found</div>
-                )}
-              </div>
-            )}
+            <div className="absolute w-full bg-white border rounded-xl mt-1 z-50 max-h-48 overflow-y-auto shadow-lg">
+              {filteredPackages.length ? (
+                filteredPackages.map((pkg) => (
+                  <div
+                    key={pkg.id}
+                    className="p-3 cursor-pointer hover:bg-gray-100"
+                    onClick={() => {
+                      setPackageSearch(pkg.name);
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        packageId: pkg.id,
+                      }));
+                    }}
+                  >
+                    {pkg.name}
+                  </div>
+                ))
+              ) : (
+                <div className="p-3 text-sm text-gray-500">
+                  No Package Found
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
