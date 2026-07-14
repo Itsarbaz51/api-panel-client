@@ -1,9 +1,7 @@
-import React from 'react'
+import FundRequestClient from "@/components/client/FundRequestClient";
 
 function page() {
-  return (
-    <div>page</div>
-  )
+  return <FundRequestClient />;
 }
 
-export default page
+export default page;
