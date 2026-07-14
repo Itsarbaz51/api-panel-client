@@ -78,7 +78,7 @@ export default function UserClient() {
 
   const { data: services } = useGetAllServices({
     page: 1,
-    limit: 100, 
+    limit: 100,
     search: "",
   });
 
@@ -157,31 +157,31 @@ export default function UserClient() {
 
   const handleApiKeyChange = (field, value, index) => {
     if (field === "allowedIps") {
-      const ips = [...(credentials?.allowedIps || [])];
+      const ips = [...(apiKeyData?.allowedIps || [])];
       ips[index] = value;
 
-      setCredentials((prev) => ({
+      setApiKeyData((prev) => ({
         ...prev,
         allowedIps: ips,
       }));
       return;
     }
 
-    setCredentials((prev) => ({
+    setApiKeyData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleAddIp = () => {
-    setCredentials((prev) => ({
+    setApiKeyData((prev) => ({
       ...prev,
       allowedIps: [...(prev?.allowedIps || []), ""],
     }));
   };
 
   const handleRemoveIp = (index) => {
-    setCredentials((prev) => ({
+    setApiKeyData((prev) => ({
       ...prev,
       allowedIps: prev.allowedIps.filter((_, i) => i !== index),
     }));
@@ -376,17 +376,16 @@ export default function UserClient() {
         open={apiKeyOpen}
         onClose={() => {
           setApiKeyOpen(false);
-          setCredentials(null);
+          setApiKeyData(null);
         }}
-        data={credentials}
+        data={apiKeyData}
         role={user?.role}
-        loading={updateApiKey.isPending}
+        loading={updateApiKey?.isPending}
         onChange={handleApiKeyChange}
         onAddIp={handleAddIp}
         onRemoveIp={handleRemoveIp}
         onSubmit={handleApiKeySubmit}
       />
-
       <PermissionModal
         open={permissionOpen}
         scope="USER"

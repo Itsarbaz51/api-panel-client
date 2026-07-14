@@ -81,7 +81,6 @@ export default function BankAddDetailClient() {
   /* ================= CREATE / UPDATE ================= */
 
   const handleSubmit = async (payload) => {
-    console.log(payload);
 
     try {
       if (editingItem) {

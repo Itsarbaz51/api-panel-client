@@ -55,14 +55,13 @@ export default function ApiKeyForm({
       {/* API KEY */}
       <div>
         <label className="text-xs font-semibold uppercase">API Key</label>
-
         <div className="mt-2 flex items-center justify-between rounded-xl border p-3">
-          <span className="break-all text-sm">{data.apiKey || "-"}</span>
+          <span className="break-all text-sm">{data?.apiKey || "-"}</span>
 
           <Copy
             size={18}
             className="cursor-pointer"
-            onClick={() => copy(data.apiKey)}
+            onClick={() => copy(data?.apiKey)}
           />
         </div>
       </div>
@@ -72,12 +71,12 @@ export default function ApiKeyForm({
         <label className="text-xs font-semibold uppercase">Secret Key</label>
 
         <div className="mt-2 flex items-center justify-between rounded-xl border p-3">
-          <span className="break-all text-sm">{data.secretKey || "-"}</span>
+          <span className="break-all text-sm">{data?.secretKey || "-"}</span>
 
           <Copy
             size={18}
             className="cursor-pointer"
-            onClick={() => copy(data.secretKey)}
+            onClick={() => copy(data?.secretKey)}
           />
         </div>
       </div>
@@ -86,7 +85,7 @@ export default function ApiKeyForm({
         <>
           <InputField
             label="Name"
-            value={data.name || ""}
+            value={data?.name || ""}
             onChange={(e) => onChange("name", e.target.value)}
             error={errors.name}
           />
