@@ -7,7 +7,7 @@ import TableHeader from "./core/TableHeader";
 import TableBody from "./core/TableBody";
 import TablePagination from "./core/TablePagination";
 
-export default function LoginLogsTable({
+export default function FLoginLogsTable({
   logs,
   total,
   page,
@@ -15,6 +15,9 @@ export default function LoginLogsTable({
   search,
   onSearch,
   onPageChange,
+  onRefresh,
+  roleType,
+  setRoleType,
 }) {
   const columns = [
     {
@@ -91,6 +94,19 @@ export default function LoginLogsTable({
         setSearch={onSearch}
         searchPlaceholder="Search IP, domain, location..."
         exportIcon={Download}
+        onRefresh={onRefresh}
+        filters={[
+          {
+            value: roleType,
+            onChange: setRoleType,
+            placeholder: "Role",
+            options: [
+              { label: "All", value: "" },
+              { label: "Super Admin", value: "SUPER_ADMIN" },
+              { label: "API Holder", value: "API_HOLDER" },
+            ],
+          },
+        ]}
       />
 
       <TableBody columns={columns} data={logs} />

@@ -32,11 +32,16 @@ export default function FilterDropdown({
         variant="outline"
         onClick={() => setOpen(!open)}
         disabled={disabled}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white border-slate-200 hover:bg-slate-50"
+        className="flex items-center flex-row gap-2 px-5  py-2.5 bg-white border-slate-200 hover:bg-slate-50"
       >
-        <Filter size={14} className="text-slate-500" />
-        <span>{activeOption?.label || placeholder}</span>
-        <ChevronDown size={14} className={`text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <div className="flex items-center flex-row gap-2">
+          <Filter size={14} className="text-slate-500" />
+          <span>{activeOption?.label || placeholder}</span>
+          <ChevronDown
+            size={14}
+            className={`text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </div>
       </Button>
 
       {open && (
@@ -54,8 +59,8 @@ export default function FilterDropdown({
                       setOpen(false);
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors ${
-                      isActive 
-                        ? "bg-primary/10 text-primary" 
+                      isActive
+                        ? "bg-primary/10 text-primary"
                         : "text-slate-700 hover:bg-slate-50"
                     }`}
                   >

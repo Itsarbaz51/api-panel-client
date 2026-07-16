@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, Download, RefreshCw } from "lucide-react";
+import { Activity, Download, RefreshCcw, RefreshCw } from "lucide-react";
 
 import TableShell from "./core/TableShell";
 import TableHeader from "./core/TableHeader";
@@ -97,10 +97,25 @@ export default function TransactionsTable({
     },
 
     {
-      key: "createdAt",
-      label: "Date",
+      key: "initiatedAt",
+      label: "Initiated Date",
 
-      render: (row) => new Date(row.createdAt).toLocaleString(),
+      render: (row) =>
+        row.initiatedAt ? new Date(row.initiatedAt).toLocaleString() : "-",
+    },
+    {
+      key: "processedAt",
+      label: "Processed Date",
+
+      render: (row) =>
+        row.processedAt ? new Date(row.processedAt).toLocaleString() : "-",
+    },
+    {
+      key: "completedAt",
+      label: "Completed Date",
+
+      render: (row) =>
+        row.completedAt ? new Date(row.completedAt).toLocaleString() : "-",
     },
 
     {
@@ -134,46 +149,40 @@ export default function TransactionsTable({
         setSearch={onSearch}
         searchPlaceholder="Search Transaction..."
         exportIcon={Download}
-      >
-        <div className="flex flex-wrap gap-3">
-          {/* Status */}
-          <select
-            value={activeTab}
-            onChange={(e) => setActiveTab(e.target.value)}
-            className="rounded-lg border px-3 py-2"
-          >
-            <option value="PENDING">Pending</option>
-            <option value="SUCCESS">Success</option>
-            <option value="FAILED">Failed</option>
-          </select>
-
-          {/* Service */}
-          <select
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            className="rounded-lg border px-3 py-2"
-          >
-            {categories.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-
-          {/* Date */}
-          <select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="rounded-lg border px-3 py-2"
-          >
-            <option value="ALL">All</option>
-            <option value="TODAY">Today</option>
-            <option value="YESTERDAY">Yesterday</option>
-            <option value="LAST_7_DAYS">Last 7 Days</option>
-            <option value="THIS_MONTH">This Month</option>
-          </select>
-        </div>
-      </TableHeader>
+        refreshIcon={RefreshCcw}
+        onRefresh={onRefresh}
+        isLoading={loading}
+        filters={[
+          {
+            value: activeTab,
+            onChange: setActiveTab,
+            placeholder: "Status",
+            options: [
+              { label: "Pending", value: "PENDING" },
+              { label: "Success", value: "SUCCESS" },
+              { label: "Failed", value: "FAILED" },
+            ],
+          },
+          {
+            value: selectedService,
+            onChange: setSelectedService,
+            placeholder: "Service",
+            options: categories,
+          },
+          {
+            value: dateFilter,
+            onChange: setDateFilter,
+            placeholder: "Date",
+            options: [
+              { label: "All", value: "ALL" },
+              { label: "Today", value: "TODAY" },
+              { label: "Yesterday", value: "YESTERDAY" },
+              { label: "Last 7 Days", value: "LAST_7_DAYS" },
+              { label: "This Month", value: "THIS_MONTH" },
+            ],
+          },
+        ]}
+      />
 
       <TableBody
         columns={columns}

@@ -56,5 +56,4 @@ export const useCurrentUser = () =>
       }),
 
     retry: false,
-    refetchOnWindowFocus: false,
   });

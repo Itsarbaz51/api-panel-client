@@ -11,10 +11,14 @@ export default function TableHeader({
   filters = [], // Array of filter configurations
   onAdd,
   onExport,
+  onRefresh,
+  refreshIcon,
+  refreshLabel = "Refresh",
   addLabel = "Add",
   exportLabel = "Export",
   addIcon,
   exportIcon,
+  isLoading,
 }) {
   return (
     <div className="p-6 border-b border-border ">
@@ -24,7 +28,7 @@ export default function TableHeader({
           <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-row items-center gap-3">
           <SearchField
             value={search}
             onChange={setSearch}
@@ -48,6 +52,11 @@ export default function TableHeader({
             </Button>
           )}
 
+          {onRefresh && (
+            <Button variant="primary" icon={refreshIcon} onClick={onRefresh}>
+              {isLoading ? "Refresh..." : refreshLabel}
+            </Button>
+          )}
           {onExport && (
             <Button variant="outline" icon={exportIcon} onClick={onExport}>
               {exportLabel}

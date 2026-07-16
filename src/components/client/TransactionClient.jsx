@@ -12,7 +12,7 @@ import {
   useCheckTransactionStatus,
 } from "@/hooks/useTransaction";
 
-import { useGetAllServices } from "@/hooks/useService";
+import { useMyPermissions } from "@/hooks/usePermission";
 export default function TransactionClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,13 +22,6 @@ export default function TransactionClient() {
   const [dateFilter, setDateFilter] = useState("ALL");
 
   const limit = 10;
-  const { data: servicesResponse } = useGetAllServices({
-    page: 1,
-    limit: 100,
-    search: "",
-  });
-
-  const services = servicesResponse?.data?.data || [];
 
   const {
     data: transactionResponse,
@@ -42,6 +35,12 @@ export default function TransactionClient() {
     service: selectedService,
     date: dateFilter,
   });
+
+  const {
+    data: permissions,
+    isLoading: isLoadingPermission,
+    error,
+  } = useMyPermissions();
 
   const checkStatus = useCheckTransactionStatus();
   useEffect(() => {
@@ -69,11 +68,10 @@ export default function TransactionClient() {
       label: "All Services",
       value: "ALL",
     },
-
-    ...services.map((item) => ({
-      label: item.name,
-      value: item.code,
-    })),
+    ...(permissions?.data?.map((item) => ({
+      label: item.serviceName,
+      value: item.serviceCode,
+    })) || []),
   ];
 
   return (

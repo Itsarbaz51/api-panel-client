@@ -17,13 +17,15 @@ export default function LoginLogsClient() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [roleType, setRoleType] = useState("");
 
   const limit = 10;
 
-  const { data, isLoading } = useGetAllLogs({
+  const { data, isLoading, refetch } = useGetAllLogs({
     page,
     limit,
     search,
+    roleType,
   });
 
   const logs = useSelector((state) => state.logs.logs);
@@ -60,7 +62,13 @@ export default function LoginLogsClient() {
             setSearch(value);
             setPage(1);
           }}
+          roleType={roleType}
+          setRoleType={(value) => {
+            setRoleType(value);
+            setPage(1);
+          }}
           onPageChange={setPage}
+          onRefresh={refetch}
         />
       </div>
     </div>
