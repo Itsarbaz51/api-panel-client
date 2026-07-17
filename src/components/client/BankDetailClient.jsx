@@ -31,21 +31,23 @@ export default function BankDetailClient() {
   const [verifiedOpen, setVerifiedOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
-
+  }, [searchTerm, status]);
   /* ================= BANK DETAILS ================= */
 
   const {
     data: response,
     refetch,
     isLoading,
+    isFetching,
   } = useGetAllBankDetails({
     page: currentPage,
     limit,
     search: searchTerm,
+    status,
   });
 
   const bankDetails = response?.data?.data || [];
@@ -169,6 +171,8 @@ export default function BankDetailClient() {
         perPage={limit}
         search={searchTerm}
         onSearch={setSearchTerm}
+        status={status}
+        setStatus={setStatus}
         onPageChange={setCurrentPage}
         onView={handleView}
         onDelete={(row) =>
@@ -185,6 +189,8 @@ export default function BankDetailClient() {
           setSelectedBank(row);
           setRejectOpen(true);
         }}
+        onRefresh={refetch}
+        isLoading={isLoading || isFetching}
       />
 
       <View

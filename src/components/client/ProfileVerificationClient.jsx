@@ -24,11 +24,17 @@ export default function ProfileVerificationClient() {
 
   const limit = 10;
   const { mutate: updateKyc, isPending } = useUpdateKyc();
+  const [status, setStatus] = useState("");
 
-  const { data: kycResponse, refetch } = useGetAllKyc({
+  const {
+    data: kycResponse,
+    refetch,
+    isLoading,
+  } = useGetAllKyc({
     page: currentPage,
     limit,
     search: searchTerm,
+    status,
   });
 
   const allKycs = kycResponse?.data?.data || [];
@@ -139,6 +145,10 @@ export default function ProfileVerificationClient() {
           setSelectedKyc(row);
           setRejectOpen(true);
         }}
+        isLoading={isLoading}
+        onRefresh={refetch}
+        status={status}
+        setStatus={setStatus}
       />
 
       <ProfileVerificationView

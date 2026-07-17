@@ -19,6 +19,10 @@ export default function ProfileVerificationTable({
   onEdit,
   onVerified,
   onReject,
+  isLoading,
+  onRefresh,
+  status,
+  setStatus,
 }) {
   const columns = [
     {
@@ -128,6 +132,21 @@ export default function ProfileVerificationTable({
         setSearch={onSearch}
         searchPlaceholder="Search by registrationNumber, name, company..."
         exportIcon={Download}
+        onRefresh={onRefresh}
+        isLoading={isLoading}
+        filters={[
+          {
+            value: status,
+            onChange: setStatus,
+            placeholder: "Status",
+            options: [
+              { label: "All", value: "" },
+              { label: "Pending", value: "PENDING" },
+              { label: "Verified", value: "VERIFIED" },
+              { label: "Rejected", value: "REJECTED" },
+            ],
+          },
+        ]}
       />
 
       <TableBody

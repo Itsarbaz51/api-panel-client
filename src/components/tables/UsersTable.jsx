@@ -21,6 +21,10 @@ export default function UsersTable({
   onViewPassword,
   handleViewApiKey,
   handlePermissions,
+  onRefresh,
+  isLoading,
+  status,
+  setStatus,
 }) {
   const columns = [
     {
@@ -125,6 +129,22 @@ export default function UsersTable({
         setSearch={onSearch}
         searchPlaceholder="Search users..."
         exportIcon={Download}
+        onRefresh={onRefresh}
+        isLoading={isLoading}
+        filterValue={status}
+        setFilterValue={setStatus}
+        filters={[
+          {
+            value: status,
+            onChange: setStatus,
+            placeholder: "Status",
+            options: [
+              { label: "All", value: "" },
+              { label: "Active", value: "ACTIVE" },
+              { label: "Inactive", value: "IN_ACTIVE" },
+            ],
+          },
+        ]}
       />
 
       <TableBody

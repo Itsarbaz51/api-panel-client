@@ -8,11 +8,18 @@ import {
 import { apiClient } from "@/lib/apiClient";
 
 /* GET ALL */
-export const useGetAllUsers = ({ page = 1, limit = 6, search = "" }) =>
+export const useGetAllUsers = ({
+  page = 1,
+  limit = 6,
+  search = "",
+  status = "",
+}) =>
   useQuery({
-    queryKey: ["users", page, limit, search],
+    queryKey: ["users", page, limit, search, status],
     queryFn: () =>
-      apiClient(`/users?page=${page}&limit=${limit}&search=${search}`),
+      apiClient(
+        `/users?page=${page}&limit=${limit}&search=${search}&status=${status}`,
+      ),
     placeholderData: keepPreviousData,
   });
 

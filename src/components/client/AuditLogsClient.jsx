@@ -12,7 +12,7 @@ export default function AuditLogsClient() {
 
   const limit = 10;
 
-  const { data, isLoading } = useGetAllAuditLogs({
+  const { data, isLoading, isFetching, refetch } = useGetAllAuditLogs({
     page,
     limit,
     search,
@@ -33,6 +33,8 @@ export default function AuditLogsClient() {
         search={search}
         onSearch={setSearch}
         onPageChange={setPage}
+        loading={isLoading || isFetching}
+        onRefresh={refetch}
       />
     </div>
   );

@@ -29,6 +29,10 @@ export default function BankDetailTable({
   onDelete,
   onVerified,
   onReject,
+  status,
+  setStatus,
+  onRefresh,
+  isLoading,
 }) {
   const pathname = usePathname();
   const isMyBankPage = pathname === "/dashboard/add-bank-account";
@@ -190,6 +194,33 @@ export default function BankDetailTable({
         setSearch={onSearch}
         searchPlaceholder="Search bank..."
         exportIcon={Download}
+        onRefresh={onRefresh}
+        isLoading={isLoading}
+        filters={[
+          {
+            value: status,
+            onChange: setStatus,
+            placeholder: "Status",
+            options: [
+              {
+                label: "All",
+                value: "",
+              },
+              {
+                label: "Pending",
+                value: "PENDING",
+              },
+              {
+                label: "Verified",
+                value: "VERIFIED",
+              },
+              {
+                label: "Rejected",
+                value: "REJECTED",
+              },
+            ],
+          },
+        ]}
       />
 
       <TableBody

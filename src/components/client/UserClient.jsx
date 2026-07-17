@@ -64,10 +64,18 @@ export default function UserClient() {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const { data: usersResponse, refetch } = useGetAllUsers({
+  const [status, setStatus] = useState("");
+
+  const {
+    data: usersResponse,
+    refetch,
+    isLoading,
+    isFetching,
+  } = useGetAllUsers({
     page: currentPage,
     limit,
     search: searchTerm,
+    status,
   });
 
   const { data: packageData, isLoading: packageLoading } = useGetAll({
@@ -90,26 +98,15 @@ export default function UserClient() {
   const createApiKey = useCreateApiKey();
   const updateApiKey = useUpdateApiKey();
 
-  const allUsers = usersResponse?.data || [];
+  const users = usersResponse?.data?.data || [];
 
-  const filteredUsers = allUsers.filter((user) =>
-    user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const total = usersResponse?.data?.total || 0;
 
-  const total = filteredUsers.length;
+  const activeUsers = users.filter((user) => user.status === "ACTIVE").length;
 
-  const activeUsers = filteredUsers.filter(
-    (user) => user.status === "ACTIVE",
-  ).length;
-
-  const inactiveUsers = filteredUsers.filter(
+  const inactiveUsers = users.filter(
     (user) => user.status === "IN_ACTIVE",
   ).length;
-
-  const users = filteredUsers.slice(
-    (currentPage - 1) * limit,
-    currentPage * limit,
-  );
 
   const handleUserModalSubmit = async (payload) => {
     try {
@@ -338,6 +335,10 @@ export default function UserClient() {
         onViewPassword={handleViewPassword}
         handleViewApiKey={handleViewApiKey}
         handlePermissions={handlePermissions}
+        onRefresh={refetch}
+        isLoading={isLoading || isFetching}
+        status={status}
+        setStatus={setStatus}
       />
 
       <UserModal

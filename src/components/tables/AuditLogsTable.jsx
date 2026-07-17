@@ -17,6 +17,8 @@ export default function AuditLogsTable({
   search,
   onSearch,
   onPageChange,
+  onRefresh,
+  loading,
 }) {
   const [jsonModal, setJsonModal] = useState({
     open: false,
@@ -127,7 +129,7 @@ export default function AuditLogsTable({
       render: (row) => (
         <button
           onClick={() => openMetadata(row.metadata)}
-          className=" hover:text-primary text-sm font-medium"
+          className="text-blue-600 hover:text-blue-700 cursor-pointer hover:text-primary text-sm font-medium"
         >
           View Metadata
         </button>
@@ -154,6 +156,8 @@ export default function AuditLogsTable({
         setSearch={onSearch}
         searchPlaceholder="Search action, module, endpoint..."
         exportIcon={Download}
+        isLoading={loading}
+        onRefresh={onRefresh}
       />
 
       <TableBody columns={columns} data={logs} />

@@ -22,6 +22,7 @@ import {
 
 export default function BankAddDetailClient() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [status, setStatus] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -42,7 +43,7 @@ export default function BankAddDetailClient() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, status]);
 
   /* ================= BANK DETAILS ================= */
 
@@ -50,10 +51,12 @@ export default function BankAddDetailClient() {
     data: response,
     refetch,
     isLoading,
+    isFetching,
   } = useGetAllMyBankDetails({
     page: currentPage,
     limit,
     search: searchTerm,
+    status,
   });
 
   const bankDetails = response?.data?.data || [];
@@ -81,7 +84,6 @@ export default function BankAddDetailClient() {
   /* ================= CREATE / UPDATE ================= */
 
   const handleSubmit = async (payload) => {
-
     try {
       if (editingItem) {
         await updateBankDetail.mutateAsync({
@@ -182,15 +184,26 @@ export default function BankAddDetailClient() {
         perPage={limit}
         search={searchTerm}
         onSearch={setSearchTerm}
+        status={status}
+        setStatus={setStatus}
         onPageChange={setCurrentPage}
         onView={handleView}
-        onEdit={handleEdit}
         onDelete={(row) =>
           setDeleteDialog({
             open: true,
             item: row,
           })
         }
+        onVerified={(row) => {
+          setSelectedBank(row);
+          setVerifiedOpen(true);
+        }}
+        onReject={(row) => {
+          setSelectedBank(row);
+          setRejectOpen(true);
+        }}
+        onRefresh={refetch}
+        isLoading={isLoading || isFetching}
       />
 
       <BankDetailModal
