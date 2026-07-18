@@ -22,11 +22,14 @@ export default function FundRequestTable({
   perPage = 10,
   search,
   onSearch,
+  status,
+  setStatus,
   onPageChange,
-
   onView,
   onApprove,
   onReject,
+  onRefresh,
+  isLoading,
 }) {
   const user = useSelector((s) => s.auth.user);
 
@@ -153,6 +156,33 @@ export default function FundRequestTable({
         setSearch={onSearch}
         searchPlaceholder="Search..."
         exportIcon={Download}
+        onRefresh={onRefresh}
+        isLoading={isLoading}
+        filters={[
+          {
+            value: status,
+            onChange: setStatus,
+            placeholder: "Status",
+            options: [
+              {
+                label: "All",
+                value: "",
+              },
+              {
+                label: "Pending",
+                value: "PENDING",
+              },
+              {
+                label: "Success",
+                value: "SUCCESS",
+              },
+              {
+                label: "Rejected",
+                value: "FAILED",
+              },
+            ],
+          },
+        ]}
       />
 
       <TableBody

@@ -34,18 +34,18 @@ export default function FundRequestClient() {
   const [rejectReason, setRejectReason] = useState("");
 
   const limit = 10;
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, status]);
 
-  const { data, refetch, isLoading } = useGetAllTransactions({
+  const { data, refetch, isLoading, isFetching } = useGetAllTransactions({
     page: currentPage,
     limit,
     search: searchTerm,
-    // status: activeTab,
+    status,
     service: "FUND_REQUEST",
-    // date: dateFilter,
   });
 
   const requests = data?.data?.data || [];
@@ -170,6 +170,8 @@ export default function FundRequestClient() {
         perPage={limit}
         search={searchTerm}
         onSearch={setSearchTerm}
+        status={status}
+        setStatus={setStatus}
         onPageChange={setCurrentPage}
         onApprove={(row) => {
           setSelectedRequest(row);
@@ -181,6 +183,8 @@ export default function FundRequestClient() {
 
           setRejectOpen(true);
         }}
+        onRefresh={refetch}
+        isLoading={isLoading || isFetching}
       />
 
       <FundRequestModal
