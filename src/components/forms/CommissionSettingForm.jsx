@@ -192,7 +192,7 @@ export default function CommissionSettingForm({
             searchable
             value={formData.serviceProviderId}
             error={errors.serviceProviderId}
-            options={providers.map((sp) => ({
+            options={providers?.map((sp) => ({
               label: `${sp.service?.name || ""} • ${sp.provider?.name || ""}`,
               value: sp.id,
             }))}
@@ -210,7 +210,7 @@ export default function CommissionSettingForm({
               searchable
               value={formData.targetUserId}
               error={errors.targetUserId}
-              options={users.map((u) => ({
+              options={users?.map((u) => ({
                 label: `${u.fullName} (${u.registrationNumber})`,
                 value: u.id,
               }))}
@@ -229,7 +229,7 @@ export default function CommissionSettingForm({
               searchable
               value={formData.packageId}
               error={errors.packageId}
-              options={packages.map((p) => ({
+              options={packages?.map((p) => ({
                 label: p.name,
                 value: p.id,
               }))}

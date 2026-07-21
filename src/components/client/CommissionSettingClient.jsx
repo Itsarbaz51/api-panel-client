@@ -52,6 +52,7 @@ export default function CommissionSettingClient() {
     search: "",
   });
 
+
   const { data: packageData } = useGetAll({
     page: 1,
     limit: 100,
@@ -179,7 +180,7 @@ export default function CommissionSettingClient() {
       <CommissionSettingModal
         open={openModal}
         initialData={editingData}
-        users={usersData?.data || []}
+        users={usersData?.data?.data || []}
         packages={packageData?.data?.data || []}
         providers={providerData?.data?.data || []}
         onSubmit={handleSubmit}
