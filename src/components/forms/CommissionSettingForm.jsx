@@ -193,10 +193,20 @@ export default function CommissionSettingForm({
             value={formData.serviceProviderId}
             error={errors.serviceProviderId}
             options={providers?.map((sp) => ({
-              label: `${sp.service?.name || ""} • ${sp.provider?.name || ""}`,
+              label: `${sp.service?.name || ""} • ${sp.provider?.name || ""} • ${
+                sp?.transactionType?.replace(/_/g, " ") || ""
+              }`,
               value: sp.id,
             }))}
-            onChange={(v) => handleChange("serviceProviderId", v)}
+            onChange={(value) => {
+              const selectedProvider = providers.find((sp) => sp.id === value);
+
+              setFormData((prev) => ({
+                ...prev,
+                serviceProviderId: value,
+                transactionType: selectedProvider?.transactionType || "",
+              }));
+            }}
           />
         </div>
 
@@ -373,7 +383,15 @@ export default function CommissionSettingForm({
             label="GST %"
             value={formData.gstPercent}
             error={errors.gstPercent}
-            onChange={(e) => handleChange("gstPercent", e.target.value)}
+            onChange={(value) => {
+              const selectedProvider = providers.find((sp) => sp.id === value);
+
+              handleChange("serviceProviderId", value);
+              handleChange(
+                "transactionType",
+                selectedProvider?.transactionType || "",
+              );
+            }}
           />
         )}
 

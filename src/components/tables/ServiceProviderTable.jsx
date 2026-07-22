@@ -20,7 +20,9 @@ export default function ServiceProviderTable({
   onDelete,
 }) {
   const [selectedConfig, setSelectedConfig] = useState(null);
+  const hasOperator = data?.some((item) => item.supportPaymentMethod);
 
+  const hasSlab = data?.some((item) => item.supportsSlab);
   const columns = [
     {
       key: "service",
@@ -55,19 +57,22 @@ export default function ServiceProviderTable({
       ),
     },
 
-    {
-      key: "operator",
-      label: "Operator",
-
-      render: (row) => (
-        <div>
-          <div>{row.operator || "-"}</div>
-          <div className="text-xs text-slate-500">
-            {row.operatorCode || "-"}
-          </div>
-        </div>
-      ),
-    },
+    ...(hasOperator
+      ? [
+          {
+            key: "operator",
+            label: "Operator",
+            render: (row) => (
+              <div>
+                <div>{row.operator || "-"}</div>
+                <div className="text-xs text-slate-500">
+                  {row.operatorCode || "-"}
+                </div>
+              </div>
+            ),
+          },
+        ]
+      : []),
 
     {
       key: "pricing",
@@ -92,19 +97,31 @@ export default function ServiceProviderTable({
         </div>
       ),
     },
-
     {
-      key: "amount",
-      label: "Amount Range",
+      key: "transactionType",
+      label: "Transaction Type",
 
       render: (row) => (
-        <div>
-          ₹{row.minAmount || 0}
-          <br />₹{row.maxAmount || 0}
-        </div>
+        <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-medium">
+          {row.transactionType?.replaceAll("_", " ")?.toUpperCase() || "-"}
+        </span>
       ),
     },
 
+    ...(hasSlab
+      ? [
+          {
+            key: "amount",
+            label: "Amount Range",
+            render: (row) => (
+              <div>
+                ₹{row.minAmount ?? 0}
+                <br />₹{row.maxAmount ?? 0}
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       key: "config",
       label: "Config",
