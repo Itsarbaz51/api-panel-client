@@ -5,7 +5,7 @@ export function proxy(request) {
   const token = request.cookies.get("accessToken")?.value;
   const pathname = request.nextUrl.pathname;
 
-  const protectedRoutes = ["/dashboard"];
+  const protectedRoutes = ["/dashboard", "/kyc", "/inactive"];
 
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route),
@@ -64,5 +64,5 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/"],
+  matcher: ["/dashboard/:path*", "/kyc", "/inactive", "/login", "/"],
 };
