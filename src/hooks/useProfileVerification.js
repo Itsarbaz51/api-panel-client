@@ -75,9 +75,52 @@ export const useGetAllKyc = ({
 /* ================= UPDATE ================= */
 export const useUpdateKyc = () =>
   useMutation({
-    mutationFn: async ({ id, payload }) =>
-      apiClient(`/kyc/${id}`, {
+    mutationFn: async ({ id, data }) => {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (
+          key !== "documents" &&
+          key !== "addresses" &&
+          value !== undefined &&
+          value !== null
+        ) {
+          if (typeof value === "object") {
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, value);
+          }
+        }
+      });
+
+      formData.append("addresses", JSON.stringify(data.addresses));
+
+      const documentPayload = data.documents.map((doc) => ({
+        type: doc.type,
+        documentNumber: doc.documentNumber || "",
+        remarks: doc.remarks || "",
+        fileUrl: doc.fileUrl || null, // existing file
+      }));
+
+      formData.append("documents", JSON.stringify(documentPayload));
+
+      data.documents.forEach((doc) => {
+        if (doc.file instanceof File) {
+          formData.append("documents", doc.file);
+        }
+      });
+
+      return apiClient(`/kyc/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(payload),
+        body: formData,
+      });
+    },
+  });
+
+export const useGetByIdKyc = () =>
+  useMutation({
+    mutationFn: async (id) =>
+      apiClient(`/kyc/${id}`, {
+        method: "GET",
       }),
   });

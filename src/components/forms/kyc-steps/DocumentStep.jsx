@@ -1,127 +1,149 @@
 "use client";
 
+import { useState } from "react";
+
 import Input from "@/components/ui/InputField";
 import FileUpload from "@/components/ui/FileUpload";
 import Checkbox from "@/components/ui/Checkbox";
+import Button from "@/components/ui/Button";
+import ImagePreviewModal from "@/components/ImagePreviewModal";
 
 export default function DocumentStep({
   formData,
-  errors,
   declaration,
   setDeclaration,
   handleDocumentChange,
 }) {
   const docs = formData.documents;
 
-  const getDoc = (type) => docs.find((item) => item.type === type);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+
+  const getDoc = (type) => docs.find((d) => d.type === type);
 
   const update = (type, field, value) => {
-    const index = docs.findIndex((item) => item.type === type);
+    const index = docs.findIndex((d) => d.type === type);
 
-    handleDocumentChange(index, field, value);
+    if (index !== -1) {
+      handleDocumentChange(index, field, value);
+    }
+  };
+
+  const renderDocument = ({
+    title,
+    type,
+    numberLabel,
+    hasNumber = true,
+    accept = ".jpg,.jpeg,.png,.pdf",
+  }) => {
+    const doc = getDoc(type);
+
+    return (
+      <div className="rounded-xl border p-6">
+        <h3 className="mb-5 font-semibold">{title}</h3>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {hasNumber && (
+            <Input
+              label={numberLabel}
+              value={doc?.documentNumber || ""}
+              onChange={(e) => update(type, "documentNumber", e.target.value)}
+            />
+          )}
+
+          <div>
+            <FileUpload
+              label={`Upload ${title}`}
+              accept={accept}
+              value={doc?.file}
+              onChange={(file) => update(type, "file", file)}
+            />
+
+            {/* Existing uploaded document */}
+            {!doc?.file && doc?.fileUrl && (
+              <div className="mt-3 rounded-lg border bg-slate-50 p-3">
+                <p className="text-sm text-green-600 font-medium">
+                  Existing document uploaded
+                </p>
+
+                <div className="mt-2 flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setPreviewImage(doc.fileUrl);
+                      setPreviewOpen(true);
+                    }}
+                  >
+                    Preview
+                  </Button>
+
+                  <a
+                    href={doc.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded border px-3 py-2 text-sm"
+                  >
+                    Open
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* New file selected */}
+            {doc?.file && (
+              <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3">
+                <p className="text-sm text-green-700">
+                  New File: <strong>{doc.file.name}</strong>
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div className="space-y-10">
-      <div>
-        <h2 className="text-2xl font-bold">Upload Documents</h2>
+    <>
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-2xl font-bold">Upload Documents</h2>
 
-        <p className="mt-2 text-slate-500">Upload all required documents.</p>
-      </div>
-
-      <div className="grid gap-8">
-        {/* Aadhaar */}
-
-        <div className="rounded-xl border p-6">
-          <h3 className="mb-5 font-semibold">Aadhaar Card</h3>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <Input
-              label="Aadhaar Number"
-              value={getDoc("AADHAR")?.documentNumber || ""}
-              onChange={(e) =>
-                update("AADHAR", "documentNumber", e.target.value)
-              }
-            />
-
-            <FileUpload
-              label="Upload Aadhaar"
-              accept=".jpg,.jpeg,.png,.pdf"
-              value={getDoc("AADHAR")?.file}
-              onChange={(file) => update("AADHAR", "file", file)}
-            />
-          </div>
+          <p className="mt-2 text-slate-500">Upload all required documents.</p>
         </div>
 
-        {/* PAN */}
+        {renderDocument({
+          title: "Aadhaar Card",
+          type: "AADHAR",
+          numberLabel: "Aadhaar Number",
+        })}
 
-        <div className="rounded-xl border p-6">
-          <h3 className="mb-5 font-semibold">PAN Card</h3>
+        {renderDocument({
+          title: "PAN Card",
+          type: "PAN",
+          numberLabel: "PAN Number",
+        })}
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <Input
-              label="PAN Number"
-              value={getDoc("PAN")?.documentNumber || ""}
-              onChange={(e) => update("PAN", "documentNumber", e.target.value)}
-            />
+        {renderDocument({
+          title: "GST Certificate",
+          type: "GST",
+          numberLabel: "GST Number",
+        })}
 
-            <FileUpload
-              label="Upload PAN"
-              accept=".jpg,.jpeg,.png,.pdf"
-              value={getDoc("PAN")?.file}
-              onChange={(file) => update("PAN", "file", file)}
-            />
-          </div>
-        </div>
+        {renderDocument({
+          title: "User Photo",
+          type: "USER_PHOTO",
+          hasNumber: false,
+          accept: ".jpg,.jpeg,.png",
+        })}
 
-        {/* GST */}
-
-        <div className="rounded-xl border p-6">
-          <h3 className="mb-5 font-semibold">GST Certificate</h3>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <Input
-              label="GST Number"
-              value={getDoc("GST")?.documentNumber || ""}
-              onChange={(e) => update("GST", "documentNumber", e.target.value)}
-            />
-
-            <FileUpload
-              label="Upload GST"
-              accept=".jpg,.jpeg,.png,.pdf"
-              value={getDoc("GST")?.file}
-              onChange={(file) => update("GST", "file", file)}
-            />
-          </div>
-        </div>
-
-        {/* User Photo */}
-
-        <div className="rounded-xl border p-6">
-          <h3 className="mb-5 font-semibold">User Photo</h3>
-
-          <FileUpload
-            label="Upload User Photo"
-            accept=".jpg,.jpeg,.png"
-            value={getDoc("USER_PHOTO")?.file}
-            onChange={(file) => update("USER_PHOTO", "file", file)}
-          />
-        </div>
-
-        {/* Business Photo */}
-
-        <div className="rounded-xl border p-6">
-          <h3 className="mb-5 font-semibold">Business / Office Photo</h3>
-
-          <FileUpload
-            label="Upload Business Photo"
-            accept=".jpg,.jpeg,.png"
-            value={getDoc("BUSINESS_PHOTO")?.file}
-            onChange={(file) => update("BUSINESS_PHOTO", "file", file)}
-          />
-        </div>
-
-        {/* Declaration */}
+        {renderDocument({
+          title: "Business / Office Photo",
+          type: "BUSINESS_PHOTO",
+          hasNumber: false,
+          accept: ".jpg,.jpeg,.png",
+        })}
 
         <div className="rounded-xl border bg-slate-50 p-6">
           <Checkbox
@@ -131,6 +153,15 @@ export default function DocumentStep({
           />
         </div>
       </div>
-    </div>
+
+      <ImagePreviewModal
+        open={previewOpen}
+        image={previewImage}
+        onClose={() => {
+          setPreviewOpen(false);
+          setPreviewImage("");
+        }}
+      />
+    </>
   );
 }

@@ -2,7 +2,11 @@
 
 import ProfileVerificationForm from "../forms/ProfileVerificationForm";
 
-export default function ProfileVerificationModal({ onSubmit, loading }) {
+export default function ProfileVerificationModal({
+  initialValues,
+  onSubmit,
+  loading,
+}) {
   return (
     <div className="w-full max-w-6xl overflow-hidden rounded-3xl bg-white shadow-2xl">
       {/* Header */}
@@ -19,7 +23,11 @@ export default function ProfileVerificationModal({ onSubmit, loading }) {
 
       {/* Body */}
       <div className="p-8">
-        <ProfileVerificationForm onSubmit={onSubmit} loading={loading} />
+        <ProfileVerificationForm
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          loading={loading}
+        />
       </div>
     </div>
   );

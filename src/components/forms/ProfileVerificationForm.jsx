@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/Button";
 import ConfirmDialog from "@/components/ConfirmDialog";
@@ -17,18 +17,19 @@ import PreviewStep from "./kyc-steps/PreviewStep";
 
 const STEPS = ["Personal", "Business", "Address", "Documents", "Preview"];
 
-export default function ProfileVerificationForm({ onSubmit, loading }) {
+export default function ProfileVerificationForm({
+  initialValues,
+  onSubmit,
+  loading,
+}) {
   const [step, setStep] = useState(0);
-
   const [errors, setErrors] = useState({});
-  console.log(errors);
-
   const [confirmOpen, setConfirmOpen] = useState(false);
-
   const [sameAddress, setSameAddress] = useState(false);
   const [declaration, setDeclaration] = useState(false);
+  console.log(errors);
 
-  const [formData, setFormData] = useState({
+  const defaultFormData = {
     fullName: "",
     dob: "",
     gender: "",
@@ -41,7 +42,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
     kycType: "MANUAL",
 
     remarks: "",
-
     metadata: {},
 
     addresses: [
@@ -53,7 +53,6 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
         city: "",
         landmark: "",
       },
-
       {
         type: "OFFICE",
         address: "",
@@ -71,34 +70,86 @@ export default function ProfileVerificationForm({ onSubmit, loading }) {
         file: null,
         remarks: "",
       },
-
       {
         type: "PAN",
         documentNumber: "",
         file: null,
         remarks: "",
       },
-
       {
         type: "GST",
         documentNumber: "",
         file: null,
         remarks: "",
       },
-
       {
         type: "USER_PHOTO",
         file: null,
         remarks: "",
       },
-
       {
         type: "BUSINESS_PHOTO",
         file: null,
         remarks: "",
       },
     ],
-  });
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  useEffect(() => {
+    if (!initialValues) return;
+
+    setFormData((prev) => ({
+      ...prev,
+
+      fullName: initialValues.fullName || "",
+      dob: initialValues.dob ? initialValues.dob.split("T")[0] : "",
+      gender: initialValues.gender || "",
+
+      email: initialValues.email || "",
+      phoneNumber: initialValues.phoneNumber || "",
+
+      companyName: initialValues.companyName || "",
+      businessType: initialValues.businessType || "",
+      kycType: initialValues.kycType || "MANUAL",
+
+      remarks: initialValues.remarks || "",
+      metadata: initialValues.metadata || {},
+
+      addresses:
+        initialValues.addresses?.length > 0
+          ? initialValues.addresses
+          : prev.addresses,
+
+      documents: prev.documents.map((doc) => {
+        const existing = initialValues.documents?.find(
+          (d) => d.type === doc.type,
+        );
+
+        if (!existing) return doc;
+
+        return {
+          ...doc,
+          documentNumber: existing.documentNumber || "",
+          remarks: existing.remarks || "",
+          fileUrl: existing.fileUrl || "",
+          file: null,
+        };
+      }),
+    }));
+
+    if (
+      initialValues.addresses?.length >= 2 &&
+      JSON.stringify(initialValues.addresses[0]) ===
+        JSON.stringify({
+          ...initialValues.addresses[1],
+          type: "HOME",
+        })
+    ) {
+      setSameAddress(true);
+    }
+  }, [initialValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
