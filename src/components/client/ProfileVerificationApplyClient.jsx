@@ -1,85 +1,86 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import ProfileVerificationForm from "@/components/forms/ProfileVerificationForm";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { useCreateKyc } from "@/hooks/useProfileVerification";
-import { addKyc } from "@/store/profileVerificationSlice";
+
+import ProfileVerificationModal from "@/components/modals/ProfileVerificationModal";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 export default function ProfileVerificationApplyClient() {
-  const dispatch = useDispatch();
-  const createKyc = useCreateKyc();
+  const router = useRouter();
 
-  const uploadFileMock = async (file) => {
-    if (!file) return "";
-    
+  const createMutation = useCreateKyc();
+
+  const [dialog, setDialog] = useState({
+    open: false,
+    title: "",
+    description: "",
+    variant: "success",
+    redirect: false,
+  });
+
+  // CREATE KYC
+  const handleSubmit = async (data) => {
     try {
+      const res = await createMutation.mutateAsync(data);
+console.log(res);
 
-      
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
+      setDialog({
+        open: true,
+        title: "KYC Submitted",
+        description:
+          res?.message || "Your KYC has been submitted successfully.",
+        variant: "success",
+        redirect: true,
       });
-    } catch (e) {
-      console.error("File upload failed:", e);
-      return "";
+    } catch (err) {
+      console.log(err);
+
+      setDialog({
+        open: true,
+        title: "Submission Failed",
+        description:
+          err?.response?.data?.message ||
+          err?.message ||
+          "Something went wrong.",
+        variant: "danger",
+        redirect: false,
+      });
     }
   };
 
-  const handleSubmit = async (structuredPayload) => {
-    try {
-     
-      const updatedDocuments = await Promise.all(
-        structuredPayload.documents.map(async (doc) => {
-          
-          return {
-            ...doc,
-            fileUrl: "https://placehold.co/600x400.png", 
-          };
-        })
-      );
-
-      
-      const finalPayload = {
-        ...structuredPayload,
-        documents: updatedDocuments,
-        
-        ownerPhoto: "https://placehold.co/150x150.png",
-        businessPhoto: "https://placehold.co/600x400.png",
-      };
-
-      
-      const res = await createKyc.mutateAsync(finalPayload);
-
-      dispatch(addKyc(res.data ?? res));
-
-      return {
-        success: true,
-        message: "Profile Verification Submitted Successfully",
-      };
-    } catch (err) {
-      console.error(err);
-
-      return {
-        success: false,
-        message:
-          err?.response?.data?.message ||
-          err?.message ||
-          "Profile Verification Failed",
-      };
+  const handleClose = () => {
+    if (dialog.redirect) {
+      router.push("/dashboard/kyc");
+      return;
     }
+
+    setDialog((prev) => ({
+      ...prev,
+      open: false,
+    }));
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="max-w-5xl mx-auto">
-        <ProfileVerificationForm
+    <div className="min-h-screen bg-slate-100 py-10 px-4">
+      <div className="mx-auto max-w-6xl">
+        <ProfileVerificationModal
           onSubmit={handleSubmit}
-          loading={createKyc.isPending}
+          loading={createMutation.isPending}
         />
       </div>
+
+      <ConfirmDialog
+        open={dialog.open}
+        onClose={handleClose}
+        onConfirm={handleClose}
+        title={dialog.title}
+        description={dialog.description}
+        variant={dialog.variant}
+        cancelText="Close"
+      />
     </div>
   );
 }

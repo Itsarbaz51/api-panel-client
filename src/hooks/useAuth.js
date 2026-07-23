@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 
-
 // LOGIN
 export const useLogin = () =>
   useMutation({
@@ -11,7 +10,6 @@ export const useLogin = () =>
         body: JSON.stringify(payload),
       }),
   });
-
 
 // FORGOT PASSWORD
 export const useForgotPassword = () =>
@@ -23,6 +21,15 @@ export const useForgotPassword = () =>
       }),
   });
 
+// FORGOT PASSWORD
+export const useForgotPasswordVerify = () =>
+  useMutation({
+    mutationFn: async (payload) =>
+      apiClient("/auth/forgot-password-verify", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+  });
 
 // RESET PASSWORD
 export const useResetPassword = () =>
@@ -34,7 +41,6 @@ export const useResetPassword = () =>
       }),
   });
 
-
 // LOGOUT
 export const useLogout = () =>
   useMutation({
@@ -43,7 +49,6 @@ export const useLogout = () =>
         method: "POST",
       }),
   });
-
 
 // CURRENT USER
 export const useCurrentUser = () =>
