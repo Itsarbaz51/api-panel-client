@@ -41,6 +41,7 @@ export default function AddressStep({
             value={home.pinCode}
             error={errors?.addresses?.[0]?.pinCode}
             onChange={(e) => handleAddressChange(0, "pinCode", e.target.value)}
+            maxLength={6}
           />
 
           <Input
@@ -97,6 +98,7 @@ export default function AddressStep({
             value={office.pinCode}
             error={errors?.addresses?.[1]?.pinCode}
             onChange={(e) => handleAddressChange(1, "pinCode", e.target.value)}
+            maxLength={6}
           />
 
           <Input

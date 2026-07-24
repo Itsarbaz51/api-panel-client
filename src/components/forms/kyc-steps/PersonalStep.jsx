@@ -82,6 +82,7 @@ export default function PersonalStep({
           value={formData.phoneNumber}
           onChange={handleChange}
           error={errors.phoneNumber}
+          maxLength={10}
         />
       </div>
     </div>

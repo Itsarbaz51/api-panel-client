@@ -1,11 +1,21 @@
 import { z } from "zod";
 
-export const documentSchema = z.object({
-  type: z.enum(["AADHAR", "PAN", "GST", "USER_PHOTO", "BUSINESS_PHOTO"]),
-  file: z.instanceof(File),
-  documentNumber: z.string().optional(),
-  remarks: z.string().optional(),
-});
+export const documentSchema = z
+  .object({
+    type: z.enum(["AADHAR", "PAN", "GST", "USER_PHOTO", "BUSINESS_PHOTO"]),
+
+    file: z.custom((value) => value instanceof File || value === null),
+
+    fileUrl: z.string().optional(),
+
+    documentNumber: z.string().optional(),
+
+    remarks: z.string().optional(),
+  })
+  .refine((doc) => doc.file instanceof File || !!doc.fileUrl, {
+    path: ["file"],
+    message: "Please upload document",
+  });
 
 export const addressSchema = z.object({
   type: z.enum(["HOME", "OFFICE"]),

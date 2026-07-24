@@ -73,7 +73,7 @@ export const useGetAllKyc = ({
   });
 
 /* ================= UPDATE ================= */
-export const useUpdateKyc = () =>
+export const useUpdateApplyKyc = () =>
   useMutation({
     mutationFn: async ({ id, data }) => {
       const formData = new FormData();
@@ -115,6 +115,15 @@ export const useUpdateKyc = () =>
         body: formData,
       });
     },
+  });
+
+export const useUpdateKyc = () =>
+  useMutation({
+    mutationFn: async ({ id, payload }) =>
+      apiClient(`/kyc/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      }),
   });
 
 export const useGetByIdKyc = () =>

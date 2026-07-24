@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useCreateKyc, useGetByIdKyc } from "@/hooks/useProfileVerification";
+import {
+  useCreateKyc,
+  useGetByIdKyc,
+  useUpdateApplyKyc,
+} from "@/hooks/useProfileVerification";
 
 import ProfileVerificationModal from "@/components/modals/ProfileVerificationModal";
 import ConfirmDialog from "@/components/ConfirmDialog";
@@ -17,6 +21,7 @@ export default function ProfileVerificationApplyClient() {
 
   const createMutation = useCreateKyc();
   const getByIdMutation = useGetByIdKyc();
+  const updateMutation = useUpdateApplyKyc();
 
   const [dialog, setDialog] = useState({
     open: false,
@@ -41,10 +46,18 @@ export default function ProfileVerificationApplyClient() {
     fetchKyc();
   }, [kyc?.id, kyc?.status]);
 
-  // CREATE KYC
   const handleSubmit = async (data) => {
     try {
-      const res = await createMutation.mutateAsync(data);
+      let res;
+
+      if (kyc?.status === "REJECTED") {
+        res = await updateMutation.mutateAsync({
+          id: kyc.id,
+          data,
+        });
+      } else {
+        res = await createMutation.mutateAsync(data);
+      }
 
       setDialog({
         open: true,
@@ -88,7 +101,11 @@ export default function ProfileVerificationApplyClient() {
         {!kyc && (
           <ProfileVerificationModal
             onSubmit={handleSubmit}
-            loading={createMutation.isPending}
+            loading={
+              kyc?.status === "REJECTED"
+                ? updateMutation.isPending
+                : createMutation.isPending
+            }
           />
         )}
 

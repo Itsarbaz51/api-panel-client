@@ -17,7 +17,7 @@ export default function DocumentStep({
   const docs = formData.documents;
 
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
+  const [previewFile, setPreviewFile] = useState("");
 
   const getDoc = (type) => docs.find((d) => d.type === type);
 
@@ -71,7 +71,7 @@ export default function DocumentStep({
                     type="button"
                     variant="outline"
                     onClick={() => {
-                      setPreviewImage(doc.fileUrl);
+                      setPreviewFile(doc.fileUrl);
                       setPreviewOpen(true);
                     }}
                   >
@@ -156,10 +156,10 @@ export default function DocumentStep({
 
       <ImagePreviewModal
         open={previewOpen}
-        image={previewImage}
+        file={previewFile}
         onClose={() => {
           setPreviewOpen(false);
-          setPreviewImage("");
+          setPreviewFile("");
         }}
       />
     </>
