@@ -38,6 +38,12 @@ export default function DashboardLayout({ children }) {
     }
   }, [user, pathname, router]);
 
+  useEffect(() => {
+    if (user?.isKycVerified) {
+      router.replace("/dashboard");
+    }
+  }, [user]);
+
   // Redirect hone tak blank screen
   if (
     user &&
