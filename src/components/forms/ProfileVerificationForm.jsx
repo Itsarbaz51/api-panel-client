@@ -27,7 +27,6 @@ export default function ProfileVerificationForm({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [sameAddress, setSameAddress] = useState(false);
   const [declaration, setDeclaration] = useState(false);
-  console.log(errors);
 
   const defaultFormData = {
     fullName: "",
